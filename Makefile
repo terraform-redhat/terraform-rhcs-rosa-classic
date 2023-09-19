@@ -4,7 +4,7 @@ TERRAFORM_DIR := examples/rosa-classic-with-unmanaged-oidc
 init:
 	@cd $(TERRAFORM_DIR) && terraform init
 
-verify:
+verify: init
 	@cd $(TERRAFORM_DIR) && terraform validate
 
 tests:
