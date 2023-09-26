@@ -29,7 +29,8 @@ resource "rhcs_cluster_rosa_classic" "rosa_sts_cluster" {
   // availability_zones = var.availability_zones
   // aws_private_link   = var.aws_private_link
   // private            = var.private
-  multi_az = var.multi_az
+  multi_az          = var.multi_az
+  admin_credentials = var.admin_credentials
 }
 
 resource "rhcs_cluster_wait" "rosa_cluster" {

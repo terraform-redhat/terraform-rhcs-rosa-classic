@@ -61,7 +61,8 @@ module "account_iam_role" {
   role_path                     = var.path
   role_permissions_boundary_arn = var.permissions_boundary
 
-  custom_role_trust_policy = data.aws_iam_policy_document.custom_trust_policy[count.index].json
+  create_custom_role_trust_policy = true
+  custom_role_trust_policy        = data.aws_iam_policy_document.custom_trust_policy[count.index].json
 
   custom_role_policy_arns = [
     module.account_iam_policy[count.index].arn
