@@ -64,3 +64,8 @@ variable "multi_az" {
   type    = bool
   default = false
 }
+
+variable "admin_credentials" {
+  type    = map(string)
+  default = null
+}

@@ -57,5 +57,6 @@ module "rosa_cluster_classic" {
   //availability_zones    = module.vpc_private.availability_zones
   //aws_private_link      = true
   //private               = true
-  multi_az = true
+  multi_az          = true
+  admin_credentials = { username = "admin1", password = "123456!qwertyU" }
 }
