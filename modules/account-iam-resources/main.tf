@@ -10,14 +10,14 @@ locals {
       role_type            = "installer"
       policy_details       = data.rhcs_policies.all_policies.account_role_policies["sts_installer_permission_policy"]
       principal_type       = "AWS"
-      principal_identifier = "arn:aws:iam::${local.account_id}:role/RH-Managed-OpenShift-Installer"
+      principal_identifier = "arn:aws:iam::${data.rhcs_info.current.ocm_aws_account_id}:role/RH-Managed-OpenShift-Installer"
     },
     {
       role_name            = "Support"
       role_type            = "support"
       policy_details       = data.rhcs_policies.all_policies.account_role_policies["sts_support_permission_policy"]
       principal_type       = "AWS"
-      principal_identifier = "arn:aws:iam::${local.account_id}:role/RH-Technical-Support-Access"
+      principal_identifier = "arn:aws:iam::${data.rhcs_info.current.ocm_aws_account_id}:role/RH-Technical-Support-Access"
     },
     {
       role_name            = "Worker"
@@ -107,16 +107,9 @@ locals {
   patch_version_list        = [for s in data.rhcs_versions.all_versions.items : s.name]
   minor_version_list        = local.patch_version_list != [] ? distinct([for s in local.patch_version_list : format("%s.%s", split(".", s)[0], split(".", s)[1])]) : []
   account_role_prefix_valid = var.account_role_prefix != null ? var.account_role_prefix : "account-role-${random_string.default_random[0].result}"
-  account_id = lookup(
-    {
-      "production"  = "710019948333",
-      "staging"     = "644306948063",
-      "integration" = "896164604406",
-      "local"       = "765374464689"
-    },
-    var.ocm_environment, "710019948333"
-  )
 }
+
+data "rhcs_info" "current" {}
 
 resource "null_resource" "validate_openshift_version" {
   lifecycle {
