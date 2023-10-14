@@ -3,6 +3,10 @@ resource "time_sleep" "wait_10_seconds" {
 }
 
 locals {
+  shared_vpc_role_arn_replace         = "%%{shared_vpc_role_arn}"
+  openshift_ingress_policy            = data.rhcs_policies.all_policies.operator_role_policies["openshift_ingress_operator_cloud_credentials_policy"]
+  shared_vpc_openshift_ingress_policy = replace(data.rhcs_policies.all_policies.operator_role_policies["shared_vpc_openshift_ingress_operator_cloud_credentials_policy"], local.shared_vpc_role_arn_replace, var.shared_vpc_role_arn)
+
   operator_roles_policy_properties = [
     {
       policy_name    = substr("${var.account_role_prefix}-openshift-cloud-network-config-controller-cloud-credentials", 0, 64)
@@ -30,7 +34,7 @@ locals {
     },
     {
       policy_name    = substr("${var.account_role_prefix}-openshift-ingress-operator-cloud-credentials", 0, 64)
-      policy_details = data.rhcs_policies.all_policies.operator_role_policies["openshift_ingress_operator_cloud_credentials_policy"]
+      policy_details = var.shared_vpc_role_arn == "" ? local.openshift_ingress_policy : local.shared_vpc_openshift_ingress_policy
       namespace      = "openshift-ingress-operator"
       operator_name  = "cloud-credentials"
     },
