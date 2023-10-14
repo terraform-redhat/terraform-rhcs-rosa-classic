@@ -25,12 +25,18 @@ resource "rhcs_cluster_rosa_classic" "rosa_sts_cluster" {
     rosa_creator_arn = data.aws_caller_identity.current.arn
   }
   sts                = local.sts_roles
-  aws_subnet_ids     = var.subnets
+  aws_subnet_ids     = var.aws_subnet_ids
   availability_zones = var.availability_zones
   // aws_private_link   = var.aws_private_link
   // private            = var.private
-  multi_az          = var.multi_az
-  admin_credentials = var.admin_credentials
+  multi_az             = var.multi_az
+  admin_credentials    = var.admin_credentials
+  autoscaling_enabled  = var.autoscaling_enabled
+  base_dns_domain      = var.base_dns_domain
+  compute_machine_type = var.compute_machine_type
+  min_replicas         = var.min_replicas
+  max_replicas         = var.max_replicas
+
 
   wait_for_create_complete = true
 }

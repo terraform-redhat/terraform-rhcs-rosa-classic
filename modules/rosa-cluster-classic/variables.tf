@@ -40,7 +40,7 @@ variable "oidc_config_id" {
   type = string
 }
 
-variable "subnets" {
+variable "aws_subnet_ids" {
   type    = list(string)
   default = null
 }
@@ -67,5 +67,30 @@ variable "multi_az" {
 
 variable "admin_credentials" {
   type    = map(string)
+  default = null
+}
+
+variable "autoscaling_enabled" {
+  type    = bool
+  default = false
+}
+
+variable "base_dns_domain" {
+  type    = string
+  default = null
+}
+
+variable "compute_machine_type" {
+  type    = string
+  default = null
+}
+
+variable "min_replicas" {
+  type    = number
+  default = null
+}
+
+variable "max_replicas" {
+  type    = number
   default = null
 }
