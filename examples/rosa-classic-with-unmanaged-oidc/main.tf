@@ -35,11 +35,11 @@ module "operator_roles" {
   oidc_endpoint_url    = module.oidc_provider.oidc_endpoint_url
 }
 
-// module "vpc_private" {
-//   source = "../../modules/vpc-private"
-// 
-//   name = "${var.cluster_name}-vpc"
-// }
+module "vpc" {
+  source = "../../modules/vpc"
+
+  name_prefix = var.cluster_name
+}
 
 module "rosa_cluster_classic" {
   source = "../../modules/rosa-cluster-classic"
@@ -53,8 +53,8 @@ module "rosa_cluster_classic" {
   controlplane_role_arn = module.account_iam_resources.account_roles_arn["ControlPlane"]
   worker_role_arn       = module.account_iam_resources.account_roles_arn["Worker"]
   oidc_config_id        = module.oidc_provider.oidc_config_id
-  //subnets               = module.vpc_private.private_subnets
-  //availability_zones    = module.vpc_private.availability_zones
+  aws_subnet_ids        = concat(module.vpc.private_subnets, module.vpc.public_subnets)
+  availability_zones    = module.vpc.availability_zones
   //aws_private_link      = true
   //private               = true
   multi_az          = true
