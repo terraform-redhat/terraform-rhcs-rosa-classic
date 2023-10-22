@@ -8,6 +8,12 @@ variable "openshift_version" {
   type        = string
 }
 
+variable "shared_vpc_role_arn" {
+  description = "The role ARN used to access the private hosted zone, in case shared VPC is used"
+  type        = string
+  default     = ""
+}
+
 variable "tags" {
   description = "List of AWS resource tags to apply."
   type        = map(string)
