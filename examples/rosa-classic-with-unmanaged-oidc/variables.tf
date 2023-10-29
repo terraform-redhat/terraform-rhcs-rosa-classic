@@ -13,6 +13,5 @@ variable "openshift_version" {
 }
 
 variable "cluster_name" {
-  type    = string
-  default = "rhcs-example"
+  type = string
 }
