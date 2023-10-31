@@ -1,5 +1,5 @@
 resource "time_sleep" "wait_10_seconds" {
-  destroy_duration = "10s"
+  destroy_duration = "30s"
 }
 
 locals {
