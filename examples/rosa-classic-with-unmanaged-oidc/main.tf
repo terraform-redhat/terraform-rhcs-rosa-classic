@@ -1,3 +1,6 @@
+##############################################################
+# Account roles includes IAM roles and IAM policies
+##############################################################
 module "account_iam_resources" {
   source = "../../modules/account-iam-resources"
 
@@ -6,6 +9,9 @@ module "account_iam_resources" {
   openshift_version   = var.openshift_version
 }
 
+############################
+# operator policies
+############################
 module "operator_policies" {
   source = "../../modules/operator-policies"
 
@@ -13,10 +19,16 @@ module "operator_policies" {
   openshift_version   = module.account_iam_resources.openshift_version
 }
 
+############################
+# unmanaged OIDC config
+############################
 module "unmanaged_oidc_config" {
   source = "../../modules/unmanaged-oidc-config"
 }
 
+############################
+# OIDC provider
+############################
 module "oidc_provider" {
   source = "../../modules/oidc-provider"
 
@@ -26,21 +38,33 @@ module "oidc_provider" {
   installer_role_arn = module.account_iam_resources.account_roles_arn["Installer"]
 }
 
+############################
+# operator roles
+############################
 module "operator_roles" {
   source = "../../modules/operator-roles"
+  # adding a dependency to operator_policies module
+  depends_on = [module.operator_policies]
 
   operator_role_prefix = "${var.cluster_name}-operator"
-  account_role_prefix  = module.account_iam_resources.account_role_prefix
+
+  account_role_prefix  = module.operator_policies.account_role_prefix
   path                 = module.account_iam_resources.path
   oidc_endpoint_url    = module.oidc_provider.oidc_endpoint_url
 }
 
+############################
+# VPC
+############################
 module "vpc" {
   source = "../../modules/vpc"
 
   name_prefix = var.cluster_name
 }
 
+############################
+# ROSA STS cluster
+############################
 module "rosa_cluster_classic" {
   source = "../../modules/rosa-cluster-classic"
 
