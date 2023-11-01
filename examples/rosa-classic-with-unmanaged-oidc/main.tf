@@ -84,3 +84,20 @@ module "rosa_cluster_classic" {
   multi_az          = true
   admin_credentials = { username = "admin1", password = "123456!qwertyU" }
 }
+
+############################
+# machine-pool
+############################
+module "rosa_machine_pool" {
+  source = "../../modules/machin-pool"
+
+  cluster_id = module.rosa_cluster_classic.cluster_id
+  name = var.machine_pool_name
+  machine_type = var.machine_type
+
+  // Should set one of replicas autoscaling_enabled
+  replicas = var.replicas
+  autoscaling_enabled = var.autoscaling_enabled
+  min_replicas = var.min_replicas
+  max_replicas = var.max_replicas
+}
