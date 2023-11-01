@@ -1,3 +1,6 @@
+# Due to Error: deleting IAM Policy.
+# The policies still signed as attached after removing the policies attachments.
+# To solve it we need to wait 20 seconds
 resource "time_sleep" "wait_10_seconds" {
   destroy_duration = "10s"
 }

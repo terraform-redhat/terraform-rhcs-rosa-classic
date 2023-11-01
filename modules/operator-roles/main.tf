@@ -1,12 +1,20 @@
 data "rhcs_rosa_operator_roles" "operator_roles" {
   operator_role_prefix = var.operator_role_prefix
   account_role_prefix  = var.account_role_prefix
+
+  lifecycle {
+    # The operator_iam_roles should contains 6 elements 
+    postcondition {
+      condition     = length(self.operator_iam_roles) == 6
+      error_message = "The list of operator roles should contains 6 elements."
+    }
+  }
 }
 
 data "aws_caller_identity" "current" {}
 
 resource "aws_iam_role" "operator_role" {
-  count = length(data.rhcs_rosa_operator_roles.operator_roles.operator_iam_roles)
+  count = 6
 
   name                 = data.rhcs_rosa_operator_roles.operator_roles.operator_iam_roles[count.index].role_name
   path                 = var.path
@@ -24,14 +32,14 @@ resource "aws_iam_role" "operator_role" {
 }
 
 resource "aws_iam_role_policy_attachment" "operator_role_policy_attachment" {
-  count = length(data.rhcs_rosa_operator_roles.operator_roles.operator_iam_roles)
+  count = 6
 
   role       = aws_iam_role.operator_role[count.index].name
   policy_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:policy/${data.rhcs_rosa_operator_roles.operator_roles.operator_iam_roles[count.index].policy_name}"
 }
 
 data "aws_iam_policy_document" "custom_trust_policy" {
-  count = length(data.rhcs_rosa_operator_roles.operator_roles.operator_iam_roles)
+  count = 6
 
   statement {
     effect  = "Allow"
