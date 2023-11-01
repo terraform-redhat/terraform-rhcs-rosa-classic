@@ -1,6 +1,6 @@
 resource "time_sleep" "wait_10_seconds" {
   create_duration  = "10s"
-  destroy_duration = "10s"
+  destroy_duration = "30s"
 }
 
 resource "rhcs_rosa_oidc_config" "oidc_config" {
