@@ -12,3 +12,9 @@ variable "tags" {
   default     = {}
   description = "AWS tags to be applied to created resources."
 }
+
+variable "single_nat_gateway" {
+  type        = bool
+  description = "Single NAT or per NAT for subnet"
+  default     = true
+}

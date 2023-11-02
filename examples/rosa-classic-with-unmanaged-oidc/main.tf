@@ -67,6 +67,8 @@ module "vpc" {
 ############################
 module "rosa_cluster_classic" {
   source = "../../modules/rosa-cluster-classic"
+  # adding a dependency to operator_policies module
+  depends_on = [module.vpc]
 
   cluster_name          = var.cluster_name
   operator_role_prefix  = module.operator_roles.operator_role_prefix
