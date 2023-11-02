@@ -61,4 +61,7 @@ No modules.
 
 ## Outputs
 
-No outputs.
+
+| Name                                                               | Description             | Type     |
+|--------------------------------------------------------------------|-------------------------|----------|
+| <a name="cluster_id"></a> cluster_id | The ROSA STS cluster ID | `string` |
