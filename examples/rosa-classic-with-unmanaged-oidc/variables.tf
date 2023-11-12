@@ -16,14 +16,10 @@ variable "cluster_name" {
   type = string
 }
 
-variable "machine_pool_name" {
-  description = "Name of the machine pool. Must consist of lower-case alphanumeric characters or '-', start and end with an alphanumeric character."
-  type        = string
-}
-
 variable "machine_type" {
   description = "Identifier of the machine type used by the nodes, for example `m5.xlarge`. Use the `rhcs_machine_types` data source to find the possible values."
   type        = string
+  default     = "m5.xlarge"
 }
 
 variable "autoscaling_enabled" {
@@ -47,5 +43,5 @@ variable "max_replicas" {
 variable "replicas" {
   description = "The amount of the machine created in this machine pool."
   type        = number
-  default     = null
+  default     = 3
 }

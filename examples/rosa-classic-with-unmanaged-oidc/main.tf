@@ -48,9 +48,9 @@ module "operator_roles" {
 
   operator_role_prefix = "${var.cluster_name}-operator"
 
-  account_role_prefix  = module.operator_policies.account_role_prefix
-  path                 = module.account_iam_resources.path
-  oidc_endpoint_url    = module.oidc_provider.oidc_endpoint_url
+  account_role_prefix = module.operator_policies.account_role_prefix
+  path                = module.account_iam_resources.path
+  oidc_endpoint_url   = module.oidc_provider.oidc_endpoint_url
 }
 
 ############################
@@ -90,15 +90,15 @@ module "rosa_cluster_classic" {
 # machine-pool
 ############################
 module "rosa_machine_pool" {
-  source = "../../modules/machin-pool"
+  source = "../../modules/machine-pool"
 
-  cluster_id = module.rosa_cluster_classic.cluster_id
-  name = var.machine_pool_name
+  cluster_id   = module.rosa_cluster_classic.cluster_id
+  name         = "${var.cluster_name}-machine-pool"
   machine_type = var.machine_type
 
   // Should set one of replicas autoscaling_enabled
-  replicas = var.replicas
+  replicas            = var.replicas
   autoscaling_enabled = var.autoscaling_enabled
-  min_replicas = var.min_replicas
-  max_replicas = var.max_replicas
+  min_replicas        = var.min_replicas
+  max_replicas        = var.max_replicas
 }
