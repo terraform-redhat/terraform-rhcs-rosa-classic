@@ -1,14 +1,7 @@
-locals {
-  azs                = slice(data.aws_availability_zones.available.names, 0, 3)
-  private_cidr_range = [for k, v in local.azs : cidrsubnet(var.vpc_cidr, 8, k)]
-  public_cidr_range  = [for k, v in local.azs : cidrsubnet(var.vpc_cidr, 8, k + 4)]
-}
-
-resource "aws_vpc" "new_vpc" {
+resource "aws_vpc" "site" {
   cidr_block           = var.vpc_cidr
-  enable_dns_hostnames = true
   enable_dns_support   = true
-
+  enable_dns_hostnames = true
   tags = merge(
     {
       "Name" = "${var.name_prefix}-vpc"
@@ -18,31 +11,45 @@ resource "aws_vpc" "new_vpc" {
 }
 
 resource "aws_vpc_endpoint" "s3" {
-  vpc_id       = aws_vpc.new_vpc.id
+  vpc_id       = aws_vpc.site.id
   service_name = "com.amazonaws.${data.aws_region.current.name}.s3"
-  route_table_ids = concat(
-    aws_route_table.private_routes.*.id,
-    aws_route_table.default.*.id,
+}
+
+resource "aws_subnet" "public" {
+  count = var.subnet_count
+
+  vpc_id            = aws_vpc.site.id
+  cidr_block        = cidrsubnet(var.vpc_cidr, var.subnet_count * 2, count.index)
+  availability_zone = data.aws_availability_zones.available.names[count.index % length(data.aws_availability_zones.available.names)]
+  tags = merge(
+    {
+      "Name" = join("-", [var.name_prefix, "subnet", "public${count.index + 1}", data.aws_availability_zones.available.names[count.index % length(data.aws_availability_zones.available.names)]])
+    },
+    var.tags,
   )
-
-  tags = var.tags
 }
 
-resource "aws_vpc_dhcp_options" "main" {
-  domain_name         = data.aws_region.current.name == "us-east-1" ? "ec2.internal" : format("%s.compute.internal", data.aws_region.current.name)
-  domain_name_servers = ["AmazonProvidedDNS"]
+resource "aws_subnet" "private" {
+  count = var.subnet_count
 
-  tags = var.tags
+  vpc_id            = aws_vpc.site.id
+  cidr_block        = cidrsubnet(var.vpc_cidr, var.subnet_count * 2, count.index + var.subnet_count)
+  availability_zone = data.aws_availability_zones.available.names[count.index % length(data.aws_availability_zones.available.names)]
+  tags = merge(
+    {
+      "Name"                            = join("-", [var.name_prefix, "subnet", "private${count.index + 1}", data.aws_availability_zones.available.names[count.index % length(data.aws_availability_zones.available.names)]])
+      "kubernetes.io/role/internal-elb" = ""
+    },
+    var.tags,
+  )
 }
 
-resource "aws_vpc_dhcp_options_association" "main" {
-  vpc_id          = aws_vpc.new_vpc.id
-  dhcp_options_id = aws_vpc_dhcp_options.main.id
-}
 
-resource "aws_internet_gateway" "igw" {
-  vpc_id = aws_vpc.new_vpc.id
-
+#
+# Internet gateway
+#
+resource "aws_internet_gateway" "site" {
+  vpc_id = aws_vpc.site.id
   tags = merge(
     {
       "Name" = "${var.name_prefix}-igw"
@@ -51,9 +58,44 @@ resource "aws_internet_gateway" "igw" {
   )
 }
 
-resource "aws_route_table" "default" {
-  vpc_id = aws_vpc.new_vpc.id
+#
+# Elastic IPs for NAT gateways
+#
+resource "aws_eip" "nat" {
+  count = var.subnet_count
 
+  domain = "vpc"
+  tags = merge(
+    {
+      "Name" = join("-", [var.name_prefix, "eip", data.aws_availability_zones.available.names[count.index % length(data.aws_availability_zones.available.names)]])
+    },
+    var.tags,
+  )
+}
+
+
+#
+# NAT gateways
+#
+resource "aws_nat_gateway" "public" {
+  count = var.subnet_count
+
+  allocation_id = aws_eip.nat[count.index].id
+  subnet_id     = aws_subnet.public[count.index].id
+
+  tags = merge(
+    {
+      "Name" = join("-", [var.name_prefix, "nat", "public${count.index}", data.aws_availability_zones.available.names[count.index % length(data.aws_availability_zones.available.names)]])
+    },
+    var.tags,
+  )
+}
+
+#
+# Route tables
+#
+resource "aws_route_table" "public" {
+  vpc_id = aws_vpc.site.id
   tags = merge(
     {
       "Name" = "${var.name_prefix}-public"
@@ -62,127 +104,73 @@ resource "aws_route_table" "default" {
   )
 }
 
-resource "aws_main_route_table_association" "main_vpc_routes" {
-  vpc_id         = aws_vpc.new_vpc.id
-  route_table_id = aws_route_table.default.id
+resource "aws_route_table" "private" {
+  count = var.subnet_count
+
+  vpc_id = aws_vpc.site.id
+  tags = merge(
+    {
+      "Name" = join("-", [var.name_prefix, "rtb", "private${count.index}", data.aws_availability_zones.available.names[count.index % length(data.aws_availability_zones.available.names)]])
+    },
+    var.tags,
+  )
 }
 
-resource "aws_route" "igw_route" {
+#
+# Routes
+#
+# Send all IPv4 traffic to the internet gateway
+resource "aws_route" "ipv4_egress_route" {
+  route_table_id         = aws_route_table.public.id
   destination_cidr_block = "0.0.0.0/0"
-  route_table_id         = aws_route_table.default.id
-  gateway_id             = aws_internet_gateway.igw.id
-
-  timeouts {
-    create = "20m"
-  }
+  gateway_id             = aws_internet_gateway.site.id
+  depends_on             = [aws_route_table.public]
 }
 
-resource "aws_subnet" "public_subnet" {
-  count = length(local.azs)
-
-  vpc_id            = aws_vpc.new_vpc.id
-  cidr_block        = local.public_cidr_range[count.index]
-  availability_zone = local.azs[count.index]
-
-  tags = merge(
-    {
-      "Name" = "${var.name_prefix}-public-${local.azs[count.index]}"
-    },
-    var.tags,
-  )
+# Send all IPv6 traffic to the internet gateway
+resource "aws_route" "ipv6_egress_route" {
+  route_table_id              = aws_route_table.public.id
+  destination_ipv6_cidr_block = "::/0"
+  gateway_id                  = aws_internet_gateway.site.id
+  depends_on                  = [aws_route_table.public]
 }
 
-resource "aws_route_table_association" "route_net" {
-  count = length(local.azs)
+# Send private traffic to NAT
+resource "aws_route" "private_nat" {
+  count = var.subnet_count
 
-  route_table_id = aws_route_table.default.id
-  subnet_id      = aws_subnet.public_subnet[count.index].id
-}
-
-resource "aws_eip" "nat_eip" {
-  count = length(local.azs)
-  vpc   = true
-
-  tags = merge(
-    {
-      "Name" = "${var.name_prefix}-eip-${local.azs[count.index]}"
-    },
-    var.tags,
-  )
-
-  # Terraform does not declare an explicit dependency towards the internet gateway.
-  # this can cause the internet gateway to be deleted/detached before the EIPs.
-  # https://github.com/coreos/tectonic-installer/issues/1017#issuecomment-307780549
-  depends_on = [aws_internet_gateway.igw]
-}
-
-resource "aws_nat_gateway" "nat_gw" {
-  count = length(local.azs)
-
-  allocation_id = aws_eip.nat_eip[count.index].id
-  subnet_id     = aws_subnet.public_subnet[count.index].id
-
-  tags = merge(
-    {
-      "Name" = "${var.name_prefix}-nat-${local.azs[count.index]}"
-    },
-    var.tags,
-  )
-
-  # https://issues.redhat.com/browse/OCPBUGS-891
-  depends_on = [aws_eip.nat_eip, aws_subnet.public_subnet]
-}
-
-resource "aws_route_table" "private_routes" {
-  count = length(local.azs)
-
-  vpc_id = aws_vpc.new_vpc.id
-
-  tags = merge(
-    {
-      "Name" = "${var.name_prefix}-private-${local.azs[count.index]}"
-    },
-    var.tags,
-  )
-}
-
-resource "aws_route" "to_nat_gw" {
-  count = length(local.azs)
-
-  route_table_id         = aws_route_table.private_routes[count.index].id
+  route_table_id         = aws_route_table.private[count.index].id
   destination_cidr_block = "0.0.0.0/0"
-  nat_gateway_id         = element(aws_nat_gateway.nat_gw.*.id, count.index)
-  depends_on             = [aws_route_table.private_routes]
-
-  timeouts {
-    create = "20m"
-  }
+  nat_gateway_id         = aws_nat_gateway.public[count.index].id
+  depends_on             = [aws_route_table.private, aws_nat_gateway.public]
 }
 
-resource "aws_subnet" "private_subnet" {
-  count = length(local.azs)
 
-  vpc_id = aws_vpc.new_vpc.id
+# Private route for vpc endpoint
+resource "aws_vpc_endpoint_route_table_association" "private" {
+  count = var.subnet_count
 
-  cidr_block = local.private_cidr_range[count.index]
-
-  availability_zone = local.azs[count.index]
-
-  tags = merge(
-    {
-      "Name"                            = "${var.name_prefix}-private-${local.azs[count.index]}"
-      "kubernetes.io/role/internal-elb" = ""
-    },
-    var.tags,
-  )
+  route_table_id  = aws_route_table.private[count.index].id
+  vpc_endpoint_id = aws_vpc_endpoint.s3.id
 }
 
-resource "aws_route_table_association" "private_routing" {
-  count = length(local.azs)
+#
+# Route table associations
+#
+resource "aws_route_table_association" "public" {
+  count = var.subnet_count
 
-  route_table_id = aws_route_table.private_routes[count.index].id
-  subnet_id      = aws_subnet.private_subnet[count.index].id
+  subnet_id      = aws_subnet.public[count.index].id
+  route_table_id = aws_route_table.public.id
 }
+
+resource "aws_route_table_association" "private" {
+  count = var.subnet_count
+
+  subnet_id      = aws_subnet.private[count.index].id
+  route_table_id = aws_route_table.private[count.index].id
+}
+
 data "aws_region" "current" {}
 
 data "aws_availability_zones" "available" {
