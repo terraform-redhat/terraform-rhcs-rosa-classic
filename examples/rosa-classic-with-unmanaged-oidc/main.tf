@@ -59,7 +59,8 @@ module "operator_roles" {
 module "vpc" {
   source = "../../modules/vpc"
 
-  name_prefix = var.cluster_name
+  name_prefix  = var.cluster_name
+  subnet_count = 3
 }
 
 ############################
