@@ -1,3 +1,9 @@
+provider "aws" {
+  ignore_tags {
+    key_prefixes = ["kubernetes.io/"]
+  }
+}
+
 resource "aws_vpc" "site" {
   cidr_block           = var.vpc_cidr
   enable_dns_support   = true
@@ -37,8 +43,7 @@ resource "aws_subnet" "private" {
   availability_zone = data.aws_availability_zones.available.names[count.index % length(data.aws_availability_zones.available.names)]
   tags = merge(
     {
-      "Name"                            = join("-", [var.name_prefix, "subnet", "private${count.index + 1}", data.aws_availability_zones.available.names[count.index % length(data.aws_availability_zones.available.names)]])
-      "kubernetes.io/role/internal-elb" = ""
+      "Name" = join("-", [var.name_prefix, "subnet", "private${count.index + 1}", data.aws_availability_zones.available.names[count.index % length(data.aws_availability_zones.available.names)]])
     },
     var.tags,
   )
