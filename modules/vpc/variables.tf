@@ -7,6 +7,11 @@ variable "name_prefix" {
   type = string
 }
 
+variable "subnet_count" {
+  description = "The number of public/private subnet pairs to make."
+  type        = number
+}
+
 variable "tags" {
   type        = map(string)
   default     = {}
