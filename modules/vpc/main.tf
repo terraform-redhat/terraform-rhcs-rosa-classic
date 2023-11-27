@@ -1,8 +1,8 @@
-provider "aws" {
-  ignore_tags {
-    key_prefixes = ["kubernetes.io/"]
-  }
-}
+# provider "aws" {
+#   ignore_tags {
+#     key_prefixes = ["kubernetes.io/"]
+#   }
+# }
 
 resource "aws_vpc" "site" {
   cidr_block           = var.vpc_cidr
