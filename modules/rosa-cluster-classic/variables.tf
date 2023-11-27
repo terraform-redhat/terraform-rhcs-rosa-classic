@@ -94,3 +94,8 @@ variable "max_replicas" {
   type    = number
   default = null
 }
+
+variable "machine_cidr" {
+  type    = string
+  default = "10.0.0.0/16"
+}
