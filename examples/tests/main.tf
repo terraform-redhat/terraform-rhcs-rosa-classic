@@ -42,9 +42,6 @@
 #   vpc_private_subnets_ids = module.vpc.private_subnets
 #   vpc_public_subnets_ids  = module.vpc.public_subnets
 #   machine_cidr            = "10.66.0.0/16"
-#   depends_on = [
-#     module.vpc
-#   ]
 # }
 
 # module "vpc" {
@@ -90,8 +87,7 @@ module "rosa" {
     }
   }
   depends_on = [
-    module.account_iam_resources, # Dependancy can be removed once iam is split out.
-    module.vpc
+    module.account_iam_resources # Dependancy can be removed once iam is split out.
   ]
 }
 
