@@ -36,7 +36,7 @@ resource "rhcs_cluster_rosa_classic" "rosa_sts_cluster" {
   compute_machine_type = var.compute_machine_type
   min_replicas         = var.min_replicas
   max_replicas         = var.max_replicas
-
+  machine_cidr         = var.machine_cidr
 
   wait_for_create_complete = true
 }

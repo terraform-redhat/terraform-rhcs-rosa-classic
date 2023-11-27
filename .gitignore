@@ -1,13 +1,16 @@
 # Local .terraform directories
 **/.terraform/*
+examples\*\.terraform/*
 
 # Terraform lockfile
 .terraform.lock.hcl
+examples\*\.terraform.lock.hcl
 
 # .tfstate files
 *.tfstate
 *.tfstate.*
-
+examples\*\*.tfstate
+examples\*\*.tfstate.*
 # Crash log files
 crash.log
 
@@ -16,6 +19,8 @@ crash.log
 # control as they are data points which are potentially sensitive and subject
 # to change depending on the environment.
 *.tfvars
+examples\*\.env
+examples\*\*.tfvars
 
 # Ignore override files as they are usually used to override resources locally and so
 # are not checked in
@@ -23,7 +28,12 @@ override.tf
 override.tf.json
 *_override.tf
 *_override.tf.json
-
+examples\*\override.tf
+examples\*\override.tf.json
+examples\*\*_override.tf
+examples\*\*_override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
+examples\*\.terraformrc
+examples\*\terraform.rc
