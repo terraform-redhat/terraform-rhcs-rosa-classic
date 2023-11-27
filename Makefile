@@ -12,3 +12,6 @@ dev-environment:
 
 registry-environment:
 	find . -type f -name "versions.tf" -exec sed -i -e "s/terraform.local\/local\/rhcs/terraform-redhat\/rhcs/g" -- {} +
+
+run-example:
+	sh scripts/run-example.sh
