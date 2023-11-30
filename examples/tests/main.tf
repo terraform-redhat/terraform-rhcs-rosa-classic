@@ -9,8 +9,8 @@
 #   create_operator_roles = true
 #   create_oidc           = true
 #   oidc                  = "unmanaged"
-#   cluster_name          = "rhcs-pub-1"
-#   openshift_version     = "4.13.10"
+#   cluster_name      = "rhcs-pub-6"
+#   openshift_version = "4.13.10"
 # }
 
 ####################################
@@ -84,6 +84,16 @@ module "rosa" {
       "name" : "pool2",
       "machine_type" : "r5.xlarge",
       "replicas" : 3
+    }
+  }
+  idp = {
+    "1" : {
+      "name" : "idp1",
+      "gitlab" = {
+        "client_id"     = "2189835314857134"
+        "client_secret" = "DG66575SKFGMdDFDSDSGTFSB47634735VDSFFDV"
+        "url"           = "https://gitlab.com"
+      }
     }
   }
   depends_on = [

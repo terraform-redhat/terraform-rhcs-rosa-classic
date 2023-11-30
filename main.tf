@@ -3,8 +3,8 @@ data "aws_caller_identity" "current" {}
 data "aws_region" "current" {}
 
 locals {
-  account_role_prefix  = var.account_role_prefix == "" ? "${var.cluster_name}-account" : var.account_role_prefix
-  operator_role_prefix = var.operator_role_prefix == "" ? "${var.cluster_name}-operator" : var.operator_role_prefix
+  account_role_prefix  = coalesce(var.account_role_prefix, "${var.cluster_name}-account")
+  operator_role_prefix = coalesce(var.operator_role_prefix, "${var.cluster_name}-operator")
   sts_roles = {
     installer_role_arn    = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${local.account_role_prefix}-Installer-Role",
     support_role_arn      = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${local.account_role_prefix}-Support-Role",
@@ -48,13 +48,13 @@ module "unmanaged_oidc_config" {
 # OIDC provider
 ############################
 module "oidc_provider" {
-  source = "./modules/oidc-provider"
+  source = "./modules/oidc-provider"  
   count  = var.create_oidc ? 1 : 0
 
   managed            = var.oidc == "managed" ? true : false
-  installer_role_arn = var.oidc != "managed" ? local.sts_roles.installer_role_arn : null
-  secret_arn         = var.oidc == "unmanaged" ? module.unmanaged_oidc_config[0].secret_arn : (var.oidc == "managed" ? null : var.oidc_secret_arn)
-  issuer_url         = var.oidc == "unmanaged" ? module.unmanaged_oidc_config[0].issuer_url : (var.oidc == "managed" ? null : var.oidc_issuer_url)
+  installer_role_arn = var.oidc == "managed" ? null : local.sts_roles.installer_role_arn
+  secret_arn         = var.oidc == "managed" ? null : module.unmanaged_oidc_config[0].secret_arn
+  issuer_url         = var.oidc == "managed" ? null : module.unmanaged_oidc_config[0].issuer_url
 }
 
 ############################
@@ -66,8 +66,8 @@ module "operator_roles" {
 
   operator_role_prefix = local.operator_role_prefix
   account_role_prefix  = local.account_role_prefix
-  path                 = var.create_account_roles == true ? module.account_iam_resources[0].path : var.account_role_path
-  oidc_endpoint_url    = var.create_oidc == true ? module.oidc_provider[0].oidc_endpoint_url : var.oidc_endpoint_url
+  path                 = var.create_account_roles ? module.account_iam_resources[0].path : var.account_role_path
+  oidc_endpoint_url    = var.create_oidc ? module.oidc_provider[0].oidc_endpoint_url : var.oidc_endpoint_url
   depends_on           = [ module.operator_policies ]
 }
 
@@ -96,12 +96,10 @@ module "rosa_cluster_classic" {
   support_role_arn      = local.sts_roles.support_role_arn
   controlplane_role_arn = local.sts_roles.controlplane_role_arn
   worker_role_arn       = local.sts_roles.worker_role_arn
-  oidc_config_id        = var.create_oidc == true ? module.oidc_provider[0].oidc_config_id : var.oidc_config_id
-  aws_subnet_ids        = var.private == true && var.create_vpc == true ? module.vpc[0].private_subnets : (var.private == false && var.create_vpc == true ? concat(module.vpc[0].private_subnets, module.vpc[0].public_subnets) : (var.private == true && var.create_vpc == false ? var.vpc_private_subnets_ids : concat(var.vpc_private_subnets_ids, var.vpc_public_subnets_ids)))
-  availability_zones    = var.create_vpc == true ? module.vpc[0].availability_zones : var.availability_zones
+  oidc_config_id        = var.create_oidc ? module.oidc_provider[0].oidc_config_id : var.oidc_config_id
+  aws_subnet_ids        = var.private && var.create_vpc ? module.vpc[0].private_subnets : (var.private == false && var.create_vpc ? concat(module.vpc[0].private_subnets, module.vpc[0].public_subnets) : (var.private && var.create_vpc == false ? var.vpc_private_subnets_ids : concat(var.vpc_private_subnets_ids, var.vpc_public_subnets_ids)))
+  availability_zones    = var.create_vpc ? module.vpc[0].availability_zones : var.availability_zones
   machine_cidr          = var.machine_cidr 
-  //aws_private_link      = true
-  //private               = true
   multi_az              = true
   admin_credentials     = { username = "admin1", password = "123456!qwertyU" }
   depends_on            = [ module.account_iam_resources ]
@@ -144,3 +142,5 @@ resource "rhcs_identity_provider" "identity_provider" {
   mapping_method = try(each.value.mapping_method, null)
   openid         = try(each.value.openid, null)
 }
+
+
