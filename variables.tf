@@ -82,18 +82,6 @@ variable "oidc" {
   default     = "managed"
 }
 
-variable "oidc_secret_arn" {
-  description = "When creating oidc outside the module you must pass in the secret arn that the oidc-config module created."
-  type        = string
-  default     = ""
-}
-
-variable "oidc_issuer_url" {
-  description = "When creating oidc outside the module you must pass in the issuer url that the oidc-config module created."
-  type        = string
-  default     = ""
-}
-
 variable "account_role_path" {
   description = "Output path from ther iam create module"
   type        = string
@@ -120,13 +108,13 @@ variable "create_vpc" {
 
 variable "vpc_public_subnets_ids" {
   description = "Create the vpc resources."
-  type        = list
+  type        = list(string)
   default     = []
 }
 
 variable "vpc_private_subnets_ids" {
   description = "Create the vpc resources."
-  type        = list
+  type        = list(string)
   default     = []
 }
 
