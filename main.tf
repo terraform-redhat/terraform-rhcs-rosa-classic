@@ -48,7 +48,7 @@ module "unmanaged_oidc_config" {
 # OIDC provider
 ############################
 module "oidc_provider" {
-  source = "./modules/oidc-provider"  
+  source = "./modules/oidc-provider"
   count  = var.create_oidc ? 1 : 0
 
   managed            = var.oidc == "managed" ? true : false
@@ -68,7 +68,7 @@ module "operator_roles" {
   account_role_prefix  = local.account_role_prefix
   path                 = var.create_account_roles ? module.account_iam_resources[0].path : var.account_role_path
   oidc_endpoint_url    = var.create_oidc ? module.oidc_provider[0].oidc_endpoint_url : var.oidc_endpoint_url
-  depends_on           = [ module.operator_policies ]
+  depends_on           = [module.operator_policies]
 }
 
 ############################
@@ -79,7 +79,7 @@ module "vpc" {
   count  = var.create_vpc ? 1 : 0
 
   name_prefix  = var.cluster_name
-  subnet_count = 3
+  subnet_count = var.multi_az ? 3 : 1
 }
 
 ############################
@@ -91,18 +91,17 @@ module "rosa_cluster_classic" {
   cluster_name          = var.cluster_name
   operator_role_prefix  = local.operator_role_prefix
   openshift_version     = var.openshift_version
-  replicas              = 3
-  installer_role_arn    = local.sts_roles.installer_role_arn
-  support_role_arn      = local.sts_roles.support_role_arn
-  controlplane_role_arn = local.sts_roles.controlplane_role_arn
-  worker_role_arn       = local.sts_roles.worker_role_arn
+  replicas              = var.replicas
+  installer_role_arn    = var.create_account_roles ? module.account_iam_resources[0].account_roles_arn["Installer"] : local.sts_roles.installer_role_arn
+  support_role_arn      = var.create_account_roles ? module.account_iam_resources[0].account_roles_arn["Support"] : local.sts_roles.support_role_arn
+  controlplane_role_arn = var.create_account_roles ? module.account_iam_resources[0].account_roles_arn["ControlPlane"] : local.sts_roles.controlplane_role_arn
+  worker_role_arn       = var.create_account_roles ? module.account_iam_resources[0].account_roles_arn["Worker"] : local.sts_roles.worker_role_arn
   oidc_config_id        = var.create_oidc ? module.oidc_provider[0].oidc_config_id : var.oidc_config_id
   aws_subnet_ids        = var.private && var.create_vpc ? module.vpc[0].private_subnets : (var.private == false && var.create_vpc ? concat(module.vpc[0].private_subnets, module.vpc[0].public_subnets) : (var.private && var.create_vpc == false ? var.vpc_private_subnets_ids : concat(var.vpc_private_subnets_ids, var.vpc_public_subnets_ids)))
   availability_zones    = var.create_vpc ? module.vpc[0].availability_zones : var.availability_zones
-  machine_cidr          = var.machine_cidr 
-  multi_az              = true
+  machine_cidr          = var.machine_cidr
+  multi_az              = var.multi_az
   admin_credentials     = { username = "admin1", password = "123456!qwertyU" }
-  depends_on            = [ module.account_iam_resources ]
 }
 
 ############################

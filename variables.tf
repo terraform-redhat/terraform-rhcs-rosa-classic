@@ -3,6 +3,8 @@ variable "ocm_environment" {
   default = "production"
 }
 
+# Cluster
+
 variable "openshift_version" {
   type    = string
   default = "4.13.13"
@@ -14,6 +16,17 @@ variable "openshift_version" {
 
 variable "cluster_name" {
   type = string
+}
+
+variable "private" {
+  description = "Create a private cluster"
+  type        = bool
+  default     = false
+}
+
+variable "machine_pools" {
+  type    = map(any)
+  default = {}
 }
 
 variable "machine_type" {
@@ -46,6 +59,18 @@ variable "replicas" {
   default     = 3
 }
 
+variable "idp" {
+  type    = map(any)
+  default = {}
+}
+
+variable "machine_cidr" {
+  type    = string
+  default = "10.0.0.0/16"
+}
+
+# Roles
+
 variable "create_account_roles" {
   description = "Create the aws account roles for rosa"
   type        = bool
@@ -70,6 +95,14 @@ variable "operator_role_prefix" {
   default     = ""
 }
 
+variable "account_role_path" {
+  description = "Output path from ther iam create module"
+  type        = string
+  default     = ""
+}
+
+# OIDC
+
 variable "create_oidc" {
   description = "Create the oidc resources."
   type        = bool
@@ -77,16 +110,11 @@ variable "create_oidc" {
 }
 
 variable "oidc" {
-  description = "OIDC create managed unmanaged or do not create."
+  description = "OIDC type managed or unmanaged oidc"
   type        = string
   default     = "managed"
 }
 
-variable "account_role_path" {
-  description = "Output path from ther iam create module"
-  type        = string
-  default     = ""
-}
 
 variable "oidc_endpoint_url" {
   description = "OIDC endpoint URL outputed by the OIDC module."
@@ -99,6 +127,8 @@ variable "oidc_config_id" {
   type        = string
   default     = ""
 }
+
+# Networking
 
 variable "create_vpc" {
   description = "Create the vpc resources."
@@ -120,27 +150,12 @@ variable "vpc_private_subnets_ids" {
 
 variable "availability_zones" {
   description = "Create the vpc resources."
-  type        = list
-  default     = []
+  type        = list(any)
+  default     = ["ap-southeast-2a", "ap-southeast-2b", "ap-southeast-2c"]
 }
 
-variable "private" {
-  description = "Create the vpc resources."
+variable "multi_az" {
+  description = "Create the vpc subnets in only one AZ"
   type        = bool
-  default     = false
-}
-
-variable "machine_cidr" {
-  type    = string
-  default = "10.0.0.0/16"
-}
-
-variable "machine_pools" {
-  type    = map(any)
-  default = {}
-}
-
-variable "idp" {
-  type    = map(any)
-  default = {}
+  default     = true
 }
