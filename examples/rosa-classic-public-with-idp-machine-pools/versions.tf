@@ -4,17 +4,11 @@ terraform {
   required_providers {
     aws = {
       source  = "hashicorp/aws"
-      version = ">= 4.0"
+      version = ">= 5.0"
     }
     rhcs = {
       version = ">= 1.4.0"
       source  = "terraform-redhat/rhcs"
     }
-  }
-}
-
-provider "aws" {
-  ignore_tags {
-    key_prefixes = ["kubernetes.io/"]
   }
 }
