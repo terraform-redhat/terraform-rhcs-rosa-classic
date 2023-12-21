@@ -1,4 +1,4 @@
-# Rosa Classic with unmanaged OIDC example
+# Rosa Classic with public cluster with default iam\oidc\vpc resources created.
 
 TODO
 
@@ -55,7 +55,7 @@ No resources.
 | <a name="input_machine_pools"></a> [machine\_pools](#input\_machine\_pools) | n/a | `object` | `{}` | no |
 | <a name="input_idp"></a> [idp](#input\_idp) | n/a | `object` | `{}` | no |
 | <a name="input_oidc"></a> [oidc](#input\_oidc) | n/a | `string` | `"managed"` | no |
-| <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | n/a | `string` | `"rhcs-example"` | no |
+| <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | n/a | `string` | `"rhcs-example"` | yes |
 | <a name="input_ocm_environment"></a> [ocm\_environment](#input\_ocm\_environment) | n/a | `string` | `"production"` | no |
 | <a name="input_openshift_version"></a> [openshift\_version](#input\_openshift\_version) | n/a | `string` | `"4.13.6"` | no |
 
