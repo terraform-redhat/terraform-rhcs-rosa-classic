@@ -44,8 +44,7 @@ No resources.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-
-| <a name="input_create_vpc "></a> [create\_vpc](#input\_create\_vpc ) | n/a | `bool` | `false` | no |
+| <a name="input_create_vpc"></a> [create\_vpc](#input\_create\_vpc ) | n/a | `bool` | `false` | no | 
 | <a name="input_create_account_roles"></a> [create\_account\_roles](#input\_create\_account\_roles) | n/a | `bool` | `false` | no |
 | <a name="input_create_operator_roles"></a> [create\_operator\_roles](#input\_create\_operator\_roles) | n/a | `bool` | `false` | no |
 | <a name="input_create_oidc "></a> [create\_oidc](#input\_create\_oidc ) | n/a | `bool` | `false` | no |
