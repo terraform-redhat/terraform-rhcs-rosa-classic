@@ -1,7 +1,7 @@
 ######################
 # Define a variable for the Terraform examples directory
-# TERRAFORM_DIR := examples/rosa-classic-public
-TERRAFORM_DIR := examples/rosa-classic-public-with-byo-vpc
+TERRAFORM_DIR := examples/rosa-classic-public
+# TERRAFORM_DIR := examples/rosa-classic-public-with-byo-vpc
 # TERRAFORM_DIR := examples/rosa-classic-public-with-byo-vpc-byo-iam-byo-oidc
 # TERRAFORM_DIR := examples/rosa-classic-public-with-idp-machine-pools
 # TERRAFORM_DIR := examples/rosa-classic-public-with-unmanaged-oidc
@@ -14,8 +14,8 @@ TERRAFORM_DIR := examples/rosa-classic-public-with-byo-vpc
 
 include .env
 export $(shell sed '/^\#/d; s/=.*//' .env)
-TF_VAR_RHCS_TOKEN=$RHCS_TOKEN
-TF_VAR_AWS_DEFAULT_REGION := $(shell aws configure get region)
+# TF_VAR_RHCS_TOKEN=$RHCS_TOKEN
+# TF_VAR_AWS_DEFAULT_REGION := $(shell aws configure get region)
 TF_LOG=INFO
 ######################
 .EXPORT_ALL_VARIABLES:
