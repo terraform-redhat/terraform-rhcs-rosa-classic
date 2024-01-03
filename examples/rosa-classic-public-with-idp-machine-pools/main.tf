@@ -1,13 +1,13 @@
 
- module "rosa" {
+module "rosa" {
   source = "../../"
-  
+
   create_vpc            = true
   create_account_roles  = true
   create_operator_roles = true
   create_oidc           = true
-  cluster_name            = "rhcs-pub-3"
-  openshift_version       = "4.14.5"
+  cluster_name          = "rhcs-pub-3"
+  openshift_version     = "4.14.5"
   machine_pools = {
     "1" : {
       "name" : "pool1",
