@@ -108,12 +108,13 @@ module "rosa_cluster_classic" {
 # machine pools
 ############################
 
-resource "rhcs_machine_pool" "machine_pool" {
+module "rhcs_machine_pool" {
+  source   = "./modules/machine-pool"
   for_each = var.machine_pools
 
+  cluster_id          = module.rosa_cluster_classic.cluster_id
   name                = each.value.name
   machine_type        = each.value.machine_type
-  cluster             = module.rosa_cluster_classic.cluster_id
   autoscaling_enabled = try(each.value.autoscaling_enabled, false)
   use_spot_instances  = try(each.value.use_spot_instances, false)
   max_replicas        = try(each.value.max_replicas, null)
@@ -128,18 +129,19 @@ resource "rhcs_machine_pool" "machine_pool" {
 # idp
 ############################
 
-resource "rhcs_identity_provider" "identity_provider" {
+module "rhcs_identity_provider" {
+  source   = "./modules/idp"
   for_each = var.idp
 
+  cluster_id     = module.rosa_cluster_classic.cluster_id
   name           = each.value.name
-  cluster        = module.rosa_cluster_classic.cluster_id
   github         = try(each.value.github, null)
   gitlab         = try(each.value.gitlab, null)
   google         = try(each.value.google, null)
   htpasswd       = try(each.value.htpasswd, null)
   ldap           = try(each.value.ldap, null)
-  mapping_method = try(each.value.mapping_method, null)
   openid         = try(each.value.openid, null)
+  mapping_method = try(each.value.mapping_method, null)
 }
 
 
