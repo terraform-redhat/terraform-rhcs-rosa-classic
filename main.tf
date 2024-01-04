@@ -141,7 +141,7 @@ module "rhcs_identity_provider" {
   htpasswd       = try(each.value.htpasswd, null)
   ldap           = try(each.value.ldap, null)
   openid         = try(each.value.openid, null)
-  mapping_method = try(each.value.mapping_method, null)
+  mapping_method = try(each.value.mapping_method, "claim")
 }
 
 
