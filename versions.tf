@@ -12,9 +12,3 @@ terraform {
     }
   }
 }
-
-provider "aws" {
-  ignore_tags {
-    key_prefixes = ["kubernetes.io/"]
-  }
-}
