@@ -1,11 +1,11 @@
 module "rosa" {
   source = "../../"
 
+  cluster_name            = var.cluster_name
+  openshift_version       = var.openshift_version
   create_account_roles    = true
   create_operator_roles   = true
   create_oidc             = true
-  cluster_name            = "rhcs-pub-1"
-  openshift_version       = "4.14.5"
   availability_zones      = ["ap-southeast-2a", "ap-southeast-2b", "ap-southeast-2c"]
   vpc_private_subnets_ids = module.vpc.private_subnets
   vpc_public_subnets_ids  = module.vpc.public_subnets

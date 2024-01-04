@@ -1,8 +1,8 @@
 module "rosa" {
   source = "../../"
 
-  cluster_name            = "rhcs-pub-2"
-  openshift_version       = "4.14.5"
+  cluster_name            = var.cluster_name
+  openshift_version       = var.openshift_version
   availability_zones      = ["ap-southeast-2a", "ap-southeast-2b", "ap-southeast-2c"]
   vpc_private_subnets_ids = module.vpc.private_subnets # replace with variable once split out properly
   vpc_public_subnets_ids  = module.vpc.public_subnets  # replace with variable once split out properly
