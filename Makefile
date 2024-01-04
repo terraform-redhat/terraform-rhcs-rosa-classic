@@ -12,45 +12,58 @@ TERRAFORM_DIR := examples/rosa-classic-public-with-idp-machine-pools
 # format.
 # RHCS_TOKEN=<ROSA TOKEN>
 
-include .env
-export $(shell sed '/^\#/d; s/=.*//' .env)
+# include .env
+# export $(shell sed '/^\#/d; s/=.*//' .env)
 TF_LOG=INFO
 ######################
-.EXPORT_ALL_VARIABLES:
+# .EXPORT_ALL_VARIABLES:
 
 # Run make init \ make plan \ make apply \ make destroy
 
-init:
+.PHONY: verify
+# This target is used by prow target (https://github.com/openshift/release/blob/77159f7696ed6c7bae518091079724cb8217dd33/ci-operator/config/terraform-redhat/terraform-rhcs-rosa/terraform-redhat-terraform-rhcs-rosa-main.yaml#L18)
+# Don't remove this target
+verify:
+	@for d in examples/*; do \
+		echo "!! Validating $$d !!" && cd $$d && terraform init && terraform validate && cd - ;\
+	done
+
+.PHONY: tf-init
+tf-init:
 	@cd $(TERRAFORM_DIR) && terraform init -input=false -lock=false -no-color -reconfigure
-.PHONY: init
 
-plan: format validate
+.PHONY: tf-plan
+tf-plan: format validate
 	@cd $(TERRAFORM_DIR) && terraform plan -lock=false -out=.terraform-plan
-.PHONY: plan
 
-apply:
+.PHONY: tf-apply
+tf-apply:
 	@cd $(TERRAFORM_DIR) && terraform apply .terraform-plan
-.PHONY: apply
 
-destroy:
+.PHONY: tf-destroy
+tf-destroy:
 	@cd $(TERRAFORM_DIR) && terraform destroy -auto-approve -input=false
-.PHONY: destroy
 
-output:
+.PHONY: tf-output
+tf-output:
 	@cd $(TERRAFORM_DIR) && terraform output > tf-output-parameters
-.PHONY: output
 
-format:
+.PHONY: tf-format
+tf-format:
 	@cd $(TERRAFORM_DIR) && terraform fmt
 
-validate:
+.PHONY: tf-validate
+tf-validate:
 	@cd $(TERRAFORM_DIR) && terraform validate
 
+.PHONY: tests
 tests:
 	sh tests.sh
 
+.PHONY: dev-environment
 dev-environment:
 	find . -type f -name "versions.tf" -exec sed -i -e "s/terraform-redhat\/rhcs/terraform.local\/local\/rhcs/g" -- {} +
 
+.PHONY: registry-environment
 registry-environment:
 	find . -type f -name "versions.tf" -exec sed -i -e "s/terraform.local\/local\/rhcs/terraform-redhat\/rhcs/g" -- {} +
