@@ -71,15 +71,13 @@ module "operator_roles" {
   depends_on           = [module.operator_policies]
 }
 
-############################
-# VPC
-############################
-module "vpc" {
-  source = "./modules/vpc"
-  count  = var.create_vpc ? 1 : 0
-
-  name_prefix  = var.cluster_name
-  subnet_count = var.multi_az ? 3 : 1
+resource "null_resource" "validations" {
+  lifecycle {
+    precondition {
+      condition     = (var.private == true && (length(var.vpc_public_subnets_ids) > 0)) == false
+      error_message = "ERROR: Public subnet IDs shouldn't be provided for private cluster"
+    }
+  }
 }
 
 ############################
@@ -97,8 +95,8 @@ module "rosa_cluster_classic" {
   controlplane_role_arn = var.create_account_roles ? module.account_iam_resources[0].account_roles_arn["ControlPlane"] : local.sts_roles.controlplane_role_arn
   worker_role_arn       = var.create_account_roles ? module.account_iam_resources[0].account_roles_arn["Worker"] : local.sts_roles.worker_role_arn
   oidc_config_id        = var.create_oidc ? module.oidc_provider[0].oidc_config_id : var.oidc_config_id
-  aws_subnet_ids        = var.private && var.create_vpc ? module.vpc[0].private_subnets : (var.private == false && var.create_vpc ? concat(module.vpc[0].private_subnets, module.vpc[0].public_subnets) : (var.private && var.create_vpc == false ? var.vpc_private_subnets_ids : concat(var.vpc_private_subnets_ids, var.vpc_public_subnets_ids)))
-  availability_zones    = var.create_vpc ? module.vpc[0].availability_zones : var.availability_zones
+  aws_subnet_ids        = concat(var.vpc_private_subnets_ids, var.vpc_public_subnets_ids)
+  availability_zones    = var.availability_zones
   machine_cidr          = var.machine_cidr
   multi_az              = var.multi_az
   admin_credentials     = { username = "admin1", password = "123456!qwertyU" }
