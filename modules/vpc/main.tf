@@ -1,9 +1,3 @@
-# provider "aws" {
-#   ignore_tags {
-#     key_prefixes = ["kubernetes.io/"]
-#   }
-# }
-
 resource "aws_vpc" "site" {
   cidr_block           = var.vpc_cidr
   enable_dns_support   = true
@@ -14,6 +8,9 @@ resource "aws_vpc" "site" {
     },
     var.tags,
   )
+  lifecycle {
+    ignore_changes = [tags]
+  }
 }
 
 resource "aws_vpc_endpoint" "s3" {
@@ -33,6 +30,9 @@ resource "aws_subnet" "public" {
     },
     var.tags,
   )
+  lifecycle {
+    ignore_changes = [tags]
+  }
 }
 
 resource "aws_subnet" "private" {
@@ -47,6 +47,9 @@ resource "aws_subnet" "private" {
     },
     var.tags,
   )
+  lifecycle {
+    ignore_changes = [tags]
+  }
 }
 
 
@@ -61,6 +64,9 @@ resource "aws_internet_gateway" "site" {
     },
     var.tags,
   )
+  lifecycle {
+    ignore_changes = [tags]
+  }
 }
 
 #
@@ -76,6 +82,9 @@ resource "aws_eip" "nat" {
     },
     var.tags,
   )
+  lifecycle {
+    ignore_changes = [tags]
+  }
 }
 
 
@@ -94,6 +103,9 @@ resource "aws_nat_gateway" "public" {
     },
     var.tags,
   )
+  lifecycle {
+    ignore_changes = [tags]
+  }
 }
 
 #
@@ -107,6 +119,9 @@ resource "aws_route_table" "public" {
     },
     var.tags,
   )
+  lifecycle {
+    ignore_changes = [tags]
+  }
 }
 
 resource "aws_route_table" "private" {
@@ -119,6 +134,9 @@ resource "aws_route_table" "private" {
     },
     var.tags,
   )
+  lifecycle {
+    ignore_changes = [tags]
+  }
 }
 
 #

@@ -9,3 +9,7 @@ output "public_subnets" {
 output "availability_zones" {
   value = slice(data.aws_availability_zones.available.names, 0, var.subnet_count)
 }
+
+output "vpc_id" {
+  value = aws_vpc.site.id
+}

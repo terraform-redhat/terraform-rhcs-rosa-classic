@@ -128,14 +128,6 @@ variable "oidc_config_id" {
   default     = ""
 }
 
-# Networking
-
-variable "create_vpc" {
-  description = "Create the vpc resources."
-  type        = bool
-  default     = false
-}
-
 variable "vpc_public_subnets_ids" {
   description = "Create the vpc resources."
   type        = list(string)

@@ -1,11 +1,10 @@
 module "rosa" {
   source = "../../"
 
-  create_vpc            = true
+  cluster_name          = var.cluster_name
+  openshift_version     = var.openshift_version
   create_account_roles  = true
   create_operator_roles = true
   create_oidc           = true
-  cluster_name          = "rhcs-pub-1"
-  openshift_version     = "4.13.10"
 }
 
