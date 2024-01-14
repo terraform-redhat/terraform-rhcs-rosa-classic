@@ -143,7 +143,7 @@ variable "vpc_private_subnets_ids" {
 variable "availability_zones" {
   description = "Create the vpc resources."
   type        = list(any)
-  default     = ["ap-southeast-2a", "ap-southeast-2b", "ap-southeast-2c"]
+  default     = null
 }
 
 variable "multi_az" {

@@ -100,6 +100,9 @@ module "rosa_cluster_classic" {
   machine_cidr          = var.machine_cidr
   multi_az              = var.multi_az
   admin_credentials     = { username = "admin1", password = "123456!qwertyU" }
+  autoscaling_enabled   = var.autoscaling_enabled
+  min_replicas          = var.min_replicas
+  max_replicas          = var.max_replicas
 }
 
 ############################
