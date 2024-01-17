@@ -15,6 +15,12 @@ locals {
   }
 }
 
+data "aws_subnet" "provided_subnet" {
+  count = length(var.aws_subnet_ids)
+
+  id = var.aws_subnet_ids[count.index]
+}
+
 resource "rhcs_cluster_rosa_classic" "rosa_sts_cluster" {
   name           = var.cluster_name
   cloud_region   = data.aws_region.current.name
@@ -24,11 +30,9 @@ resource "rhcs_cluster_rosa_classic" "rosa_sts_cluster" {
   properties = {
     rosa_creator_arn = data.aws_caller_identity.current.arn
   }
-  sts                = local.sts_roles
-  aws_subnet_ids     = var.aws_subnet_ids
-  availability_zones = var.availability_zones
-  // aws_private_link   = var.aws_private_link
-  // private            = var.private
+  sts                  = local.sts_roles
+  aws_subnet_ids       = var.aws_subnet_ids
+  availability_zones   = var.availability_zones == null && var.aws_subnet_ids != null ? distinct(data.aws_subnet.provided_subnet[*].availability_zone) : var.availability_zones
   multi_az             = var.multi_az
   admin_credentials    = var.admin_credentials
   autoscaling_enabled  = var.autoscaling_enabled
@@ -37,6 +41,10 @@ resource "rhcs_cluster_rosa_classic" "rosa_sts_cluster" {
   min_replicas         = var.min_replicas
   max_replicas         = var.max_replicas
   machine_cidr         = var.machine_cidr
+  private_hosted_zone = var.private_hosted_zone_id == null ? null : {
+    id       = var.private_hosted_zone_id
+    role_arn = var.private_hosted_zone_role_arn
+  }
 
   wait_for_create_complete = true
 }
