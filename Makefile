@@ -25,7 +25,7 @@ TF_LOG=INFO
 # Don't remove this target
 verify:
 	@for d in examples/*; do \
-		echo "!! Validating $$d !!" && cd $$d && terraform init && terraform validate && cd - ;\
+		echo "!! Validating $$d !!" && cd $$d && rm -rf .terraform .terraform.lock.hcl && terraform init && terraform validate && cd - ;\
 	done
 
 .PHONY: tf-init

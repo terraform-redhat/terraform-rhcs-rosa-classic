@@ -19,6 +19,7 @@ variable "issuer_url" {
 variable "installer_role_arn" {
   type        = string
   description = "STS Role ARN with get secrets permission"
+  default     = null
 }
 
 variable "cluster_id" {
