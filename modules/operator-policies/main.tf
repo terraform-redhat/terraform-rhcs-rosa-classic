@@ -1,10 +1,3 @@
-# Due to Error: deleting IAM Policy.
-# The policies still signed as attached after removing the policies attachments.
-# To solve it we need to wait 20 seconds
-resource "time_sleep" "wait_10_seconds" {
-  destroy_duration = "10s"
-}
-
 locals {
   shared_vpc_role_arn_replace         = "%%{shared_vpc_role_arn}"
   openshift_ingress_policy            = data.rhcs_policies.all_policies.operator_role_policies["openshift_ingress_operator_cloud_credentials_policy"]
@@ -56,11 +49,22 @@ resource "aws_iam_policy" "operator-policy" {
   policy = local.operator_roles_policy_properties[count.index].policy_details
 
   tags = merge(var.tags, {
-    rosa_openshift_version = "${var.openshift_version}"
-    rosa_role_prefix       = "${var.account_role_prefix}"
-    operator_namespace     = "${local.operator_roles_policy_properties[count.index].namespace}"
-    operator_name          = "${local.operator_roles_policy_properties[count.index].operator_name}"
+    rosa_openshift_version = var.openshift_version
+    rosa_role_prefix       = var.account_role_prefix
+    operator_namespace     = local.operator_roles_policy_properties[count.index].namespace
+    operator_name          = local.operator_roles_policy_properties[count.index].operator_name
   })
 }
 
 data "rhcs_policies" "all_policies" {}
+
+# This resource is used in order to avoid operator-policy destruction
+# before it was detached from the roles
+resource "time_sleep" "operator_policy_wait" {
+  destroy_duration = "10s"
+
+  triggers = {
+    account_role_prefix  = var.account_role_prefix
+    operator_policy_arns = "[ ${join(", ", aws_iam_policy.operator-policy[*].arn)} ]"
+  }
+}

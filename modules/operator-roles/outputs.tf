@@ -1,5 +1,5 @@
 output "operator_role_prefix" {
-  value = var.operator_role_prefix
+  value = time_sleep.role_resources_propagation.triggers["operator_role_prefix"]
 }
 
 output "operator_roles_arn" {

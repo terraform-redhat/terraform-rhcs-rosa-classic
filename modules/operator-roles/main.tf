@@ -55,3 +55,13 @@ data "aws_iam_policy_document" "custom_trust_policy" {
     }
   }
 }
+
+# Wait 20 seconds after the operator role is created in order to avoid error in cluster create
+resource "time_sleep" "role_resources_propagation" {
+  create_duration = "20s"
+
+  triggers = {
+    operator_role_prefix = var.operator_role_prefix
+    operator_role_arns   = "[ ${join(", ", aws_iam_role.operator_role[*].arn)} ]"
+  }
+}
