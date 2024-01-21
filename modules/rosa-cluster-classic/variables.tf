@@ -42,12 +42,12 @@ variable "oidc_config_id" {
 
 variable "aws_subnet_ids" {
   type    = list(string)
-  default = null
+  default = []
 }
 
 variable "availability_zones" {
   type    = list(string)
-  default = null
+  default = []
 }
 
 variable "aws_private_link" {
