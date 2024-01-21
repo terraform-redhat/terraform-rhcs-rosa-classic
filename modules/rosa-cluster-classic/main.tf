@@ -30,9 +30,18 @@ resource "rhcs_cluster_rosa_classic" "rosa_sts_cluster" {
   properties = {
     rosa_creator_arn = data.aws_caller_identity.current.arn
   }
-  sts                  = local.sts_roles
-  aws_subnet_ids       = var.aws_subnet_ids
-  availability_zones   = var.availability_zones == null && var.aws_subnet_ids != null ? distinct(data.aws_subnet.provided_subnet[*].availability_zone) : var.availability_zones
+  sts            = local.sts_roles
+  aws_subnet_ids = var.aws_subnet_ids
+  # availability_zones = slice(data.aws_availability_zones.available.names, 0, var.multi_az ? 3 : 1)
+  availability_zones = length(var.availability_zones) > 0 ? (
+    var.availability_zones
+    ) : (
+    length(var.aws_subnet_ids) > 0 ? (
+      distinct(data.aws_subnet.provided_subnet[*].availability_zone)
+      ) : (
+      slice(data.aws_availability_zones.available.names, 0, var.multi_az ? 3 : 1)
+    )
+  )
   multi_az             = var.multi_az
   admin_credentials    = var.admin_credentials
   autoscaling_enabled  = var.autoscaling_enabled
@@ -47,4 +56,15 @@ resource "rhcs_cluster_rosa_classic" "rosa_sts_cluster" {
   }
 
   wait_for_create_complete = true
+}
+
+
+data "aws_availability_zones" "available" {
+  state = "available"
+
+  # New configuration to exclude Local Zones
+  filter {
+    name   = "opt-in-status"
+    values = ["opt-in-not-required"]
+  }
 }
