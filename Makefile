@@ -67,3 +67,7 @@ dev-environment:
 .PHONY: registry-environment
 registry-environment:
 	find . -type f -name "versions.tf" -exec sed -i -e "s/terraform.local\/local\/rhcs/terraform-redhat\/rhcs/g" -- {} +
+
+.PHONY: run-example
+run-example:
+	bash scripts/run-example.sh $(EXAMPLE_NAME)
