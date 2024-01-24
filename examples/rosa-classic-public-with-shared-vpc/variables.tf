@@ -2,11 +2,11 @@ variable "cluster_name" {
   type = string
 }
 
-variable "shared_vpc_aws_key" {
+variable "shared_vpc_aws_access_key_id" {
   type = string
 }
 
-variable "shared_vpc_aws_secret" {
+variable "shared_vpc_aws_secret_access_key" {
   type = string
 }
 
@@ -14,7 +14,7 @@ variable "shared_vpc_aws_region" {
   type = string
 }
 
-variable "shared_vpc_aws_account" {
+variable "shared_vpc_aws_account_id" {
   type = string
 }
 
