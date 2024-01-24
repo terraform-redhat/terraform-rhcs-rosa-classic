@@ -1,8 +1,8 @@
 provider "aws" {
   alias = "shared-vpc"
 
-  access_key = var.shared_vpc_aws_key
-  secret_key = var.shared_vpc_aws_secret
+  access_key = var.shared_vpc_aws_access_key_id
+  secret_key = var.shared_vpc_aws_secret_access_key
   region     = var.shared_vpc_aws_region
 }
 
@@ -44,7 +44,7 @@ module "operator_policies" {
 
   account_role_prefix = module.account_iam_resources.account_role_prefix
   openshift_version   = module.account_iam_resources.openshift_version
-  shared_vpc_role_arn = "arn:aws:iam::${var.shared_vpc_aws_account}:role/${local.shared_vpc_role_name}"
+  shared_vpc_role_arn = "arn:aws:iam::${var.shared_vpc_aws_account_id}:role/${local.shared_vpc_role_name}"
 }
 
 ############################
