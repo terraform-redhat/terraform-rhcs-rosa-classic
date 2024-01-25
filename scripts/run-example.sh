@@ -78,7 +78,7 @@ env_arr+=("RHCS_TOKEN" "TF_VAR_cluster_name")
 ## Make sure that all shared VPC examples names include "shared-vpc" substring
 if [[ "${example_name}" == *"shared-vpc"* ]]; then
   echo "Running example with \"shared-vpc\""
-  env_arr+=("TF_VAR_shared_vpc_aws_access_key_id" "TF_VAR_shared_vpc_aws_secret_access_key" "TF_VAR_shared_vpc_aws_region" "TF_VAR_shared_vpc_aws_account_id")
+  env_arr+=("TF_VAR_shared_vpc_aws_access_key_id" "TF_VAR_shared_vpc_aws_secret_access_key" "TF_VAR_shared_vpc_aws_region")
 fi
 
 ## now loop through the above array
