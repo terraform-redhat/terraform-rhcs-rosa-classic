@@ -36,6 +36,10 @@ module "account_iam_resources" {
   openshift_version   = var.openshift_version
 }
 
+data "aws_caller_identity" "shared_vpc" {
+  provider = aws.shared-vpc
+}
+
 ############################
 # operator policies
 ############################
@@ -44,7 +48,7 @@ module "operator_policies" {
 
   account_role_prefix = module.account_iam_resources.account_role_prefix
   openshift_version   = module.account_iam_resources.openshift_version
-  shared_vpc_role_arn = "arn:aws:iam::${var.shared_vpc_aws_account_id}:role/${local.shared_vpc_role_name}"
+  shared_vpc_role_arn = "arn:aws:iam::${data.aws_caller_identity.shared_vpc.account_id}:role/${local.shared_vpc_role_name}"
 }
 
 ############################
