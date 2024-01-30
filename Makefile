@@ -71,3 +71,8 @@ registry-environment:
 .PHONY: run-example
 run-example:
 	bash scripts/run-example.sh $(EXAMPLE_NAME)
+
+.PHONY: change-ocp-version
+# Example for running: make change-ocp-version OLD_VER=4.13.13 NEW_VER=4.14.9
+change-ocp-version:
+	find . -type f -name "variables.tf" -exec sed -i -e 's/default = "${OLD_VER}"/default = "${NEW_VER}"/g' -- {} +
