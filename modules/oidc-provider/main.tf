@@ -22,8 +22,7 @@ resource "aws_iam_openid_connect_provider" "oidc_provider" {
   ]
 
   tags = merge(var.tags, {
-    // TODO nargaman its always empty, is it needed?
-    rosa_cluster_id = var.cluster_id
+    red-hat-managed = true
   })
 
   thumbprint_list = [rhcs_rosa_oidc_config.oidc_config.thumbprint]

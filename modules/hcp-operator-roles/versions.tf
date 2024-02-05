@@ -10,5 +10,9 @@ terraform {
       version = ">= 1.5.0"
       source  = "terraform.local/local/rhcs"
     }
+    time = {
+      source  = "hashicorp/time"
+      version = ">= 0.9"
+    }
   }
 }
