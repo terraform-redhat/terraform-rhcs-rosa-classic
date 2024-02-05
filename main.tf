@@ -86,23 +86,24 @@ resource "null_resource" "validations" {
 module "rosa_cluster_classic" {
   source = "./modules/rosa-cluster-classic"
 
-  cluster_name          = var.cluster_name
-  operator_role_prefix  = local.operator_role_prefix
-  openshift_version     = var.openshift_version
-  replicas              = var.replicas
-  installer_role_arn    = var.create_account_roles ? module.account_iam_resources[0].account_roles_arn["Installer"] : local.sts_roles.installer_role_arn
-  support_role_arn      = var.create_account_roles ? module.account_iam_resources[0].account_roles_arn["Support"] : local.sts_roles.support_role_arn
-  controlplane_role_arn = var.create_account_roles ? module.account_iam_resources[0].account_roles_arn["ControlPlane"] : local.sts_roles.controlplane_role_arn
-  worker_role_arn       = var.create_account_roles ? module.account_iam_resources[0].account_roles_arn["Worker"] : local.sts_roles.worker_role_arn
-  oidc_config_id        = var.create_oidc ? module.oidc_provider[0].oidc_config_id : var.oidc_config_id
-  aws_subnet_ids        = concat(var.vpc_private_subnets_ids, var.vpc_public_subnets_ids)
-  availability_zones    = var.availability_zones
-  machine_cidr          = var.machine_cidr
-  multi_az              = var.multi_az
-  admin_credentials     = { username = "admin1", password = random_password.password.result }
-  autoscaling_enabled   = var.autoscaling_enabled
-  min_replicas          = var.min_replicas
-  max_replicas          = var.max_replicas
+  cluster_name               = var.cluster_name
+  operator_role_prefix       = local.operator_role_prefix
+  openshift_version          = var.openshift_version
+  replicas                   = var.replicas
+  installer_role_arn         = var.create_account_roles ? module.account_iam_resources[0].account_roles_arn["Installer"] : local.sts_roles.installer_role_arn
+  support_role_arn           = var.create_account_roles ? module.account_iam_resources[0].account_roles_arn["Support"] : local.sts_roles.support_role_arn
+  controlplane_role_arn      = var.create_account_roles ? module.account_iam_resources[0].account_roles_arn["ControlPlane"] : local.sts_roles.controlplane_role_arn
+  worker_role_arn            = var.create_account_roles ? module.account_iam_resources[0].account_roles_arn["Worker"] : local.sts_roles.worker_role_arn
+  oidc_config_id             = var.create_oidc ? module.oidc_provider[0].oidc_config_id : var.oidc_config_id
+  aws_subnet_ids             = concat(var.vpc_private_subnets_ids, var.vpc_public_subnets_ids)
+  aws_availability_zones     = var.availability_zones
+  machine_cidr               = var.machine_cidr
+  multi_az                   = var.multi_az
+  admin_credentials_username = "admin1"
+  admin_credentials_password = random_password.password.result
+  autoscaling_enabled        = var.autoscaling_enabled
+  min_replicas               = var.min_replicas
+  max_replicas               = var.max_replicas
 }
 
 resource "random_password" "password" {

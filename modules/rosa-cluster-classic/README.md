@@ -1,7 +1,103 @@
-# rosa-cluster-classic
+# ROSA Classic Cluster sub-module
 
 ## Introduction
-TODO
+This Terraform sub-module is designed to facilitate the provisioning and management of ROSA Classic clusters within AWS infrastructure. Prior to using this sub-module, ensure that AWS IAM roles and policies are already established within the account, along with the necessary OIDC configuration and provider settings.
 
 <!-- BEGIN_AUTOMATED_TF_DOCS_BLOCK -->
+## Requirements
+
+| Name | Version |
+|------|---------|
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.0 |
+| <a name="requirement_rhcs"></a> [rhcs](#requirement\_rhcs) | >= 1.5.0 |
+
+## Providers
+
+| Name | Version |
+|------|---------|
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.0 |
+| <a name="provider_rhcs"></a> [rhcs](#provider\_rhcs) | >= 1.5.0 |
+
+## Modules
+
+No modules.
+
+## Resources
+
+| Name | Type |
+|------|------|
+| [rhcs_cluster_rosa_classic.rosa_classic_cluster](https://registry.terraform.io/providers/terraform-redhat/rhcs/latest/docs/resources/cluster_rosa_classic) | resource |
+| [aws_availability_zones.available](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/availability_zones) | data source |
+| [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
+| [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
+| [aws_subnet.provided_subnet](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/subnet) | data source |
+
+## Inputs
+
+| Name | Description | Type | Default | Required |
+|------|-------------|------|---------|:--------:|
+| <a name="input_additional_trust_bundle"></a> [additional\_trust\_bundle](#input\_additional\_trust\_bundle) | A string containing a PEM-encoded X.509 certificate bundle that will be added to the nodes' trusted certificate store. | `string` | `null` | no |
+| <a name="input_admin_credentials_password"></a> [admin\_credentials\_password](#input\_admin\_credentials\_password) | Admin password that will be created with the cluster. The password must contain at least 14 characters (ASCII-standard) without whitespaces including uppercase letters, lowercase letters, and numbers or symbols. | `string` | `null` | no |
+| <a name="input_admin_credentials_username"></a> [admin\_credentials\_username](#input\_admin\_credentials\_username) | Admin username that will be created with the cluster. auto generated username - "cluster-admin" | `string` | `null` | no |
+| <a name="input_autoscaling_enabled"></a> [autoscaling\_enabled](#input\_autoscaling\_enabled) | Enable autoscaling for the initial worker pool. (default: false) | `bool` | n/a | yes |
+| <a name="input_aws_account_arn"></a> [aws\_account\_arn](#input\_aws\_account\_arn) | The ARN of the AWS account where all resources are created during the installation of the ROSA cluster. If no information is provided, the data will be retrieved from the currently connected account. | `string` | `null` | no |
+| <a name="input_aws_account_id"></a> [aws\_account\_id](#input\_aws\_account\_id) | The AWS account identifier where all resources are created during the installation of the ROSA cluster. If no information is provided, the data will be retrieved from the currently connected account. | `string` | `null` | no |
+| <a name="input_aws_additional_compute_security_group_ids"></a> [aws\_additional\_compute\_security\_group\_ids](#input\_aws\_additional\_compute\_security\_group\_ids) | The additional Security Group IDs to be added to the default worker machine pool. | `list(string)` | `null` | no |
+| <a name="input_aws_additional_control_plane_security_group_ids"></a> [aws\_additional\_control\_plane\_security\_group\_ids](#input\_aws\_additional\_control\_plane\_security\_group\_ids) | The additional Security Group IDs to be added to the control plane nodes. | `list(string)` | `null` | no |
+| <a name="input_aws_additional_infra_security_group_ids"></a> [aws\_additional\_infra\_security\_group\_ids](#input\_aws\_additional\_infra\_security\_group\_ids) | The additional Security Group IDs to be added to the infra worker nodes. | `list(string)` | `null` | no |
+| <a name="input_aws_availability_zones"></a> [aws\_availability\_zones](#input\_aws\_availability\_zones) | The AWS availability zones where instances of the default worker machine pool are deployed. Leave empty for the installer to pick availability zones | `list(string)` | `[]` | no |
+| <a name="input_aws_private_link"></a> [aws\_private\_link](#input\_aws\_private\_link) | Provides private connectivity between VPCs, AWS services, and your on-premises networks, without exposing your traffic to the public internet. (default: false) | `bool` | `null` | no |
+| <a name="input_aws_region"></a> [aws\_region](#input\_aws\_region) | The full name of the AWS region used for the ROSA cluster installation, for example 'us-east-1'. If no information is provided, the data will be retrieved from the currently connected account. | `string` | `null` | no |
+| <a name="input_aws_subnet_ids"></a> [aws\_subnet\_ids](#input\_aws\_subnet\_ids) | The Subnet IDs to use when installing the cluster. Leave empty for installer provisioned subnet IDs. | `list(string)` | `[]` | no |
+| <a name="input_base_dns_domain"></a> [base\_dns\_domain](#input\_base\_dns\_domain) | Base DNS domain name previously reserved and matching the hosted zone name of the private Route 53 hosted zone associated with intended shared VPC, e.g., '1vo8.p1.openshiftapps.com'. | `string` | `null` | no |
+| <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | Name of the cluster. Cannot exceed 15 characters in length. After the creation of the resource, it is not possible to update the attribute value. | `string` | n/a | yes |
+| <a name="input_compute_machine_type"></a> [compute\_machine\_type](#input\_compute\_machine\_type) | Identifies the Instance type used by the default worker machine pool e.g. `m5.xlarge`. Use the `rhcs_machine_types` data source to find the possible values. | `string` | `null` | no |
+| <a name="input_controlplane_role_arn"></a> [controlplane\_role\_arn](#input\_controlplane\_role\_arn) | The Amazon Resource Name (ARN) associated with the AWS IAM role that will be used by the cluster's control plane instances. | `string` | n/a | yes |
+| <a name="input_default_mp_labels"></a> [default\_mp\_labels](#input\_default\_mp\_labels) | Labels for the worker machine pool. This list will overwrite any modifications made to Node labels on an ongoing basis. | `map(string)` | `null` | no |
+| <a name="input_destroy_timeout"></a> [destroy\_timeout](#input\_destroy\_timeout) | Maximum duration in minutes to allow for destroying resources. (Default: 60 minutes) | `number` | `null` | no |
+| <a name="input_disable_scp_checks"></a> [disable\_scp\_checks](#input\_disable\_scp\_checks) | Indicates if cloud permission checks are disabled when attempting installation of the cluster. | `bool` | `null` | no |
+| <a name="input_disable_waiting_in_destroy"></a> [disable\_waiting\_in\_destroy](#input\_disable\_waiting\_in\_destroy) | Disable addressing cluster state in the destroy resource. Default value is false, and so a `destroy` will wait for the cluster to be deleted. | `bool` | `null` | no |
+| <a name="input_disable_workload_monitoring"></a> [disable\_workload\_monitoring](#input\_disable\_workload\_monitoring) | Enables you to monitor your own projects in isolation from Red Hat Site Reliability Engineer (SRE) platform metrics. | `bool` | `null` | no |
+| <a name="input_ec2_metadata_http_tokens"></a> [ec2\_metadata\_http\_tokens](#input\_ec2\_metadata\_http\_tokens) | Should cluster nodes use both v1 and v2 endpoints or just v2 endpoint of EC2 Instance Metadata Service (IMDS). Available since OpenShift version 4.11.0. | `string` | `null` | no |
+| <a name="input_etcd_encryption"></a> [etcd\_encryption](#input\_etcd\_encryption) | Add etcd encryption. By default etcd data is encrypted at rest. This option configures etcd encryption on top of existing storage encryption. | `bool` | `null` | no |
+| <a name="input_fips"></a> [fips](#input\_fips) | Create cluster that uses FIPS Validated / Modules in Process cryptographic libraries. | `bool` | `null` | no |
+| <a name="input_host_prefix"></a> [host\_prefix](#input\_host\_prefix) | Subnet prefix length to assign to each individual node. For example, if host prefix is set to "23", then each node is assigned a /23 subnet out of the given CIDR. | `number` | `null` | no |
+| <a name="input_http_proxy"></a> [http\_proxy](#input\_http\_proxy) | A proxy URL to use for creating HTTP connections outside the cluster. The URL scheme must be http. | `string` | `null` | no |
+| <a name="input_https_proxy"></a> [https\_proxy](#input\_https\_proxy) | A proxy URL to use for creating HTTPS connections outside the cluster. | `string` | `null` | no |
+| <a name="input_installer_role_arn"></a> [installer\_role\_arn](#input\_installer\_role\_arn) | The Amazon Resource Name (ARN) associated with the AWS IAM role used by the ROSA installer. | `string` | n/a | yes |
+| <a name="input_kms_key_arn"></a> [kms\_key\_arn](#input\_kms\_key\_arn) | The key ARN is the Amazon Resource Name (ARN) of a CMK. It is a unique, fully qualified identifier for the CMK. A key ARN includes the AWS account, Region, and the key ID. | `string` | `null` | no |
+| <a name="input_machine_cidr"></a> [machine\_cidr](#input\_machine\_cidr) | Block of IP addresses used by OpenShift while installing the cluster, for example "10.0.0.0/16". | `string` | `null` | no |
+| <a name="input_max_replicas"></a> [max\_replicas](#input\_max\_replicas) | Maximum number of compute nodes. This attribute is applicable solely when autoscaling is enabled. (default: 2) | `number` | `null` | no |
+| <a name="input_min_replicas"></a> [min\_replicas](#input\_min\_replicas) | Minimum number of compute nodes. This attribute is applicable solely when autoscaling is enabled. (default: 2) | `number` | `null` | no |
+| <a name="input_multi_az"></a> [multi\_az](#input\_multi\_az) | Specifies whether the deployment of the cluster should extend across multiple availability zones. (default: false) | `bool` | n/a | yes |
+| <a name="input_no_proxy"></a> [no\_proxy](#input\_no\_proxy) | A comma-separated list of destination domain names, domains, IP addresses or other network CIDRs to exclude proxying. | `string` | `null` | no |
+| <a name="input_oidc_config_id"></a> [oidc\_config\_id](#input\_oidc\_config\_id) | The unique identifier associated with users authenticated through OpenID Connect (OIDC) within the ROSA cluster. | `string` | n/a | yes |
+| <a name="input_openshift_version"></a> [openshift\_version](#input\_openshift\_version) | Desired version of OpenShift for the cluster, for example '4.1.0'. If version is greater than the currently running version, an upgrade will be scheduled. | `string` | n/a | yes |
+| <a name="input_operator_role_prefix"></a> [operator\_role\_prefix](#input\_operator\_role\_prefix) | A designated prefix used for the creation of AWS IAM roles asso:willciated with operators within the ROSA environment. | `string` | n/a | yes |
+| <a name="input_pod_cidr"></a> [pod\_cidr](#input\_pod\_cidr) | Block of IP addresses from which Pod IP addresses are allocated, for example "10.128.0.0/14". | `string` | `null` | no |
+| <a name="input_private"></a> [private](#input\_private) | Restrict master API endpoint and application routes to direct, private connectivity. (default: false) | `bool` | `null` | no |
+| <a name="input_private_hosted_zone_id"></a> [private\_hosted\_zone\_id](#input\_private\_hosted\_zone\_id) | ID assigned by AWS to private Route 53 hosted zone associated with intended shared VPC, e.g., 'Z05646003S02O1ENCDCSN'. | `string` | `null` | no |
+| <a name="input_private_hosted_zone_role_arn"></a> [private\_hosted\_zone\_role\_arn](#input\_private\_hosted\_zone\_role\_arn) | AWS IAM role ARN with a policy attached, granting permissions necessary to create and manage Route 53 DNS records in private Route 53 hosted zone associated with intended shared VPC. | `string` | `null` | no |
+| <a name="input_properties"></a> [properties](#input\_properties) | User defined properties. | `map(string)` | `null` | no |
+| <a name="input_replicas"></a> [replicas](#input\_replicas) | Number of worker nodes to provision. This attribute is applicable solely when autoscaling is disabled. Single zone clusters need at least 2 nodes, multizone clusters need at least 3 nodes. Hosted clusters require that the number of worker nodes be a multiple of the number of private subnets. (default: 2) | `number` | `null` | no |
+| <a name="input_service_cidr"></a> [service\_cidr](#input\_service\_cidr) | Block of IP addresses for services, for example "172.30.0.0/16". | `string` | `null` | no |
+| <a name="input_support_role_arn"></a> [support\_role\_arn](#input\_support\_role\_arn) | The Amazon Resource Name (ARN) associated with the AWS IAM role used by Red Hat SREs to enable access to the cluster account in order to provide support. | `string` | n/a | yes |
+| <a name="input_tags"></a> [tags](#input\_tags) | Apply user defined tags to all cluster resources created in AWS. After the creation of the cluster is completed, it is not possible to update this attribute. | `map(string)` | `null` | no |
+| <a name="input_upgrade_acknowledgements_for"></a> [upgrade\_acknowledgements\_for](#input\_upgrade\_acknowledgements\_for) | Indicates acknowledgement of agreements required to upgrade the cluster version between minor versions (e.g. a value of "4.12" indicates acknowledgement of any agreements required to upgrade to OpenShift 4.12.z from 4.11 or before). | `bool` | `null` | no |
+| <a name="input_wait_for_create_complete"></a> [wait\_for\_create\_complete](#input\_wait\_for\_create\_complete) | Wait until the cluster is either in a ready state or in an error state. The waiter has a timeout of 60 minutes. (default: true) | `bool` | `true` | no |
+| <a name="input_worker_disk_size"></a> [worker\_disk\_size](#input\_worker\_disk\_size) | Default worker machine pool root disk size with a **unit suffix** like GiB or TiB, e.g. 200GiB. | `number` | `null` | no |
+| <a name="input_worker_role_arn"></a> [worker\_role\_arn](#input\_worker\_role\_arn) | The Amazon Resource Name (ARN) associated with the AWS IAM role that will be used by the cluster's compute instances. | `string` | n/a | yes |
+
+## Outputs
+
+| Name | Description |
+|------|-------------|
+| <a name="output_api_url"></a> [api\_url](#output\_api\_url) | URL of the API server. |
+| <a name="output_cluster_id"></a> [cluster\_id](#output\_cluster\_id) | Unique identifier of the cluster. |
+| <a name="output_console_url"></a> [console\_url](#output\_console\_url) | URL of the console. |
+| <a name="output_current_version"></a> [current\_version](#output\_current\_version) | The currently running version of OpenShift on the cluster, for example '4.11.0'. |
+| <a name="output_domain"></a> [domain](#output\_domain) | DNS domain of cluster. |
+| <a name="output_infra_id"></a> [infra\_id](#output\_infra\_id) | The ROSA cluster infrastructure ID. |
+| <a name="output_state"></a> [state](#output\_state) | The state of the cluster. |
 <!-- END_AUTOMATED_TF_DOCS_BLOCK -->

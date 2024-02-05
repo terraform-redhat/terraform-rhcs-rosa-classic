@@ -49,3 +49,9 @@ variable "machine_type" {
   type        = string
   default     = "m5.xlarge"
 }
+
+variable "autoscaling_enabled" {
+  description = "Enables autoscaling. If `true`, this variable requires you to set a maximum and minimum replicas range using the `max_replicas` and `min_replicas` variables."
+  type        = bool
+  default     = null
+}
