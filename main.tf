@@ -21,7 +21,6 @@ module "account_iam_resources" {
   count  = var.create_account_roles ? 1 : 0
 
   account_role_prefix = local.account_role_prefix
-  ocm_environment     = var.ocm_environment
   openshift_version   = var.openshift_version
 }
 

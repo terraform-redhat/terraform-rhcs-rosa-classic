@@ -1,8 +1,3 @@
-variable "ocm_environment" {
-  type    = string
-  default = "production"
-}
-
 # Cluster
 
 variable "openshift_version" {

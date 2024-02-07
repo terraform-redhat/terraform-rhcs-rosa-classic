@@ -1,7 +1,3 @@
-resource "time_sleep" "wait_10_seconds" {
-  destroy_duration = "30s"
-}
-
 locals {
   short_openshift_version = format("%s.%s", split(".", var.openshift_version)[0], split(".", var.openshift_version)[1])
   account_roles_properties = [
@@ -35,6 +31,17 @@ locals {
     }
   ]
   account_roles_count = null_resource.validate_openshift_version != null ? length(local.account_roles_properties) : 0
+  patch_version_list  = [for s in data.rhcs_versions.all_versions.items : s.name]
+  minor_version_list = length(local.patch_version_list) > 0 ? (
+    distinct([for s in local.patch_version_list : format("%s.%s", split(".", s)[0], split(".", s)[1])])
+    ) : (
+    []
+  )
+  account_role_prefix_valid = var.account_role_prefix != null ? (
+    var.account_role_prefix
+    ) : (
+    "account-role-${random_string.default_random[0].result}"
+  )
 }
 
 data "aws_iam_policy_document" "custom_trust_policy" {
@@ -51,8 +58,10 @@ data "aws_iam_policy_document" "custom_trust_policy" {
 }
 
 module "account_iam_role" {
-  source = "terraform-aws-modules/iam/aws//modules/iam-assumable-role"
-  count  = local.account_roles_count
+  source  = "terraform-aws-modules/iam/aws//modules/iam-assumable-role"
+  version = ">=5.34.0"
+
+  count = local.account_roles_count
 
   create_role = true
 
@@ -71,14 +80,16 @@ module "account_iam_role" {
   tags = merge(var.tags, {
     red-hat-managed        = true
     rosa_openshift_version = local.short_openshift_version
-    rosa_role_prefix       = "${local.account_role_prefix_valid}"
-    rosa_role_type         = "${local.account_roles_properties[count.index].role_type}"
+    rosa_role_prefix       = local.account_role_prefix_valid
+    rosa_role_type         = local.account_roles_properties[count.index].role_type
   })
 }
 
 module "account_iam_policy" {
-  source = "terraform-aws-modules/iam/aws//modules/iam-policy"
-  count  = local.account_roles_count
+  source  = "terraform-aws-modules/iam/aws//modules/iam-policy"
+  version = ">=5.34.0"
+
+  count = local.account_roles_count
 
   name = "${local.account_role_prefix_valid}-${local.account_roles_properties[count.index].role_name}-Role-Policy"
 
@@ -86,8 +97,8 @@ module "account_iam_policy" {
 
   tags = merge(var.tags, {
     rosa_openshift_version = local.short_openshift_version
-    rosa_role_prefix       = "${local.account_role_prefix_valid}"
-    rosa_role_type         = "${local.account_roles_properties[count.index].role_type}"
+    rosa_role_prefix       = local.account_role_prefix_valid
+    rosa_role_type         = local.account_roles_properties[count.index].role_type
   })
 }
 
@@ -103,12 +114,6 @@ resource "random_string" "default_random" {
   upper   = false
 }
 
-locals {
-  patch_version_list        = [for s in data.rhcs_versions.all_versions.items : s.name]
-  minor_version_list        = local.patch_version_list != [] ? distinct([for s in local.patch_version_list : format("%s.%s", split(".", s)[0], split(".", s)[1])]) : []
-  account_role_prefix_valid = var.account_role_prefix != null ? var.account_role_prefix : "account-role-${random_string.default_random[0].result}"
-}
-
 data "rhcs_info" "current" {}
 
 resource "null_resource" "validate_openshift_version" {
@@ -117,5 +122,14 @@ resource "null_resource" "validate_openshift_version" {
       condition     = contains(local.minor_version_list, local.short_openshift_version)
       error_message = "ERROR: Expected a valid OpenShift version. Valid versions: ${join(", ", local.minor_version_list)}"
     }
+  }
+}
+
+resource "time_sleep" "account_iam_resources_wait" {
+  count = local.account_roles_count
+
+  destroy_duration = "10s"
+  triggers = {
+    account_iam_role = module.account_iam_role[count.index].iam_role_arn
   }
 }

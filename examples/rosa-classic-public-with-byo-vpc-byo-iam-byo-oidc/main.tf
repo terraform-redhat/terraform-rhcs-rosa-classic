@@ -33,7 +33,6 @@ module "account_iam_resources" {
   source = "../../modules/account-iam-resources"
 
   account_role_prefix = "pf-account"
-  ocm_environment     = "production"
   openshift_version   = "4.14.5"
 }
 
