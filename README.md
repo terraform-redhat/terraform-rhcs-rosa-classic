@@ -1,4 +1,5 @@
-# terraform-rhcs-rosa
+# terraform-rhcs-rosa-classic
+
 Terraform module which creates ROSA cluster
 
 ## Notice
@@ -7,3 +8,12 @@ This module is currently in its Alpha version and remains under active developme
 
 For the supported provider go to https://registry.terraform.io/providers/terraform-redhat/rhcs/latest
 For the supported rosa-sts module go to https://registry.terraform.io/modules/terraform-redhat/rosa-sts/aws/latest
+
+## Introduction
+TODO
+
+## Prerequisites
+TODO
+
+<!-- BEGIN_AUTOMATED_TF_DOCS_BLOCK -->
+<!-- END_AUTOMATED_TF_DOCS_BLOCK -->

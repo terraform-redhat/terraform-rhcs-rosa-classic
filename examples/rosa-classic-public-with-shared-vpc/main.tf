@@ -113,11 +113,13 @@ module "rosa_cluster_classic" {
   oidc_config_id               = module.oidc_provider.oidc_config_id
   aws_subnet_ids               = module.shared-vpc-policy-and-hosted-zone.shared_subnets
   multi_az                     = true
-  admin_credentials            = { username = "kubeadmin", password = random_password.password.result }
+  admin_credentials_username   = "kubeadmin"
+  admin_credentials_password   = random_password.password.result
   compute_machine_type         = var.machine_type
   base_dns_domain              = rhcs_dns_domain.dns_domain.id
   private_hosted_zone_id       = module.shared-vpc-policy-and-hosted-zone.hosted_zone_id
   private_hosted_zone_role_arn = module.shared-vpc-policy-and-hosted-zone.shared_role
+  autoscaling_enabled          = var.autoscaling_enabled
 }
 
 resource "random_password" "password" {

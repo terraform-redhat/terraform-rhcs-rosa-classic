@@ -1,4 +1,4 @@
-# oidc-provider
+# Rosa Classic with shared vpc example
 
 ## Introduction
 TODO

@@ -76,3 +76,7 @@ run-example:
 # Example for running: make change-ocp-version OLD_VER=4.13.13 NEW_VER=4.14.9
 change-ocp-version:
 	find . -type f -name "variables.tf" -exec sed -i -e 's/default = "${OLD_VER}"/default = "${NEW_VER}"/g' -- {} +
+
+.PHONY: terraform-docs
+terraform-docs:
+	bash scripts/terraform-docs.sh
