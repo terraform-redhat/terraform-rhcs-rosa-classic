@@ -17,14 +17,14 @@ locals {
     },
     {
       role_name            = "Worker"
-      role_type            = "worker"
+      role_type            = "instance_worker"
       policy_details       = data.rhcs_policies.all_policies.account_role_policies["sts_instance_worker_permission_policy"]
       principal_type       = "Service"
       principal_identifier = "ec2.amazonaws.com"
     },
     {
       role_name            = "ControlPlane"
-      role_type            = "controlplane"
+      role_type            = "instance_controlplane"
       policy_details       = data.rhcs_policies.all_policies.account_role_policies["sts_instance_controlplane_permission_policy"]
       principal_type       = "Service"
       principal_identifier = "ec2.amazonaws.com"
