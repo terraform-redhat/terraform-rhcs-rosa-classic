@@ -1,33 +1,28 @@
 variable "account_role_prefix" {
-  type    = string
-  default = null
+  type        = string
+  default     = null
+  description = "User-defined prefix for all generated AWS resources (default \"account-role-<random>\")"
 }
 
 variable "openshift_version" {
-  description = "The Openshift cluster version of the cluster those account roles are used for. Only major and minor parts (for example 4.1)"
   type        = string
-  default     = "4.13"
+  description = "The Openshift cluster version of the cluster those account roles are used for."
 }
 
 variable "path" {
-  description = "(Optional) The arn path for the account/operator roles as well as their policies."
   type        = string
   default     = "/"
+  description = "The arn path for the account/operator roles as well as their policies."
 }
 
 variable "permissions_boundary" {
-  description = "The ARN of the policy that is used to set the permissions boundary for the IAM roles in STS clusters."
   type        = string
   default     = ""
+  description = "The ARN of the policy that is used to set the permissions boundary for the IAM roles in STS clusters."
 }
 
 variable "tags" {
-  description = "List of AWS resource tags to apply."
   type        = map(string)
   default     = null
-}
-
-variable "ocm_environment" {
-  type    = string
-  default = "production"
+  description = "List of AWS resource tags to apply."
 }
