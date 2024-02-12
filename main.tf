@@ -86,7 +86,7 @@ module "rosa_cluster_classic" {
   source = "./modules/rosa-cluster-classic"
 
   cluster_name               = var.cluster_name
-  operator_role_prefix       = local.operator_role_prefix
+  operator_role_prefix       = var.create_operator_roles ? module.operator_roles[0].operator_role_prefix : local.operator_role_prefix
   openshift_version          = var.openshift_version
   replicas                   = var.replicas
   installer_role_arn         = var.create_account_roles ? module.account_iam_resources[0].account_roles_arn["Installer"] : local.sts_roles.installer_role_arn
@@ -149,5 +149,3 @@ module "rhcs_identity_provider" {
   openid         = try(each.value.openid, null)
   mapping_method = try(each.value.mapping_method, "claim")
 }
-
-

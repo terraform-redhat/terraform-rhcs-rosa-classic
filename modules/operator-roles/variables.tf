@@ -1,36 +1,33 @@
 variable "operator_role_prefix" {
-  type = string
+  type        = string
+  default     = null
+  description = "User-defined prefix for generated AWS operator policies. Use \"account-role-prefix\" in case no value provided."
 }
 
 variable "account_role_prefix" {
-  type = string
+  type        = string
+  description = "User-defined prefix for all generated AWS resources."
 }
 
 variable "path" {
-  description = "(Optional) The arn path for the account/operator roles as well as their policies."
   type        = string
   default     = "/"
+  description = "The arn path for the account/operator roles as well as their policies. Must use the same path used for \"account_iam_roles\"."
 }
 
 variable "permissions_boundary" {
+  type        = string
+  default     = ""
   description = "The ARN of the policy that is used to set the permissions boundary for the IAM roles in STS clusters."
-  type        = string
-  default     = ""
-}
-
-variable "cluster_id" {
-  description = "cluster ID"
-  type        = string
-  default     = ""
 }
 
 variable "tags" {
-  description = "List of AWS resource tags to apply."
   type        = map(string)
   default     = null
+  description = "List of AWS resource tags to apply."
 }
 
 variable "oidc_endpoint_url" {
-  description = "oidc provider url"
   type        = string
+  description = "Registered OIDC configuration issuer URL, added as the trusted relationship to the operator roles."
 }
