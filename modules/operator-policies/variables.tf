@@ -1,21 +1,22 @@
 variable "account_role_prefix" {
-  type    = string
-  default = null
+  // This variable is mandatory as the account roles are already created
+  type        = string
+  description = "User-defined prefix for all generated AWS resources (default \"account-role-<random>\")"
 }
 
 variable "openshift_version" {
-  description = "The Openshift cluster version of the cluster those account roles are used for. Only major and minor parts (for example 4.1)"
   type        = string
+  description = "The Openshift cluster version of the cluster these operator policies are used for."
 }
 
 variable "shared_vpc_role_arn" {
-  description = "The role ARN used to access the private hosted zone, in case shared VPC is used"
   type        = string
   default     = ""
+  description = "The role ARN used to access the private hosted zone, in case shared VPC is used"
 }
 
 variable "tags" {
-  description = "List of AWS resource tags to apply."
   type        = map(string)
   default     = null
+  description = "List of AWS resource tags to apply."
 }

@@ -1,4 +1,5 @@
 locals {
+  short_openshift_version             = format("%s.%s", split(".", var.openshift_version)[0], split(".", var.openshift_version)[1])
   shared_vpc_role_arn_replace         = "%%{shared_vpc_role_arn}"
   openshift_ingress_policy            = data.rhcs_policies.all_policies.operator_role_policies["openshift_ingress_operator_cloud_credentials_policy"]
   shared_vpc_openshift_ingress_policy = replace(data.rhcs_policies.all_policies.operator_role_policies["shared_vpc_openshift_ingress_operator_cloud_credentials_policy"], local.shared_vpc_role_arn_replace, var.shared_vpc_role_arn)
@@ -40,16 +41,22 @@ locals {
       namespace      = "openshift-cluster-csi-drivers"
       operator_name  = "ebs-cloud-credentials"
   }]
+  patch_version_list = [for s in data.rhcs_versions.all_versions.items : s.name]
+  minor_version_list = length(local.patch_version_list) > 0 ? (
+    distinct([for s in local.patch_version_list : format("%s.%s", split(".", s)[0], split(".", s)[1])])
+    ) : (
+    []
+  )
 }
 
 resource "aws_iam_policy" "operator-policy" {
-  count = length(local.operator_roles_policy_properties)
+  count = null_resource.validate_openshift_version != null ? length(local.operator_roles_policy_properties) : 0
 
   name   = local.operator_roles_policy_properties[count.index].policy_name
   policy = local.operator_roles_policy_properties[count.index].policy_details
 
   tags = merge(var.tags, {
-    rosa_openshift_version = var.openshift_version
+    rosa_openshift_version = local.short_openshift_version
     rosa_role_prefix       = var.account_role_prefix
     operator_namespace     = local.operator_roles_policy_properties[count.index].namespace
     operator_name          = local.operator_roles_policy_properties[count.index].operator_name
@@ -68,3 +75,14 @@ resource "time_sleep" "operator_policy_wait" {
     operator_policy_arns = "[ ${join(", ", aws_iam_policy.operator-policy[*].arn)} ]"
   }
 }
+
+resource "null_resource" "validate_openshift_version" {
+  lifecycle {
+    precondition {
+      condition     = contains(local.minor_version_list, local.short_openshift_version)
+      error_message = "ERROR: Expected a valid OpenShift version. Valid versions: ${join(", ", local.minor_version_list)}"
+    }
+  }
+}
+
+data "rhcs_versions" "all_versions" {}
