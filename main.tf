@@ -36,24 +36,14 @@ module "operator_policies" {
 }
 
 ############################
-# unmanaged OIDC config
-############################
-module "unmanaged_oidc_config" {
-  source = "./modules/unmanaged-oidc-config"
-  count  = var.create_oidc && var.oidc == "unmanaged" ? 1 : 0
-}
-
-############################
 # OIDC provider
 ############################
-module "oidc_provider" {
-  source = "./modules/oidc-provider"
+module "oidc_config_and_provider" {
+  source = "./modules/oidc-config-and-provider"
   count  = var.create_oidc ? 1 : 0
 
-  managed            = var.oidc == "managed" ? true : false
-  installer_role_arn = var.oidc == "managed" ? null : local.sts_roles.installer_role_arn
-  secret_arn         = var.oidc == "managed" ? null : module.unmanaged_oidc_config[0].secret_arn
-  issuer_url         = var.oidc == "managed" ? null : module.unmanaged_oidc_config[0].issuer_url
+  managed            = var.managed_oidc
+  installer_role_arn = var.managed_oidc ? null : local.sts_roles.installer_role_arn
 }
 
 ############################
@@ -66,7 +56,7 @@ module "operator_roles" {
   operator_role_prefix = local.operator_role_prefix
   account_role_prefix  = local.account_role_prefix
   path                 = var.create_account_roles ? module.account_iam_resources[0].path : var.account_role_path
-  oidc_endpoint_url    = var.create_oidc ? module.oidc_provider[0].oidc_endpoint_url : var.oidc_endpoint_url
+  oidc_endpoint_url    = var.create_oidc ? module.oidc_config_and_provider[0].oidc_endpoint_url : var.oidc_endpoint_url
   depends_on           = [module.operator_policies]
 }
 
@@ -93,7 +83,7 @@ module "rosa_cluster_classic" {
   support_role_arn           = var.create_account_roles ? module.account_iam_resources[0].account_roles_arn["Support"] : local.sts_roles.support_role_arn
   controlplane_role_arn      = var.create_account_roles ? module.account_iam_resources[0].account_roles_arn["ControlPlane"] : local.sts_roles.controlplane_role_arn
   worker_role_arn            = var.create_account_roles ? module.account_iam_resources[0].account_roles_arn["Worker"] : local.sts_roles.worker_role_arn
-  oidc_config_id             = var.create_oidc ? module.oidc_provider[0].oidc_config_id : var.oidc_config_id
+  oidc_config_id             = var.create_oidc ? module.oidc_config_and_provider[0].oidc_config_id : var.oidc_config_id
   aws_subnet_ids             = concat(var.vpc_private_subnets_ids, var.vpc_public_subnets_ids)
   aws_availability_zones     = var.availability_zones
   machine_cidr               = var.machine_cidr

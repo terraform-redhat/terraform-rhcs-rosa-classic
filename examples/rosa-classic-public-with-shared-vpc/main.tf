@@ -54,8 +54,8 @@ module "operator_policies" {
 ############################
 # OIDC provider
 ############################
-module "oidc_provider" {
-  source = "../../modules/oidc-provider"
+module "oidc_config_and_provider" {
+  source = "../../modules/oidc-config-and-provider"
 
   managed = true
 }
@@ -70,7 +70,7 @@ module "operator_roles" {
 
   account_role_prefix = module.operator_policies.account_role_prefix
   path                = module.account_iam_resources.path
-  oidc_endpoint_url   = module.oidc_provider.oidc_endpoint_url
+  oidc_endpoint_url   = module.oidc_config_and_provider.oidc_endpoint_url
 }
 
 resource "rhcs_dns_domain" "dns_domain" {}
@@ -110,7 +110,7 @@ module "rosa_cluster_classic" {
   support_role_arn             = module.account_iam_resources.account_roles_arn["Support"]
   controlplane_role_arn        = module.account_iam_resources.account_roles_arn["ControlPlane"]
   worker_role_arn              = module.account_iam_resources.account_roles_arn["Worker"]
-  oidc_config_id               = module.oidc_provider.oidc_config_id
+  oidc_config_id               = module.oidc_config_and_provider.oidc_config_id
   aws_subnet_ids               = module.shared-vpc-policy-and-hosted-zone.shared_subnets
   multi_az                     = true
   admin_credentials_username   = "kubeadmin"

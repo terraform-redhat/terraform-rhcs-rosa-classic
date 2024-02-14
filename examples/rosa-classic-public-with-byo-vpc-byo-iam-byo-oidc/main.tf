@@ -7,7 +7,7 @@ module "rosa" {
   machine_cidr         = var.machine_cidr
   account_role_prefix  = "pub-2-account"
   operator_role_prefix = "pub-2-operator"
-  oidc_config_id       = module.oidc_provider.oidc_config_id # replace with variable once split out properly
+  oidc_config_id       = module.oidc_config_and_provider.oidc_config_id # replace with variable once split out properly
   depends_on = [
     module.account_iam_resources # Dependancy can be removed once iam is split out.
   ]
@@ -49,17 +49,14 @@ module "operator_roles" {
   operator_role_prefix = "pub-2-operator"
   account_role_prefix  = module.operator_policies.account_role_prefix
   path                 = module.account_iam_resources.path
-  oidc_endpoint_url    = module.oidc_provider.oidc_endpoint_url
+  oidc_endpoint_url    = module.oidc_config_and_provider.oidc_endpoint_url
   depends_on = [
     module.operator_policies
   ]
 }
 
-module "oidc_provider" {
-  source = "../../modules/oidc-provider"
+module "oidc_config_and_provider" {
+  source = "../../modules/oidc-config-and-provider"
 
-  managed            = true
-  secret_arn         = null
-  issuer_url         = null
-  installer_role_arn = null
+  managed = true
 }
