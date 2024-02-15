@@ -42,8 +42,16 @@ module "oidc_config_and_provider" {
   source = "./modules/oidc-config-and-provider"
   count  = var.create_oidc ? 1 : 0
 
-  managed            = var.managed_oidc
-  installer_role_arn = var.managed_oidc ? null : local.sts_roles.installer_role_arn
+  managed = var.managed_oidc
+  installer_role_arn = var.managed_oidc ? (
+    null
+    ) : (
+    var.create_account_roles ? (
+      module.account_iam_resources[0].account_roles_arn["Installer"]
+      ) : (
+      local.sts_roles.installer_role_arn
+    )
+  )
 }
 
 ############################

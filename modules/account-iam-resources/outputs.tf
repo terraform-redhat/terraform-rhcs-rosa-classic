@@ -9,7 +9,7 @@ output "openshift_version" {
 }
 
 output "account_roles_arn" {
-  value       = { for idx, value in time_sleep.account_iam_resources_wait : local.account_roles_properties[idx].role_name => value.triggers["account_iam_role"] }
+  value       = { for idx, value in time_sleep.account_iam_resources_wait : local.account_roles_properties[idx].role_name => value.triggers["account_iam_role_arn"] }
   description = "List of the Amazon Resource Name (ARN) associated with the AWS IAM roles created"
 }
 
