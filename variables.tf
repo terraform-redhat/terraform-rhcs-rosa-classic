@@ -104,10 +104,10 @@ variable "create_oidc" {
   default     = false
 }
 
-variable "oidc" {
+variable "managed_oidc" {
   description = "OIDC type managed or unmanaged oidc"
-  type        = string
-  default     = "managed"
+  type        = bool
+  default     = true
 }
 
 

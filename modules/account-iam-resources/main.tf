@@ -73,10 +73,6 @@ module "account_iam_role" {
   create_custom_role_trust_policy = true
   custom_role_trust_policy        = data.aws_iam_policy_document.custom_trust_policy[count.index].json
 
-  custom_role_policy_arns = [
-    module.account_iam_policy[count.index].arn
-  ]
-
   tags = merge(var.tags, {
     red-hat-managed        = true
     rosa_openshift_version = local.short_openshift_version
@@ -100,6 +96,13 @@ module "account_iam_policy" {
     rosa_role_prefix       = local.account_role_prefix_valid
     rosa_role_type         = local.account_roles_properties[count.index].role_type
   })
+}
+
+resource "aws_iam_role_policy_attachment" "role_policy_attachment" {
+  count = local.account_roles_count
+
+  role       = module.account_iam_role[count.index].iam_role_name
+  policy_arn = module.account_iam_policy[count.index].arn
 }
 
 data "rhcs_policies" "all_policies" {}
@@ -129,7 +132,9 @@ resource "time_sleep" "account_iam_resources_wait" {
   count = local.account_roles_count
 
   destroy_duration = "10s"
+  create_duration  = "10s"
   triggers = {
-    account_iam_role = module.account_iam_role[count.index].iam_role_arn
+    account_iam_role_name = aws_iam_role_policy_attachment.role_policy_attachment[count.index].role
+    account_iam_role_arn  = module.account_iam_role[count.index].iam_role_arn
   }
 }
