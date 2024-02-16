@@ -1,7 +1,9 @@
 output "operator_role_prefix" {
-  value = time_sleep.role_resources_propagation.triggers["operator_role_prefix"]
+  value       = time_sleep.role_resources_propagation.triggers["operator_role_prefix"]
+  description = "Prefix used for generated AWS operator policies."
 }
 
 output "operator_roles_arn" {
-  value = { for idx, val in aws_iam_role.operator_role : data.rhcs_rosa_operator_roles.operator_roles.operator_iam_roles[idx].operator_namespace => val.arn }
+  value       = { for idx, val in aws_iam_role.operator_role : data.rhcs_rosa_operator_roles.operator_roles.operator_iam_roles[idx].operator_namespace => val.arn }
+  description = "List of Amazon Resource Names (ARNs) for all operator roles created."
 }
