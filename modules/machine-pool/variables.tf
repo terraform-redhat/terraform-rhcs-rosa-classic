@@ -54,7 +54,7 @@ variable "max_replicas" {
 
 variable "taints" {
   description = "Taints for a machine pool. This list will overwrite any modifications made to node taints on an ongoing basis."
-  type        = list(object({
+  type = list(object({
     key           = string
     value         = string
     schedule_type = string
@@ -83,5 +83,17 @@ variable "availability_zone" {
 variable "subnet_id" {
   description = "Select the subnet in which to create a single AZ machine pool for BYO-VPC cluster"
   type        = string
+  default     = null
+}
+
+variable "disk_size" {
+  description = "Root disk size, in GiB."
+  type        = number
+  default     = null
+}
+
+variable "aws_additional_security_group_ids" {
+  description = "AWS additional security group ids."
+  type        = list(string)
   default     = null
 }
