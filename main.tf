@@ -128,22 +128,3 @@ module "rhcs_machine_pool" {
   taints              = try(each.value.taints, null)
   labels              = try(each.value.labels, null)
 }
-
-############################
-# idp
-############################
-
-module "rhcs_identity_provider" {
-  source   = "./modules/idp"
-  for_each = var.idp
-
-  cluster_id     = module.rosa_cluster_classic.cluster_id
-  name           = each.value.name
-  github         = try(each.value.github, null)
-  gitlab         = try(each.value.gitlab, null)
-  google         = try(each.value.google, null)
-  htpasswd       = try(each.value.htpasswd, null)
-  ldap           = try(each.value.ldap, null)
-  openid         = try(each.value.openid, null)
-  mapping_method = try(each.value.mapping_method, "claim")
-}
