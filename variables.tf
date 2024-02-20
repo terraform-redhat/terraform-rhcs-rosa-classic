@@ -54,11 +54,6 @@ variable "replicas" {
   default     = 3
 }
 
-variable "idp" {
-  type    = map(any)
-  default = {}
-}
-
 variable "machine_cidr" {
   type    = string
   default = "10.0.0.0/16"

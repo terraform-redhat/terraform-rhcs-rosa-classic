@@ -1,4 +1,3 @@
-
 module "rosa" {
   source = "../../"
 
@@ -19,14 +18,38 @@ module "rosa" {
       "replicas" : 3
     }
   }
-  idp = {
-    "1" : {
-      "name" : "idp1",
-      "gitlab" = {
-        "client_id"     = "2189835314857134"
-        "client_secret" = "DG66575SKFGMdDFDSDSGTFSB47634735VDSFFDV"
-        "url"           = "https://gitlab.com"
-      }
-    }
-  }
+}
+
+module "gitlab_idp" {
+  source = "../../modules/idp"
+
+  cluster_id = module.rosa.cluster_id
+  name       = "gitlab-idp"
+  idp_type   = "gitlab"
+  # Utilize randomly generated values for "client_id" and "client_secret" to ensure the example configuration:
+  # 1. Enables the file to run seamlessly without modifications.
+  # 2. Avoid security alerts on "Potential data leak"
+  # Please note that these are not real account credentials, and access to the cluster itself is not feasible.
+  # To enable GitLab IDP functionality, substitute these random values with valid credentials.
+  gitlab_idp_client_id     = random_password.client_id.result     # replace with valid <client-id>
+  gitlab_idp_client_secret = random_password.client_secret.result # replace with valid <client-secret>
+  gitlab_idp_url           = "https://gitlab.com"
+}
+
+resource "random_password" "client_id" {
+  length = 16
+
+  numeric = true
+  upper   = false
+  lower   = false
+  special = false
+}
+
+resource "random_password" "client_secret" {
+  length = 39
+
+  numeric = true
+  upper   = true
+  lower   = false
+  special = false
 }
