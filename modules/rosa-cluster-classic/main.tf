@@ -88,6 +88,49 @@ resource "rhcs_cluster_rosa_classic" "rosa_classic_cluster" {
   upgrade_acknowledgements_for = var.upgrade_acknowledgements_for
 }
 
+resource "rhcs_cluster_autoscaler" "cluster_autoscaler" {
+  count = var.autoscaling_enabled == true ? 1 : 0
+
+  cluster                       = rhcs_cluster_rosa_classic.rosa_classic_cluster.id
+  balance_similar_node_groups   = var.autoscaler_balance_similar_node_groups
+  skip_nodes_with_local_storage = var.autoscaler_skip_nodes_with_local_storage
+  log_verbosity                 = var.autoscaler_log_verbosity
+  max_pod_grace_period          = var.autoscaler_max_pod_grace_period
+  pod_priority_threshold        = var.autoscaler_pod_priority_threshold
+  ignore_daemonsets_utilization = var.autoscaler_ignore_daemonsets_utilization
+  max_node_provision_time       = var.autoscaler_max_node_provision_time
+  balancing_ignored_labels      = var.autoscaler_balancing_ignored_labels
+
+  resource_limits = {
+    max_nodes_total = var.autoscaler_max_nodes_total
+    cores           = var.autoscaler_cores
+    memory          = var.autoscaler_memory
+    gpus            = var.autoscaler_gpus
+  }
+
+  scale_down = {
+    enabled               = var.autoscaler_scale_down_enabled
+    unneeded_time         = var.autoscaler_scale_down_unneeded_time
+    utilization_threshold = var.autoscaler_scale_down_utilization_threshold
+    delay_after_add       = var.autoscaler_scale_down_delay_after_add
+    delay_after_delete    = var.autoscaler_scale_down_delay_after_delete
+    delay_after_failure   = var.autoscaler_scale_down_delay_after_failure
+  }
+}
+
+resource "rhcs_default_ingress" "default_ingress" {
+  cluster                          = rhcs_cluster_rosa_classic.rosa_classic_cluster.id
+  id                               = var.default_ingress_id
+  route_selectors                  = var.default_ingress_route_selectors
+  excluded_namespaces              = var.default_ingress_excluded_namespaces
+  route_wildcard_policy            = var.default_ingress_route_wildcard_policy
+  route_namespace_ownership_policy = var.default_ingress_route_namespace_ownership_policy
+  cluster_routes_hostname          = var.default_ingress_cluster_routes_hostname
+  load_balancer_type               = var.default_ingress_load_balancer_type
+  cluster_routes_tls_secret_ref    = var.default_ingress_cluster_routes_tls_secret_ref
+}
+
+
 data "aws_caller_identity" "current" {
   count = var.aws_account_id == null || var.aws_account_arn == null ? 1 : 0
 }
