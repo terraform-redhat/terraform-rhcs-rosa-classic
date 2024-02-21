@@ -312,3 +312,179 @@ variable "aws_additional_compute_security_group_ids" {
   default     = null
   description = "The additional Security Group IDs to be added to the default worker machine pool."
 }
+
+##############################################################
+# Autoscaler resource variables
+##############################################################
+
+variable "autoscaler_balance_similar_node_groups" {
+  type        = bool
+  default     = null
+  description = "Automatically identify node groups with the same instance type and the same set of labels and try to keep the respective sizes of those node groups balanced."
+}
+
+variable "autoscaler_skip_nodes_with_local_storage" {
+  type        = bool
+  default     = null
+  description = "If true cluster autoscaler will never delete nodes with pods with local storage, e.g. EmptyDir or HostPath. default is true."
+}
+
+variable "autoscaler_log_verbosity" {
+  type        = number
+  default     = null
+  description = "Sets the autoscaler log level. Default value is 1, level 4 is recommended for DEBUGGING and level 6 will enable almost everything."
+}
+
+variable "autoscaler_max_pod_grace_period" {
+  type        = number
+  default     = null
+  description = "Gives pods graceful termination time before scaling down."
+}
+
+variable "autoscaler_pod_priority_threshold" {
+  type        = number
+  default     = null
+  description = "To allow users to schedule 'best-effort' pods, which shouldn't trigger Cluster Autoscaler actions, but only run when there are spare resources available."
+}
+
+variable "autoscaler_ignore_daemonsets_utilization" {
+  type        = bool
+  default     = null
+  description = "Should cluster-autoscaler ignore DaemonSet pods when calculating resource utilization for scaling down. false by default."
+}
+
+variable "autoscaler_max_node_provision_time" {
+  type        = string
+  default     = null
+  description = "Maximum time cluster-autoscaler waits for node to be provisioned."
+}
+
+variable "autoscaler_balancing_ignored_labels" {
+  type        = list(string)
+  default     = null
+  description = "This option specifies labels that cluster autoscaler should ignore when considering node group similarity. For example, if you have nodes with 'topology.ebs.csi.aws.com/zone' label, you can add name of this label here to prevent cluster autoscaler from splitting nodes into different node groups based on its value."
+}
+
+variable "autoscaler_max_nodes_total" {
+  type        = number
+  default     = null
+  description = "Maximum number of nodes in all node groups. Cluster autoscaler will not grow the cluster beyond this number."
+}
+
+variable "autoscaler_cores" {
+  type = object({
+    min = number
+    max = number
+  })
+  default     = null
+  description = "Minimum and maximum number of cores in cluster, in the format <min>:<max>. Cluster autoscaler will not scale the cluster beyond these numbers."
+}
+
+variable "autoscaler_memory" {
+  type = object({
+    min = number
+    max = number
+  })
+  default     = null
+  description = "Minimum and maximum number of gigabytes of memory in cluster, in the format <min>:<max>. Cluster autoscaler will not scale the cluster beyond these numbers."
+}
+
+variable "autoscaler_gpus" {
+  type = list(object({
+    type = string
+    range = object({
+      min = number
+      max = number
+    })
+  }))
+  default     = null
+  description = "Minimum and maximum number of different GPUs in cluster, in the format <gpu_type>:<min>:<max>. Cluster autoscaler will not scale the cluster beyond these numbers. Can be passed multiple times."
+}
+
+variable "autoscaler_scale_down_enabled" {
+  type        = bool
+  default     = null
+  description = "Should cluster-autoscaler scale down the cluster."
+}
+
+variable "autoscaler_scale_down_unneeded_time" {
+  type        = string
+  default     = null
+  description = "How long a node should be unneeded before it is eligible for scale down."
+}
+
+variable "autoscaler_scale_down_utilization_threshold" {
+  type        = string
+  default     = null
+  description = "Node utilization level, defined as sum of requested resources divided by capacity, below which a node can be considered for scale down."
+}
+
+variable "autoscaler_scale_down_delay_after_add" {
+  type        = string
+  default     = null
+  description = "How long after scale up that scale down evaluation resumes."
+}
+
+variable "autoscaler_scale_down_delay_after_delete" {
+  type        = string
+  default     = null
+  description = "How long after node deletion that scale down evaluation resumes."
+}
+
+variable "autoscaler_scale_down_delay_after_failure" {
+  type        = string
+  default     = null
+  description = "How long after scale down failure that scale down evaluation resumes."
+}
+
+##############################################################
+# default_ingress resource variables
+##############################################################
+
+variable "default_ingress_id" {
+  type        = string
+  default     = null
+  description = "Unique identifier of the ingress."
+}
+
+variable "default_ingress_route_selectors" {
+  type        = map(string)
+  default     = null
+  description = "Route Selectors for ingress. Format should be a comma-separated list of 'key=value'. If no label is specified, all routes will be exposed on both routers. For legacy ingress support these are inclusion labels, otherwise they are treated as exclusion label."
+}
+
+variable "default_ingress_excluded_namespaces" {
+  type        = list(string)
+  default     = null
+  description = "Excluded namespaces for ingress. Format should be a comma-separated list 'value1, value2...'. If no values are specified, all namespaces will be exposed."
+}
+
+variable "default_ingress_route_wildcard_policy" {
+  type        = string
+  default     = null
+  description = "Wildcard Policy for ingress. Options are [\"WildcardsDisallowed\", \"WildcardsAllowed\"]. Default is \"WildcardsDisallowed\"."
+}
+
+variable "default_ingress_route_namespace_ownership_policy" {
+  type        = string
+  default     = null
+  description = "Namespace Ownership Policy for ingress. Options are [\"Strict\", \"InterNamespaceAllowed\"]. Default is \"Strict\"."
+}
+
+variable "default_ingress_cluster_routes_hostname" {
+  type        = string
+  default     = null
+  description = "Components route hostname for oauth, console, download."
+}
+
+variable "default_ingress_load_balancer_type" {
+  type        = string
+  default     = null
+  description = "Type of Load Balancer. Options are [\"classic\", \"nlb\"]`:with."
+}
+
+variable "default_ingress_cluster_routes_tls_secret_ref" {
+  type        = string
+  default     = null
+  description = "Components route TLS secret reference for oauth, console, download."
+}
