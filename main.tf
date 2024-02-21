@@ -1,7 +1,3 @@
-data "aws_caller_identity" "current" {}
-
-data "aws_region" "current" {}
-
 locals {
   account_role_prefix  = coalesce(var.account_role_prefix, "${var.cluster_name}-account")
   operator_role_prefix = coalesce(var.operator_role_prefix, "${var.cluster_name}-operator")
@@ -14,29 +10,21 @@ locals {
 }
 
 ##############################################################
-# Account roles includes IAM roles and IAM policies
+# Account IAM resources: IAM roles and IAM policies
 ##############################################################
 module "account_iam_resources" {
   source = "./modules/account-iam-resources"
   count  = var.create_account_roles ? 1 : 0
 
-  account_role_prefix = local.account_role_prefix
-  openshift_version   = var.openshift_version
+  account_role_prefix  = local.account_role_prefix
+  openshift_version    = var.openshift_version
+  path                 = var.path
+  permissions_boundary = var.permissions_boundary
+  tags                 = var.tags
 }
 
 ############################
-# operator policies
-############################
-module "operator_policies" {
-  source = "./modules/operator-policies"
-  count  = var.create_operator_roles ? 1 : 0
-
-  account_role_prefix = local.account_role_prefix
-  openshift_version   = var.openshift_version
-}
-
-############################
-# OIDC provider
+# OIDC config and provider
 ############################
 module "oidc_config_and_provider" {
   source = "./modules/oidc-config-and-provider"
@@ -52,6 +40,23 @@ module "oidc_config_and_provider" {
       local.sts_roles.installer_role_arn
     )
   )
+  tags = var.tags
+}
+
+############################
+# operator policies
+############################
+module "operator_policies" {
+  source = "./modules/operator-policies"
+  count  = var.create_operator_roles ? 1 : 0
+
+  account_role_prefix = var.create_account_roles ? (
+    module.account_iam_resources[0].account_role_prefix
+    ) : (
+    local.account_role_prefix
+  )
+  openshift_version = var.openshift_version
+  tags              = var.tags
 }
 
 ############################
@@ -62,19 +67,16 @@ module "operator_roles" {
   count  = var.create_operator_roles ? 1 : 0
 
   operator_role_prefix = local.operator_role_prefix
-  account_role_prefix  = local.account_role_prefix
-  path                 = var.create_account_roles ? module.account_iam_resources[0].path : var.account_role_path
+  account_role_prefix = var.create_account_roles ? (
+    module.account_iam_resources[0].account_role_prefix
+    ) : (
+    local.account_role_prefix
+  )
+  path                 = var.create_account_roles ? module.account_iam_resources[0].path : var.path
   oidc_endpoint_url    = var.create_oidc ? module.oidc_config_and_provider[0].oidc_endpoint_url : var.oidc_endpoint_url
   depends_on           = [module.operator_policies]
-}
-
-resource "null_resource" "validations" {
-  lifecycle {
-    precondition {
-      condition     = (var.private == true && (length(var.vpc_public_subnets_ids) > 0)) == false
-      error_message = "ERROR: Public subnet IDs shouldn't be provided for private cluster"
-    }
-  }
+  tags                 = var.tags
+  permissions_boundary = var.permissions_boundary
 }
 
 ############################
@@ -83,48 +85,112 @@ resource "null_resource" "validations" {
 module "rosa_cluster_classic" {
   source = "./modules/rosa-cluster-classic"
 
-  cluster_name               = var.cluster_name
-  operator_role_prefix       = var.create_operator_roles ? module.operator_roles[0].operator_role_prefix : local.operator_role_prefix
-  openshift_version          = var.openshift_version
-  replicas                   = var.replicas
-  installer_role_arn         = var.create_account_roles ? module.account_iam_resources[0].account_roles_arn["Installer"] : local.sts_roles.installer_role_arn
-  support_role_arn           = var.create_account_roles ? module.account_iam_resources[0].account_roles_arn["Support"] : local.sts_roles.support_role_arn
-  controlplane_role_arn      = var.create_account_roles ? module.account_iam_resources[0].account_roles_arn["ControlPlane"] : local.sts_roles.controlplane_role_arn
-  worker_role_arn            = var.create_account_roles ? module.account_iam_resources[0].account_roles_arn["Worker"] : local.sts_roles.worker_role_arn
-  oidc_config_id             = var.create_oidc ? module.oidc_config_and_provider[0].oidc_config_id : var.oidc_config_id
-  aws_subnet_ids             = concat(var.vpc_private_subnets_ids, var.vpc_public_subnets_ids)
-  aws_availability_zones     = var.availability_zones
-  machine_cidr               = var.machine_cidr
-  multi_az                   = var.multi_az
-  admin_credentials_username = "admin1"
-  admin_credentials_password = random_password.password.result
-  autoscaling_enabled        = var.autoscaling_enabled
-  min_replicas               = var.min_replicas
-  max_replicas               = var.max_replicas
+  cluster_name             = var.cluster_name
+  operator_role_prefix     = var.create_operator_roles ? module.operator_roles[0].operator_role_prefix : local.operator_role_prefix
+  openshift_version        = var.openshift_version
+  installer_role_arn       = var.create_account_roles ? module.account_iam_resources[0].account_roles_arn["Installer"] : local.sts_roles.installer_role_arn
+  support_role_arn         = var.create_account_roles ? module.account_iam_resources[0].account_roles_arn["Support"] : local.sts_roles.support_role_arn
+  controlplane_role_arn    = var.create_account_roles ? module.account_iam_resources[0].account_roles_arn["ControlPlane"] : local.sts_roles.controlplane_role_arn
+  worker_role_arn          = var.create_account_roles ? module.account_iam_resources[0].account_roles_arn["Worker"] : local.sts_roles.worker_role_arn
+  oidc_config_id           = var.create_oidc ? module.oidc_config_and_provider[0].oidc_config_id : var.oidc_config_id
+  aws_subnet_ids           = var.aws_subnet_ids
+  machine_cidr             = var.machine_cidr
+  service_cidr             = var.service_cidr
+  pod_cidr                 = var.pod_cidr
+  aws_private_link         = var.aws_private_link
+  private                  = var.private
+  host_prefix              = var.host_prefix
+  ec2_metadata_http_tokens = var.ec2_metadata_http_tokens
+  tags                     = var.tags
+  properties               = var.properties
+
+  admin_credentials_username = var.admin_credentials_username
+  admin_credentials_password = var.admin_credentials_password
+
+  aws_additional_infra_security_group_ids         = var.aws_additional_infra_security_group_ids
+  aws_additional_control_plane_security_group_ids = var.aws_additional_control_plane_security_group_ids
+  kms_key_arn                                     = var.kms_key_arn
+
+  ########
+  # Flags
+  ########
+  wait_for_create_complete     = var.wait_for_create_complete
+  disable_workload_monitoring  = var.disable_workload_monitoring
+  disable_scp_checks           = var.disable_scp_checks
+  etcd_encryption              = var.etcd_encryption
+  fips                         = var.fips
+  disable_waiting_in_destroy   = var.disable_waiting_in_destroy
+  destroy_timeout              = var.destroy_timeout
+  upgrade_acknowledgements_for = var.upgrade_acknowledgements_for
+  multi_az                     = var.multi_az
+
+  #######################
+  # Default Machine Pool
+  #######################
+  autoscaling_enabled                       = var.autoscaling_enabled
+  replicas                                  = var.replicas
+  min_replicas                              = var.min_replicas
+  max_replicas                              = var.max_replicas
+  compute_machine_type                      = var.compute_machine_type
+  worker_disk_size                          = var.worker_disk_size
+  default_mp_labels                         = var.default_mp_labels
+  aws_availability_zones                    = var.aws_availability_zones
+  aws_additional_compute_security_group_ids = var.aws_additional_compute_security_group_ids
+
+  ########
+  # Proxy 
+  ########
+  http_proxy              = var.http_proxy
+  https_proxy             = var.https_proxy
+  no_proxy                = var.no_proxy
+  additional_trust_bundle = var.additional_trust_bundle
+
+  #############
+  # Autoscaler 
+  #############
+  autoscaler_balance_similar_node_groups      = var.autoscaler_balance_similar_node_groups
+  autoscaler_skip_nodes_with_local_storage    = var.autoscaler_skip_nodes_with_local_storage
+  autoscaler_log_verbosity                    = var.autoscaler_log_verbosity
+  autoscaler_max_pod_grace_period             = var.autoscaler_max_pod_grace_period
+  autoscaler_pod_priority_threshold           = var.autoscaler_pod_priority_threshold
+  autoscaler_ignore_daemonsets_utilization    = var.autoscaler_ignore_daemonsets_utilization
+  autoscaler_max_node_provision_time          = var.autoscaler_max_node_provision_time
+  autoscaler_balancing_ignored_labels         = var.autoscaler_balancing_ignored_labels
+  autoscaler_max_nodes_total                  = var.autoscaler_max_nodes_total
+  autoscaler_cores                            = var.autoscaler_cores
+  autoscaler_memory                           = var.autoscaler_memory
+  autoscaler_gpus                             = var.autoscaler_gpus
+  autoscaler_scale_down_enabled               = var.autoscaler_scale_down_enabled
+  autoscaler_scale_down_unneeded_time         = var.autoscaler_scale_down_unneeded_time
+  autoscaler_scale_down_utilization_threshold = var.autoscaler_scale_down_utilization_threshold
+  autoscaler_scale_down_delay_after_add       = var.autoscaler_scale_down_delay_after_add
+  autoscaler_scale_down_delay_after_delete    = var.autoscaler_scale_down_delay_after_delete
+  autoscaler_scale_down_delay_after_failure   = var.autoscaler_scale_down_delay_after_failure
+
+  ##################
+  # default_ingress 
+  ##################
+  default_ingress_id                               = var.default_ingress_id
+  default_ingress_route_selectors                  = var.default_ingress_route_selectors
+  default_ingress_excluded_namespaces              = var.default_ingress_excluded_namespaces
+  default_ingress_route_wildcard_policy            = var.default_ingress_route_wildcard_policy
+  default_ingress_route_namespace_ownership_policy = var.default_ingress_route_namespace_ownership_policy
+  default_ingress_cluster_routes_hostname          = var.default_ingress_cluster_routes_hostname
+  default_ingress_load_balancer_type               = var.default_ingress_load_balancer_type
+  default_ingress_cluster_routes_tls_secret_ref    = var.default_ingress_cluster_routes_tls_secret_ref
 }
 
-resource "random_password" "password" {
-  length  = 14
-  special = true
+resource "null_resource" "validations" {
+  lifecycle {
+    precondition {
+      condition     = (var.create_oidc != true && var.oidc_endpoint_url == null) == false
+      error_message = "\"oidc_endpoint_url\" mustn't be empty when oidc is pre-created (create_oidc != true)."
+    }
+    precondition {
+      condition     = (var.create_oidc != true && var.oidc_config_id == null) == false
+      error_message = "\"oidc_config_id\" mustn't be empty when oidc is pre-created (create_oidc != true)."
+    }
+  }
 }
 
-############################
-# machine pools
-############################
-
-module "rhcs_machine_pool" {
-  source   = "./modules/machine-pool"
-  for_each = var.machine_pools
-
-  cluster_id          = module.rosa_cluster_classic.cluster_id
-  name                = each.value.name
-  machine_type        = each.value.machine_type
-  autoscaling_enabled = try(each.value.autoscaling_enabled, false)
-  use_spot_instances  = try(each.value.use_spot_instances, false)
-  max_replicas        = try(each.value.max_replicas, null)
-  max_spot_price      = try(each.value.max_spot_price, null)
-  min_replicas        = try(each.value.min_replicas, null)
-  replicas            = try(each.value.replicas, null)
-  taints              = try(each.value.taints, null)
-  labels              = try(each.value.labels, null)
-}
+data "aws_caller_identity" "current" {}

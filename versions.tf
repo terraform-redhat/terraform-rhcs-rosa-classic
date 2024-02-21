@@ -10,5 +10,9 @@ terraform {
       version = ">= 1.5.0"
       source  = "terraform-redhat/rhcs"
     }
+    null = {
+      source  = "hashicorp/null"
+      version = ">= 3.0.0"
+    }
   }
 }

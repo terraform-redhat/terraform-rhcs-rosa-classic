@@ -6,18 +6,24 @@ module "rosa" {
   create_account_roles  = true
   create_operator_roles = true
   create_oidc           = true
-  machine_pools = {
-    "1" : {
-      "name" : "pool1",
-      "machine_type" : "r5.xlarge",
-      "replicas" : 3
-    }
-    "2" : {
-      "name" : "pool2",
-      "machine_type" : "r5.xlarge",
-      "replicas" : 3
-    }
-  }
+}
+
+module "machine_pool_1" {
+  source = "../../modules/machine-pool"
+
+  cluster_id   = module.rosa.cluster_id
+  name         = "pool1"
+  machine_type = "r5.xlarge"
+  replicas     = 3
+}
+
+module "machine_pool_2" {
+  source = "../../modules/machine-pool"
+
+  cluster_id   = module.rosa.cluster_id
+  name         = "pool2"
+  machine_type = "r5.xlarge"
+  replicas     = 3
 }
 
 module "gitlab_idp" {

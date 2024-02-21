@@ -31,7 +31,7 @@ resource "rhcs_cluster_rosa_classic" "rosa_classic_cluster" {
     length(var.aws_subnet_ids) > 0 ? (
       distinct(data.aws_subnet.provided_subnet[*].availability_zone)
       ) : (
-      slice(data.aws_availability_zones.available[0].names, 0, var.multi_az ? 3 : 1)
+      slice(data.aws_availability_zones.available[0].names, 0, var.multi_az == true ? 3 : 1)
     )
   )
   multi_az             = var.multi_az

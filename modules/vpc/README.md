@@ -54,7 +54,7 @@ No modules.
 | <a name="input_name_prefix"></a> [name\_prefix](#input\_name\_prefix) | User-defined prefix for all generated AWS resources of this VPC | `string` | n/a | yes |
 | <a name="input_subnet_count"></a> [subnet\_count](#input\_subnet\_count) | The number of public/private subnet pairs to make. | `number` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | AWS tags to be applied to generated AWS resources of this VPC. | `map(string)` | `null` | no |
-| <a name="input_vpc_cidr"></a> [vpc\_cidr](#input\_vpc\_cidr) | n/a | `string` | `"10.0.0.0/16"` | no |
+| <a name="input_vpc_cidr"></a> [vpc\_cidr](#input\_vpc\_cidr) | Cidr block of the desired VPC. | `string` | `"10.0.0.0/16"` | no |
 
 ## Outputs
 
