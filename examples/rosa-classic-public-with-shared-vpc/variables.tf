@@ -10,10 +10,6 @@ variable "shared_vpc_aws_secret_access_key" {
   type = string
 }
 
-variable "shared_vpc_aws_region" {
-  type = string
-}
-
 variable "shared_vpc_role_name" {
   type    = string
   default = null
