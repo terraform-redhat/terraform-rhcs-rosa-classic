@@ -257,11 +257,13 @@ variable "upgrade_acknowledgements_for" {
 
 variable "multi_az" {
   type        = bool
+  default     = null
   description = "Specifies whether the deployment of the cluster should extend across multiple availability zones. (default: false)"
 }
 
 variable "autoscaling_enabled" {
   type        = bool
+  default     = null
   description = "Enable autoscaling for the initial worker pool. (default: false)"
 }
 

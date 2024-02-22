@@ -11,9 +11,8 @@ module "rosa" {
   depends_on = [
     module.account_iam_resources # Dependancy can be removed once iam is split out.
   ]
-  vpc_public_subnets_ids  = module.vpc.public_subnets
-  vpc_private_subnets_ids = module.vpc.private_subnets
-  availability_zones      = module.vpc.availability_zones
+  aws_subnet_ids         = concat(module.vpc.public_subnets, module.vpc.private_subnets)
+  aws_availability_zones = module.vpc.availability_zones
 }
 
 ############################
