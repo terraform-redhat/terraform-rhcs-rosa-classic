@@ -10,14 +10,3 @@ variable "openshift_version" {
 variable "cluster_name" {
   type = string
 }
-
-variable "multi_az" {
-  description = "Create the vpc subnets in only one AZ"
-  type        = bool
-  default     = true
-}
-
-variable "machine_cidr" {
-  type    = string
-  default = "10.0.0.0/16"
-}

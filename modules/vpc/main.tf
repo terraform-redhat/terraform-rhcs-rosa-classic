@@ -23,10 +23,10 @@ resource "aws_vpc_endpoint" "s3" {
 }
 
 resource "aws_subnet" "public_subnet" {
-  count = var.subnet_count
+  count = var.availability_zones_count
 
   vpc_id            = aws_vpc.vpc.id
-  cidr_block        = cidrsubnet(var.vpc_cidr, var.subnet_count * 2, count.index)
+  cidr_block        = cidrsubnet(var.vpc_cidr, var.availability_zones_count * 2, count.index)
   availability_zone = data.aws_availability_zones.available.names[count.index % length(data.aws_availability_zones.available.names)]
   tags = merge(
     {
@@ -40,10 +40,10 @@ resource "aws_subnet" "public_subnet" {
 }
 
 resource "aws_subnet" "private_subnet" {
-  count = var.subnet_count
+  count = var.availability_zones_count
 
   vpc_id            = aws_vpc.vpc.id
-  cidr_block        = cidrsubnet(var.vpc_cidr, var.subnet_count * 2, count.index + var.subnet_count)
+  cidr_block        = cidrsubnet(var.vpc_cidr, var.availability_zones_count * 2, count.index + var.availability_zones_count)
   availability_zone = data.aws_availability_zones.available.names[count.index % length(data.aws_availability_zones.available.names)]
   tags = merge(
     {
@@ -76,7 +76,7 @@ resource "aws_internet_gateway" "internet_gateway" {
 # Elastic IPs for NAT gateways
 #
 resource "aws_eip" "eip" {
-  count = var.subnet_count
+  count = var.availability_zones_count
 
   domain = "vpc"
   tags = merge(
@@ -94,7 +94,7 @@ resource "aws_eip" "eip" {
 # NAT gateways
 #
 resource "aws_nat_gateway" "public_nat_gateway" {
-  count = var.subnet_count
+  count = var.availability_zones_count
 
   allocation_id = aws_eip.eip[count.index].id
   subnet_id     = aws_subnet.public_subnet[count.index].id
@@ -127,7 +127,7 @@ resource "aws_route_table" "public_route_table" {
 }
 
 resource "aws_route_table" "private_route_table" {
-  count = var.subnet_count
+  count = var.availability_zones_count
 
   vpc_id = aws_vpc.vpc.id
   tags = merge(
@@ -162,7 +162,7 @@ resource "aws_route" "ipv6_egress_route" {
 
 # Send private traffic to NAT
 resource "aws_route" "private_nat" {
-  count = var.subnet_count
+  count = var.availability_zones_count
 
   route_table_id         = aws_route_table.private_route_table[count.index].id
   destination_cidr_block = "0.0.0.0/0"
@@ -173,7 +173,7 @@ resource "aws_route" "private_nat" {
 
 # Private route for vpc endpoint
 resource "aws_vpc_endpoint_route_table_association" "private_vpc_endpoint_route_table_association" {
-  count = var.subnet_count
+  count = var.availability_zones_count
 
   route_table_id  = aws_route_table.private_route_table[count.index].id
   vpc_endpoint_id = aws_vpc_endpoint.s3.id
@@ -183,14 +183,14 @@ resource "aws_vpc_endpoint_route_table_association" "private_vpc_endpoint_route_
 # Route table associations
 #
 resource "aws_route_table_association" "public_route_table_association" {
-  count = var.subnet_count
+  count = var.availability_zones_count
 
   subnet_id      = aws_subnet.public_subnet[count.index].id
   route_table_id = aws_route_table.public_route_table.id
 }
 
 resource "aws_route_table_association" "private_route_table_association" {
-  count = var.subnet_count
+  count = var.availability_zones_count
 
   subnet_id      = aws_subnet.private_subnet[count.index].id
   route_table_id = aws_route_table.private_route_table[count.index].id
@@ -202,6 +202,7 @@ resource "time_sleep" "vpc_resources_wait" {
   create_duration = "10s"
   triggers = {
     vpc_id                                           = aws_vpc.vpc.id
+    cidr_block                                       = aws_vpc.vpc.cidr_block
     ipv4_egress_route_id                             = aws_route.ipv4_egress_route.id
     ipv6_egress_route_id                             = aws_route.ipv6_egress_route.id
     private_nat_ids                                  = jsonencode([for value in aws_route.private_nat : value.id])

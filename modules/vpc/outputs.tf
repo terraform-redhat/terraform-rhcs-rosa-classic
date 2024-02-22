@@ -9,11 +9,16 @@ output "public_subnets" {
 }
 
 output "availability_zones" {
-  value       = slice(data.aws_availability_zones.available.names, 0, var.subnet_count)
+  value       = aws_subnet.private_subnet[*].availability_zone
   description = "List of the Availability Zone names used for the VPC creation"
 }
 
 output "vpc_id" {
   value       = time_sleep.vpc_resources_wait.triggers["vpc_id"]
   description = "The unique ID of the VPC"
+}
+
+output "cidr_block" {
+  value       = time_sleep.vpc_resources_wait.triggers["cidr_block"]
+  description = "The CIDR block of the VPC for the association."
 }

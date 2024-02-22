@@ -33,24 +33,34 @@ variable "oidc_config_id" {
 
 variable "installer_role_arn" {
   type        = string
+  default     = null
   description = "The Amazon Resource Name (ARN) associated with the AWS IAM role used by the ROSA installer."
 }
 
 variable "support_role_arn" {
   type        = string
+  default     = null
   description = "The Amazon Resource Name (ARN) associated with the AWS IAM role used by Red Hat SREs to enable access to the cluster account in order to provide support."
 }
 
 variable "controlplane_role_arn" {
   type        = string
+  default     = null
   description = "The Amazon Resource Name (ARN) associated with the AWS IAM role that will be used by the cluster's control plane instances."
 }
 
 variable "worker_role_arn" {
   type        = string
+  default     = null
   description = "The Amazon Resource Name (ARN) associated with the AWS IAM role that will be used by the cluster's compute instances."
 }
 
+
+variable "account_role_prefix" {
+  type        = string
+  default     = null
+  description = "User-defined prefix for all generated AWS resources (default \"account-role-<random>\")"
+}
 variable "operator_role_prefix" {
   type        = string
   description = "A designated prefix used for the creation of AWS IAM roles asso:willciated with operators within the ROSA environment."

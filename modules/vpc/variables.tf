@@ -9,9 +9,9 @@ variable "name_prefix" {
   description = "User-defined prefix for all generated AWS resources of this VPC"
 }
 
-variable "subnet_count" {
+variable "availability_zones_count" {
   type        = number
-  description = "The number of public/private subnet pairs to make."
+  description = "The count of availability zones to utilize within the specified AWS Region, where pairs of public and private subnets will be generated."
 }
 
 variable "tags" {

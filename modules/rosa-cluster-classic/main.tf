@@ -1,10 +1,27 @@
 locals {
+  aws_account_id = var.aws_account_id == null ? data.aws_caller_identity.current[0].account_id : var.aws_account_id
   sts_roles = {
-    role_arn         = var.installer_role_arn,
-    support_role_arn = var.support_role_arn,
+    role_arn = var.installer_role_arn != null ? (
+      var.installer_role_arn
+      ) : (
+      "arn:aws:iam::${local.aws_account_id}:role/${var.account_role_prefix}-Installer-Role"
+    ),
+    support_role_arn = var.support_role_arn != null ? (
+      var.support_role_arn
+      ) : (
+      "arn:aws:iam::${local.aws_account_id}:role/${var.account_role_prefix}-Support-Role"
+    ),
     instance_iam_roles = {
-      master_role_arn = var.controlplane_role_arn,
-      worker_role_arn = var.worker_role_arn
+      master_role_arn = var.controlplane_role_arn != null ? (
+        var.controlplane_role_arn
+        ) : (
+        "arn:aws:iam::${local.aws_account_id}:role/${var.account_role_prefix}-ControlPlane-Role"
+      ),
+      worker_role_arn = var.worker_role_arn != null ? (
+        var.worker_role_arn
+        ) : (
+        "arn:aws:iam::${local.aws_account_id}:role/${var.account_role_prefix}-Worker-Role"
+      ),
     },
     operator_role_prefix = var.operator_role_prefix,
     oidc_config_id       = var.oidc_config_id
@@ -20,7 +37,7 @@ locals {
 resource "rhcs_cluster_rosa_classic" "rosa_classic_cluster" {
   name           = var.cluster_name
   cloud_region   = var.aws_region == null ? data.aws_region.current[0].name : var.aws_region
-  aws_account_id = var.aws_account_id == null ? data.aws_caller_identity.current[0].account_id : var.aws_account_id
+  aws_account_id = local.aws_account_id
   replicas       = var.replicas
   version        = var.openshift_version
   sts            = local.sts_roles
@@ -86,6 +103,17 @@ resource "rhcs_cluster_rosa_classic" "rosa_classic_cluster" {
   disable_waiting_in_destroy   = var.disable_waiting_in_destroy
   destroy_timeout              = var.destroy_timeout
   upgrade_acknowledgements_for = var.upgrade_acknowledgements_for
+
+  lifecycle {
+    precondition {
+      condition = (
+        !(var.installer_role_arn != null && var.support_role_arn != null && var.controlplane_role_arn != null && var.worker_role_arn != null)
+        &&
+        var.account_role_prefix == null
+      ) == false
+      error_message = "Either provide the \"account_role_prefix\" or specify all ARNs for account roles (\"installer_role_arn\", \"support_role_arn\", \"controlplane_role_arn\", \"worker_role_arn\")."
+    }
+  }
 }
 
 resource "rhcs_cluster_autoscaler" "cluster_autoscaler" {
@@ -129,7 +157,6 @@ resource "rhcs_default_ingress" "default_ingress" {
   load_balancer_type               = var.default_ingress_load_balancer_type
   cluster_routes_tls_secret_ref    = var.default_ingress_cluster_routes_tls_secret_ref
 }
-
 
 data "aws_caller_identity" "current" {
   count = var.aws_account_id == null || var.aws_account_arn == null ? 1 : 0

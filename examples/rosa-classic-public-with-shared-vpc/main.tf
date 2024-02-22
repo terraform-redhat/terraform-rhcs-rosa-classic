@@ -18,14 +18,14 @@ module "vpc" {
     aws = aws.shared-vpc
   }
 
-  name_prefix  = var.cluster_name
-  subnet_count = var.replicas
+  name_prefix              = var.cluster_name
+  availability_zones_count = 3
 }
 
 locals {
-  account_role_prefix  = var.account_role_prefix != null ? var.account_role_prefix : "${var.cluster_name}-account"
-  shared_vpc_role_name = var.shared_vpc_role_name != null ? var.shared_vpc_role_name : "${var.cluster_name}-shared-vpc-role"
-  operator_role_prefix = var.operator_role_prefix != null ? var.operator_role_prefix : "${var.cluster_name}-operator"
+  account_role_prefix  = "${var.cluster_name}-account"
+  shared_vpc_role_name = "${var.cluster_name}-shared-vpc-role"
+  operator_role_prefix = "${var.cluster_name}-operator"
 }
 
 ##############################################################
@@ -106,22 +106,17 @@ module "rosa_cluster_classic" {
 
   cluster_name                 = var.cluster_name
   operator_role_prefix         = module.operator_roles.operator_role_prefix
+  account_role_prefix          = module.account_iam_resources.account_role_prefix
   openshift_version            = var.openshift_version
-  replicas                     = var.replicas
-  installer_role_arn           = module.account_iam_resources.account_roles_arn["Installer"]
-  support_role_arn             = module.account_iam_resources.account_roles_arn["Support"]
-  controlplane_role_arn        = module.account_iam_resources.account_roles_arn["ControlPlane"]
-  worker_role_arn              = module.account_iam_resources.account_roles_arn["Worker"]
   oidc_config_id               = module.oidc_config_and_provider.oidc_config_id
   aws_subnet_ids               = module.shared-vpc-policy-and-hosted-zone.shared_subnets
-  multi_az                     = true
+  multi_az                     = length(module.vpc.availability_zones) > 1
+  replicas                     = length(module.vpc.availability_zones)
   admin_credentials_username   = "kubeadmin"
   admin_credentials_password   = random_password.password.result
-  compute_machine_type         = var.machine_type
   base_dns_domain              = rhcs_dns_domain.dns_domain.id
   private_hosted_zone_id       = module.shared-vpc-policy-and-hosted-zone.hosted_zone_id
   private_hosted_zone_role_arn = module.shared-vpc-policy-and-hosted-zone.shared_role
-  autoscaling_enabled          = var.autoscaling_enabled
 }
 
 resource "random_password" "password" {
