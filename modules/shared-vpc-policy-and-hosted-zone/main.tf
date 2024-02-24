@@ -38,22 +38,16 @@ resource "aws_iam_policy" "shared_vpc_policy" {
       {
         Effect = "Allow"
         Action = [
-          "route53:GetHostedZone",
           "route53:ChangeResourceRecordSets",
-          "route53:ChangeTagsForResource",
-          "route53:ListResourceRecordSets",
-          "route53:ListTagsForResource",
-          "route53:GetAccountLimit",
-          "route53:UpdateHostedZoneComment"
-        ]
-        Resource = "arn:aws:route53:::hostedzone/${aws_route53_zone.shared_vpc_hosted_zone.id}"
-      },
-      {
-        Effect = "Allow"
-        Action = [
-          "route53:GetChange",
-          "route53:ListHostedZonesByName",
           "route53:ListHostedZones",
+          "route53:ListHostedZonesByName",
+          "route53:ListResourceRecordSets",
+          "route53:ChangeTagsForResource",
+          "route53:GetAccountLimit",
+          "route53:GetChange",
+          "route53:GetHostedZone",
+          "route53:ListTagsForResource",
+          "route53:UpdateHostedZoneComment",
           "tag:GetResources",
           "tag:UntagResources"
         ]
