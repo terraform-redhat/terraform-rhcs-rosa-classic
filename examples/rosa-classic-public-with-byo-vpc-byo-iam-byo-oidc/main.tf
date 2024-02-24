@@ -15,6 +15,8 @@ module "rosa" {
   aws_subnet_ids         = concat(module.vpc.public_subnets, module.vpc.private_subnets)
   aws_availability_zones = module.vpc.availability_zones
   multi_az               = length(module.vpc.availability_zones) > 1
+  path                   = module.account_iam_resources.path
+  replicas               = length(module.vpc.availability_zones)
 }
 
 ############################
@@ -34,6 +36,7 @@ module "account_iam_resources" {
 
   account_role_prefix = local.account_role_prefix
   openshift_version   = "4.14.5"
+  path                = "/tf-example/"
 }
 
 module "operator_policies" {

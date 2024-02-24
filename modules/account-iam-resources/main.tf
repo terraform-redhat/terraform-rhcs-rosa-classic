@@ -1,4 +1,5 @@
 locals {
+  path                    = coalesce(var.path, "/")
   short_openshift_version = format("%s.%s", split(".", var.openshift_version)[0], split(".", var.openshift_version)[1])
   account_roles_properties = [
     {
@@ -67,7 +68,7 @@ module "account_iam_role" {
 
   role_name = "${local.account_role_prefix_valid}-${local.account_roles_properties[count.index].role_name}-Role"
 
-  role_path                     = var.path
+  role_path                     = local.path
   role_permissions_boundary_arn = var.permissions_boundary
 
   create_custom_role_trust_policy = true

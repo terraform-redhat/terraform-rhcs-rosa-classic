@@ -1,26 +1,27 @@
 locals {
+  path           = coalesce(var.path, "/")
   aws_account_id = var.aws_account_id == null ? data.aws_caller_identity.current[0].account_id : var.aws_account_id
   sts_roles = {
     role_arn = var.installer_role_arn != null ? (
       var.installer_role_arn
       ) : (
-      "arn:aws:iam::${local.aws_account_id}:role/${var.account_role_prefix}-Installer-Role"
+      "arn:aws:iam::${local.aws_account_id}:role${local.path}${var.account_role_prefix}-Installer-Role"
     ),
     support_role_arn = var.support_role_arn != null ? (
       var.support_role_arn
       ) : (
-      "arn:aws:iam::${local.aws_account_id}:role/${var.account_role_prefix}-Support-Role"
+      "arn:aws:iam::${local.aws_account_id}:role${local.path}${var.account_role_prefix}-Support-Role"
     ),
     instance_iam_roles = {
       master_role_arn = var.controlplane_role_arn != null ? (
         var.controlplane_role_arn
         ) : (
-        "arn:aws:iam::${local.aws_account_id}:role/${var.account_role_prefix}-ControlPlane-Role"
+        "arn:aws:iam::${local.aws_account_id}:role${local.path}${var.account_role_prefix}-ControlPlane-Role"
       ),
       worker_role_arn = var.worker_role_arn != null ? (
         var.worker_role_arn
         ) : (
-        "arn:aws:iam::${local.aws_account_id}:role/${var.account_role_prefix}-Worker-Role"
+        "arn:aws:iam::${local.aws_account_id}:role${local.path}${var.account_role_prefix}-Worker-Role"
       ),
     },
     operator_role_prefix = var.operator_role_prefix,

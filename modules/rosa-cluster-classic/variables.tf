@@ -9,6 +9,12 @@ variable "aws_region" {
   description = "The full name of the AWS region used for the ROSA cluster installation, for example 'us-east-1'. If no information is provided, the data will be retrieved from the currently connected account."
 }
 
+variable "path" {
+  type        = string
+  default     = "/"
+  description = "The arn path for the account/operator roles as well as their policies."
+}
+
 variable "openshift_version" {
   type        = string
   description = "Desired version of OpenShift for the cluster, for example '4.1.0'. If version is greater than the currently running version, an upgrade will be scheduled."

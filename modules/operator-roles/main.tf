@@ -6,13 +6,14 @@ locals {
   # value matches the actual length returned from the data source.
   operator_roles_count = 6
   operator_role_prefix = var.operator_role_prefix != null ? var.operator_role_prefix : var.account_role_prefix
+  path                 = coalesce(var.path, "/")
 }
 
 resource "aws_iam_role" "operator_role" {
   count = local.operator_roles_count
 
   name                 = data.rhcs_rosa_operator_roles.operator_roles.operator_iam_roles[count.index].role_name
-  path                 = var.path
+  path                 = local.path
   permissions_boundary = var.permissions_boundary
 
   assume_role_policy = data.aws_iam_policy_document.custom_trust_policy[count.index].json
