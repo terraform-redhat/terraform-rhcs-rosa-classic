@@ -1,9 +1,11 @@
 provider "aws" {
   alias = "shared-vpc"
 
-  access_key = var.shared_vpc_aws_access_key_id
-  secret_key = var.shared_vpc_aws_secret_access_key
-  region     = data.aws_region.current.name
+  access_key               = var.shared_vpc_aws_access_key_id
+  secret_key               = var.shared_vpc_aws_secret_access_key
+  region                   = data.aws_region.current.name
+  profile                  = var.shared_vpc_aws_profile
+  shared_credentials_files = var.shared_vpc_aws_shared_credentials_files
 }
 
 data "aws_region" "current" {}
@@ -122,4 +124,18 @@ module "rosa_cluster_classic" {
 resource "random_password" "password" {
   length  = 14
   special = true
+}
+
+locals {
+  shared_vpc_aws_credentials_provided = length(var.shared_vpc_aws_access_key_id) > 0 && length(var.shared_vpc_aws_secret_access_key) > 0
+  shared_vpc_aws_profile_provided     = length(var.shared_vpc_aws_profile) > 0
+}
+
+resource "null_resource" "validations" {
+  lifecycle {
+    precondition {
+      condition     = (local.shared_vpc_aws_credentials_provided == false && local.shared_vpc_aws_profile_provided == false) == false
+      error_message = "AWS credentials for the shared-vpc account must be provided. This can provided with \"var.shared_vpc_aws_access_key_id\" and \"var.shared_vpc_aws_secret_access_key\" or with existing profile \"var.shared_vpc_aws_profile\""
+    }
+  }
 }
