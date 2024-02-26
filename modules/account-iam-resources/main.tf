@@ -1,4 +1,5 @@
 locals {
+  path                    = coalesce(var.path, "/")
   short_openshift_version = format("%s.%s", split(".", var.openshift_version)[0], split(".", var.openshift_version)[1])
   account_roles_properties = [
     {
@@ -67,7 +68,7 @@ module "account_iam_role" {
 
   role_name = "${local.account_role_prefix_valid}-${local.account_roles_properties[count.index].role_name}-Role"
 
-  role_path                     = var.path
+  role_path                     = local.path
   role_permissions_boundary_arn = var.permissions_boundary
 
   create_custom_role_trust_policy = true
@@ -129,12 +130,13 @@ resource "null_resource" "validate_openshift_version" {
 }
 
 resource "time_sleep" "account_iam_resources_wait" {
-  count = local.account_roles_count
-
   destroy_duration = "10s"
   create_duration  = "10s"
   triggers = {
-    account_iam_role_name = aws_iam_role_policy_attachment.role_policy_attachment[count.index].role
-    account_iam_role_arn  = module.account_iam_role[count.index].iam_role_arn
+    account_iam_role_name = jsonencode([for value in aws_iam_role_policy_attachment.role_policy_attachment : value.role])
+    account_roles_arn     = jsonencode({ for idx, value in module.account_iam_role : local.account_roles_properties[idx].role_name => value.iam_role_arn })
+    account_role_prefix   = local.account_role_prefix_valid
+    openshift_version     = var.openshift_version
+    path                  = var.path
   }
 }

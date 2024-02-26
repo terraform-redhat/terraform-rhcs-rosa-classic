@@ -1,6 +1,6 @@
 variable "cluster_name" {
   type        = string
-  description = "Name of the cluster. Cannot exceed 15 characters in length. After the creation of the resource, it is not possible to update the attribute value."
+  description = "Name of the cluster. After the creation of the resource, it is not possible to update the attribute value."
 }
 
 variable "openshift_version" {

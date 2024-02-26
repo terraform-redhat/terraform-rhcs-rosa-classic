@@ -1,57 +1,38 @@
 variable "cluster_name" {
-  type = string
-}
-
-variable "shared_vpc_aws_access_key_id" {
-  type = string
-}
-
-variable "shared_vpc_aws_secret_access_key" {
-  type = string
-}
-
-variable "shared_vpc_aws_region" {
-  type = string
-}
-
-variable "shared_vpc_role_name" {
-  type    = string
-  default = null
+  type        = string
+  description = "Name of the cluster. After the creation of the resource, it is not possible to update the attribute value."
 }
 
 variable "openshift_version" {
-  type    = string
-  default = "4.14.9"
+  type        = string
+  default     = "4.14.9"
+  description = "Desired version of OpenShift for the cluster, for example '4.1.0'. If version is greater than the currently running version, an upgrade will be scheduled."
   validation {
     condition     = can(regex("^[0-9]*[0-9]+.[0-9]*[0-9]+.[0-9]*[0-9]+$", var.openshift_version))
     error_message = "openshift_version must be with structure <major>.<minor>.<patch> (for example 4.13.6)."
   }
 }
 
-variable "account_role_prefix" {
-  type    = string
-  default = null
-}
-
-variable "operator_role_prefix" {
-  type    = string
-  default = null
-}
-
-variable "replicas" {
-  description = "The amount of the machine created in this machine pool."
-  type        = number
-  default     = 3
-}
-
-variable "machine_type" {
-  description = "Identifier of the machine type used by the nodes, for example `m5.xlarge`. Use the `rhcs_machine_types` data source to find the possible values."
+variable "shared_vpc_aws_access_key_id" {
   type        = string
-  default     = "m5.xlarge"
+  default     = ""
+  description = "The access key provides access to AWS services and is associated with the shared-vpc AWS account."
 }
 
-variable "autoscaling_enabled" {
-  description = "Enables autoscaling. If `true`, this variable requires you to set a maximum and minimum replicas range using the `max_replicas` and `min_replicas` variables."
-  type        = bool
+variable "shared_vpc_aws_secret_access_key" {
+  type        = string
+  default     = ""
+  description = "The secret key paired with the access key. Together, they provide the necessary credentials for Terraform to authenticate with the shared-vpc AWS account and manage resources securely."
+}
+
+variable "shared_vpc_aws_profile" {
+  type        = string
+  default     = ""
+  description = "The name of the AWS profile configured in the AWS credentials file (typically located at ~/.aws/credentials). This profile contains the access key, secret key, and optional session token associated with the shared-vpc AWS account."
+}
+
+variable "shared_vpc_aws_shared_credentials_files" {
+  type        = list(string)
   default     = null
+  description = "List of files path to the AWS shared credentials file. This file typically contains AWS access keys and secret keys and is used when authenticating with AWS using profiles (default file located at ~/.aws/credentials)."
 }

@@ -1,11 +1,12 @@
 locals {
+  path                 = coalesce(var.path, "/")
   account_role_prefix  = coalesce(var.account_role_prefix, "${var.cluster_name}-account")
   operator_role_prefix = coalesce(var.operator_role_prefix, "${var.cluster_name}-operator")
   sts_roles = {
-    installer_role_arn    = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${local.account_role_prefix}-Installer-Role",
-    support_role_arn      = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${local.account_role_prefix}-Support-Role",
-    controlplane_role_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${local.account_role_prefix}-ControlPlane-Role",
-    worker_role_arn       = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/${local.account_role_prefix}-Worker-Role"
+    installer_role_arn    = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role${local.path}${local.account_role_prefix}-Installer-Role",
+    support_role_arn      = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role${local.path}${local.account_role_prefix}-Support-Role",
+    controlplane_role_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role${local.path}${local.account_role_prefix}-ControlPlane-Role",
+    worker_role_arn       = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role${local.path}${local.account_role_prefix}-Worker-Role"
   }
 }
 
@@ -18,7 +19,7 @@ module "account_iam_resources" {
 
   account_role_prefix  = local.account_role_prefix
   openshift_version    = var.openshift_version
-  path                 = var.path
+  path                 = local.path
   permissions_boundary = var.permissions_boundary
   tags                 = var.tags
 }
@@ -72,7 +73,7 @@ module "operator_roles" {
     ) : (
     local.account_role_prefix
   )
-  path                 = var.create_account_roles ? module.account_iam_resources[0].path : var.path
+  path                 = var.create_account_roles ? module.account_iam_resources[0].path : local.path
   oidc_endpoint_url    = var.create_oidc ? module.oidc_config_and_provider[0].oidc_endpoint_url : var.oidc_endpoint_url
   depends_on           = [module.operator_policies]
   tags                 = var.tags
@@ -88,6 +89,7 @@ module "rosa_cluster_classic" {
   cluster_name             = var.cluster_name
   operator_role_prefix     = var.create_operator_roles ? module.operator_roles[0].operator_role_prefix : local.operator_role_prefix
   openshift_version        = var.openshift_version
+  path                     = var.create_account_roles ? module.account_iam_resources[0].path : local.path
   installer_role_arn       = var.create_account_roles ? module.account_iam_resources[0].account_roles_arn["Installer"] : local.sts_roles.installer_role_arn
   support_role_arn         = var.create_account_roles ? module.account_iam_resources[0].account_roles_arn["Support"] : local.sts_roles.support_role_arn
   controlplane_role_arn    = var.create_account_roles ? module.account_iam_resources[0].account_roles_arn["ControlPlane"] : local.sts_roles.controlplane_role_arn
@@ -183,7 +185,7 @@ module "rosa_cluster_classic" {
 resource "null_resource" "validations" {
   lifecycle {
     precondition {
-      condition     = (var.create_oidc != true && var.oidc_endpoint_url == null) == false
+      condition     = (var.create_operator_roles == true && var.create_oidc != true && var.oidc_endpoint_url == null) == false
       error_message = "\"oidc_endpoint_url\" mustn't be empty when oidc is pre-created (create_oidc != true)."
     }
     precondition {

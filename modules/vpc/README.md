@@ -51,8 +51,8 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
+| <a name="input_availability_zones_count"></a> [availability\_zones\_count](#input\_availability\_zones\_count) | The count of availability zones to utilize within the specified AWS Region, where pairs of public and private subnets will be generated. | `number` | n/a | yes |
 | <a name="input_name_prefix"></a> [name\_prefix](#input\_name\_prefix) | User-defined prefix for all generated AWS resources of this VPC | `string` | n/a | yes |
-| <a name="input_subnet_count"></a> [subnet\_count](#input\_subnet\_count) | The number of public/private subnet pairs to make. | `number` | n/a | yes |
 | <a name="input_tags"></a> [tags](#input\_tags) | AWS tags to be applied to generated AWS resources of this VPC. | `map(string)` | `null` | no |
 | <a name="input_vpc_cidr"></a> [vpc\_cidr](#input\_vpc\_cidr) | Cidr block of the desired VPC. | `string` | `"10.0.0.0/16"` | no |
 
@@ -61,6 +61,7 @@ No modules.
 | Name | Description |
 |------|-------------|
 | <a name="output_availability_zones"></a> [availability\_zones](#output\_availability\_zones) | List of the Availability Zone names used for the VPC creation |
+| <a name="output_cidr_block"></a> [cidr\_block](#output\_cidr\_block) | The CIDR block of the VPC for the association. |
 | <a name="output_private_subnets"></a> [private\_subnets](#output\_private\_subnets) | List of private subnets created this this AWS VPC |
 | <a name="output_public_subnets"></a> [public\_subnets](#output\_public\_subnets) | List of public subnets created this this AWS VPC |
 | <a name="output_vpc_id"></a> [vpc\_id](#output\_vpc\_id) | The unique ID of the VPC |

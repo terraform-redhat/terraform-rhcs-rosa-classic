@@ -3,13 +3,13 @@ module "rosa" {
 
   cluster_name           = var.cluster_name
   openshift_version      = var.openshift_version
-  multi_az               = var.multi_az
-  machine_cidr           = var.machine_cidr
+  machine_cidr           = module.vpc.cidr_block
   create_account_roles   = true
   create_operator_roles  = true
   create_oidc            = true
   aws_subnet_ids         = concat(module.vpc.public_subnets, module.vpc.private_subnets)
   aws_availability_zones = module.vpc.availability_zones
+  multi_az               = length(module.vpc.availability_zones) > 1
 }
 
 ############################
@@ -18,7 +18,6 @@ module "rosa" {
 module "vpc" {
   source = "../../modules/vpc"
 
-  name_prefix  = var.cluster_name
-  subnet_count = var.multi_az ? 3 : 1
-  vpc_cidr     = var.machine_cidr
+  name_prefix              = var.cluster_name
+  availability_zones_count = 3
 }
