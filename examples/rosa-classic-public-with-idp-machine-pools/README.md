@@ -1,4 +1,4 @@
-# Rosa Classic public with IDP and machine pools
+# ROSA Classic public with IDP and machine pools
 
 ## Introduction
 
