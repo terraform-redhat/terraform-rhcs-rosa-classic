@@ -37,11 +37,11 @@ For more info about shared VPC see [Configuring a shared VPC for ROSA clusters](
 
 | Name | Version |
 |------|---------|
-| <a name="provider_aws"></a> [aws](#provider\_aws) | 5.38.0 |
-| <a name="provider_aws.shared-vpc"></a> [aws.shared-vpc](#provider\_aws.shared-vpc) | 5.38.0 |
-| <a name="provider_null"></a> [null](#provider\_null) | 3.2.2 |
-| <a name="provider_random"></a> [random](#provider\_random) | 3.6.0 |
-| <a name="provider_rhcs"></a> [rhcs](#provider\_rhcs) | 1.5.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.0 |
+| <a name="provider_aws.shared-vpc"></a> [aws.shared-vpc](#provider\_aws.shared-vpc) | >= 4.0 |
+| <a name="provider_null"></a> [null](#provider\_null) | >= 3.0.0 |
+| <a name="provider_random"></a> [random](#provider\_random) | >= 2.0 |
+| <a name="provider_rhcs"></a> [rhcs](#provider\_rhcs) | >= 1.5.0 |
 
 ## Modules
 
