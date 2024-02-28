@@ -1,4 +1,4 @@
-# Rosa Classic with shared vpc example
+# ROSA Classic with shared VPC example
 
 ## Introduction
 

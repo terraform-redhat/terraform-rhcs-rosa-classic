@@ -1,4 +1,4 @@
-# Rosa Classic with unmanaged OIDC example
+# ROSA Classic with unmanaged OIDC example
 
 ## Introduction
 

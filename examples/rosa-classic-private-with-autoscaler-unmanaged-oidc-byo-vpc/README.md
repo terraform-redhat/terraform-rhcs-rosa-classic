@@ -1,4 +1,4 @@
-# Rosa Classic public with BYO VPC\IAM\OIDC
+# ROSA Classic private with BYOVPC, IAM and unmanaged OIDC
 
 ## Introduction
 

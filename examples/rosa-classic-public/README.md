@@ -1,4 +1,4 @@
-# Rosa Classic with public cluster with default iam\oidc\vpc resources created.
+# ROSA Classic public cluster with default IAM+OIDC+VPC resources
 
 ## Introduction
 
