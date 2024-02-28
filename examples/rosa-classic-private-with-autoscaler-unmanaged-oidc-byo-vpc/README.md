@@ -1,13 +1,13 @@
-# Rosa Classic public with IDP and machine pools
+# Rosa Classic public with BYO VPC\IAM\OIDC
 
 ## Introduction
 
 Terraform manifest example for creating a Red Hat OpenShift Service on AWS (ROSA) cluster. This example provides a structured configuration template that demonstrates how to deploy a ROSA cluster within your AWS environment using Terraform.
 This example includes:
-- Cluster with public access and managed OIDC
-- All AWS resources (IAM and networking) are created as part of the ROSA cluster module execution
-- "Day 2" Machine pool resources - created after the cluster creation is completed
-- "Day 2" Identity provider resource - created after the cluster creation is completed
+- Cluster with private access
+- A pre-existing VPC within the same AWS account.
+- A pre-existing IAM roles within the AWS account, to be used by the installation process.
+- A pre-existing unmanaged OIDC resource.
 
 ## Prerequisites
 
@@ -28,30 +28,22 @@ Installation of the following CLI tools is recommended:
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 5.0 |
-| <a name="requirement_random"></a> [random](#requirement\_random) | >= 2.0 |
 | <a name="requirement_rhcs"></a> [rhcs](#requirement\_rhcs) | >= 1.5.0 |
 
 ## Providers
 
-| Name | Version |
-|------|---------|
-| <a name="provider_random"></a> [random](#provider\_random) | >= 2.0 |
+No providers.
 
 ## Modules
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_gitlab_idp"></a> [gitlab\_idp](#module\_gitlab\_idp) | ../../modules/idp | n/a |
-| <a name="module_machine_pool_1"></a> [machine\_pool\_1](#module\_machine\_pool\_1) | ../../modules/machine-pool | n/a |
-| <a name="module_machine_pool_2"></a> [machine\_pool\_2](#module\_machine\_pool\_2) | ../../modules/machine-pool | n/a |
 | <a name="module_rosa"></a> [rosa](#module\_rosa) | ../../ | n/a |
+| <a name="module_vpc"></a> [vpc](#module\_vpc) | ../../modules/vpc | n/a |
 
 ## Resources
 
-| Name | Type |
-|------|------|
-| [random_password.client_id](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password) | resource |
-| [random_password.client_secret](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password) | resource |
+No resources.
 
 ## Inputs
 

@@ -22,7 +22,7 @@ Ensure that you have an existing Red Hat OpenShift Service on AWS (ROSA) cluster
 
 | Name | Version |
 |------|---------|
-| <a name="provider_rhcs"></a> [rhcs](#provider\_rhcs) | 1.5.0 |
+| <a name="provider_rhcs"></a> [rhcs](#provider\_rhcs) | >= 1.5.0 |
 
 ## Modules
 
