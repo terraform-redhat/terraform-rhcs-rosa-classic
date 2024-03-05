@@ -1,4 +1,4 @@
-# ROSA Classic public with IDP and machine pools
+# ROSA Classic public with multiple IDPs and machine pools
 
 ## Introduction
 
@@ -6,8 +6,8 @@ Terraform manifest example for creating a Red Hat OpenShift Service on AWS (ROSA
 This example includes:
 - Cluster with public access and managed OIDC
 - All AWS resources (IAM and networking) are created as part of the ROSA cluster module execution
-- "Day 2" Machine pool resources - created after the cluster creation is completed
-- "Day 2" Identity provider resource - created after the cluster creation is completed
+- "Day 2" Machine pool resources - created as part of the root module execution - map of multiple resources is provided
+- "Day 2" Identity provider resource - created as part of the root module execution - map of multiple resources is provided
 
 Please note: This example involves the creation of various identity providers. Placeholder values are utilized for illustrative purposes. However, with the exception of the HTPasswd identity provider, these providers will not grant access to the cluster. For authentic identity providers, please supply your own pre-configured values.
 
@@ -43,14 +43,6 @@ Installation of the following CLI tools is recommended:
 
 | Name | Source | Version |
 |------|--------|---------|
-| <a name="module_github_idp"></a> [github\_idp](#module\_github\_idp) | ../../modules/idp | n/a |
-| <a name="module_gitlab_idp"></a> [gitlab\_idp](#module\_gitlab\_idp) | ../../modules/idp | n/a |
-| <a name="module_google_idp"></a> [google\_idp](#module\_google\_idp) | ../../modules/idp | n/a |
-| <a name="module_htpasswd_idp"></a> [htpasswd\_idp](#module\_htpasswd\_idp) | ../../modules/idp | n/a |
-| <a name="module_ldap_idp"></a> [ldap\_idp](#module\_ldap\_idp) | ../../modules/idp | n/a |
-| <a name="module_machine_pool_1"></a> [machine\_pool\_1](#module\_machine\_pool\_1) | ../../modules/machine-pool | n/a |
-| <a name="module_machine_pool_2"></a> [machine\_pool\_2](#module\_machine\_pool\_2) | ../../modules/machine-pool | n/a |
-| <a name="module_openid_idp"></a> [openid\_idp](#module\_openid\_idp) | ../../modules/idp | n/a |
 | <a name="module_rosa"></a> [rosa](#module\_rosa) | ../../ | n/a |
 
 ## Resources

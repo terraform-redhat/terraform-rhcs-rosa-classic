@@ -66,6 +66,8 @@ Installation of the following CLI tools is recommended:
 | <a name="module_oidc_config_and_provider"></a> [oidc\_config\_and\_provider](#module\_oidc\_config\_and\_provider) | ./modules/oidc-config-and-provider | n/a |
 | <a name="module_operator_policies"></a> [operator\_policies](#module\_operator\_policies) | ./modules/operator-policies | n/a |
 | <a name="module_operator_roles"></a> [operator\_roles](#module\_operator\_roles) | ./modules/operator-roles | n/a |
+| <a name="module_rhcs_identity_provider"></a> [rhcs\_identity\_provider](#module\_rhcs\_identity\_provider) | ./modules/idp | n/a |
+| <a name="module_rhcs_machine_pool"></a> [rhcs\_machine\_pool](#module\_rhcs\_machine\_pool) | ./modules/machine-pool | n/a |
 | <a name="module_rosa_cluster_classic"></a> [rosa\_cluster\_classic](#module\_rosa\_cluster\_classic) | ./modules/rosa-cluster-classic | n/a |
 
 ## Resources
@@ -132,8 +134,10 @@ Installation of the following CLI tools is recommended:
 | <a name="input_host_prefix"></a> [host\_prefix](#input\_host\_prefix) | Subnet prefix length to assign to each individual node. For example, if host prefix is set to "23", then each node is assigned a /23 subnet out of the given CIDR. | `number` | `null` | no |
 | <a name="input_http_proxy"></a> [http\_proxy](#input\_http\_proxy) | A proxy URL to use for creating HTTP connections outside the cluster. The URL scheme must be http. | `string` | `null` | no |
 | <a name="input_https_proxy"></a> [https\_proxy](#input\_https\_proxy) | A proxy URL to use for creating HTTPS connections outside the cluster. | `string` | `null` | no |
+| <a name="input_identity_providers"></a> [identity\_providers](#input\_identity\_providers) | Provides a generic approach to add multiple identity providers after the creation of the cluster. This variable allows users to specify configurations for multiple identity providers in a flexible and customizable manner, facilitating the management of resources post-cluster deployment. For additional details regarding the variables utilized, please refer to the [idp sub-module](./modules/idp). For non-primitive variables (such as maps, lists, and objects), please supply the JSON-encoded string. | `map(any)` | `{}` | no |
 | <a name="input_kms_key_arn"></a> [kms\_key\_arn](#input\_kms\_key\_arn) | The key ARN is the Amazon Resource Name (ARN) of a CMK. It is a unique, fully qualified identifier for the CMK. A key ARN includes the AWS account, Region, and the key ID. | `string` | `null` | no |
 | <a name="input_machine_cidr"></a> [machine\_cidr](#input\_machine\_cidr) | Block of IP addresses used by OpenShift while installing the cluster, for example "10.0.0.0/16". | `string` | `null` | no |
+| <a name="input_machine_pools"></a> [machine\_pools](#input\_machine\_pools) | Provides a generic approach to add multiple machine pools after the creation of the cluster. This variable allows users to specify configurations for multiple machine pools in a flexible and customizable manner, facilitating the management of resources post-cluster deployment. For additional details regarding the variables utilized, please refer to the [machine-pool sub-module](./modules/machine-pool). For non-primitive variables (such as maps, lists, and objects), please supply the JSON-encoded string. | `map(any)` | `{}` | no |
 | <a name="input_managed_oidc"></a> [managed\_oidc](#input\_managed\_oidc) | OIDC type managed or unmanaged oidc | `bool` | `true` | no |
 | <a name="input_max_replicas"></a> [max\_replicas](#input\_max\_replicas) | Maximum number of compute nodes. This attribute is applicable solely when autoscaling is enabled. (default: 2) | `number` | `null` | no |
 | <a name="input_min_replicas"></a> [min\_replicas](#input\_min\_replicas) | Minimum number of compute nodes. This attribute is applicable solely when autoscaling is enabled. (default: 2) | `number` | `null` | no |

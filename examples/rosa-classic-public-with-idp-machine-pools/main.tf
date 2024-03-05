@@ -42,6 +42,64 @@ module "gitlab_idp" {
   gitlab_idp_url           = "https://gitlab.com"
 }
 
+module "htpasswd_idp" {
+  source = "../../modules/idp"
+
+  cluster_id         = module.rosa.cluster_id
+  name               = "htpasswd-idp"
+  idp_type           = "htpasswd"
+  htpasswd_idp_users = [{ username = "test-user", password = random_password.password.result }]
+}
+
+module "github_idp" {
+  source = "../../modules/idp"
+
+  cluster_id               = module.rosa.cluster_id
+  name                     = "github-idp"
+  idp_type                 = "github"
+  github_idp_client_id     = random_password.client_id.result     # replace with valid <client-id>
+  github_idp_client_secret = random_password.client_secret.result # replace with valid <client-secret>
+  github_idp_organizations = ["example"]
+}
+
+module "google_idp" {
+  source = "../../modules/idp"
+
+  cluster_id               = module.rosa.cluster_id
+  name                     = "google-idp"
+  idp_type                 = "google"
+  google_idp_client_id     = random_password.client_id.result     # replace with valid <client-id>
+  google_idp_client_secret = random_password.client_secret.result # replace with valid <client-secret>
+  google_idp_hosted_domain = "example.com"
+}
+
+module "ldap_idp" {
+  source = "../../modules/idp"
+
+  cluster_id        = module.rosa.cluster_id
+  name              = "ldap-idp"
+  idp_type          = "ldap"
+  ldap_idp_ca       = ""
+  ldap_idp_url      = "ldap://ldap.forumsys.com/dc=example,dc=com?uid"
+  ldap_idp_insecure = true
+}
+
+module "openid_idp" {
+  source = "../../modules/idp"
+
+  cluster_id                           = module.rosa.cluster_id
+  name                                 = "openid-idp"
+  idp_type                             = "openid"
+  openid_idp_client_id                 = random_password.client_id.result     # replace with valid <client-id>
+  openid_idp_client_secret             = random_password.client_secret.result # replace with valid <client-secret>
+  openid_idp_ca                        = ""
+  openid_idp_issuer                    = "https://example.com"
+  openid_idp_claims_email              = ["example@email.com"]
+  openid_idp_claims_groups             = ["example"]
+  openid_idp_claims_name               = ["example"]
+  openid_idp_claims_preferred_username = ["example"]
+}
+
 resource "random_password" "client_id" {
   length = 16
 
@@ -58,4 +116,9 @@ resource "random_password" "client_secret" {
   upper   = true
   lower   = false
   special = false
+}
+
+resource "random_password" "password" {
+  length  = 14
+  special = true
 }
