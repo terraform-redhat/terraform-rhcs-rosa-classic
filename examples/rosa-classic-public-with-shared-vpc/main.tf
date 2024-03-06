@@ -8,6 +8,13 @@ provider "aws" {
   shared_credentials_files = var.shared_vpc_aws_shared_credentials_files
 }
 
+locals {
+  account_role_prefix          = "${var.cluster_name}-account"
+  operator_role_prefix         = "${var.cluster_name}-operator"
+  shared_resources_name_prefix = var.cluster_name
+  shared_vpc_role_name         = "${local.shared_resources_name_prefix}-shared-vpc-role"
+}
+
 data "aws_region" "current" {}
 
 ############################
@@ -20,14 +27,8 @@ module "vpc" {
     aws = aws.shared-vpc
   }
 
-  name_prefix              = var.cluster_name
+  name_prefix              = local.shared_resources_name_prefix
   availability_zones_count = 3
-}
-
-locals {
-  account_role_prefix  = "${var.cluster_name}-account"
-  shared_vpc_role_name = "${var.cluster_name}-shared-vpc-role"
-  operator_role_prefix = "${var.cluster_name}-operator"
 }
 
 ##############################################################
@@ -92,6 +93,7 @@ module "shared-vpc-policy-and-hosted-zone" {
   }
 
   cluster_name              = var.cluster_name
+  name_prefix               = local.shared_resources_name_prefix
   target_aws_account        = data.aws_caller_identity.current.account_id
   installer_role_arn        = module.account_iam_resources.account_roles_arn["Installer"]
   ingress_operator_role_arn = module.operator_roles.operator_roles_arn["openshift-ingress-operator"]

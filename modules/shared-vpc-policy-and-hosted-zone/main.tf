@@ -1,10 +1,9 @@
 locals {
-  name_prefix         = var.name_prefix != null ? var.name_prefix : var.cluster_name
   resource_arn_prefix = "arn:aws:ec2:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:subnet/"
 }
 
 resource "aws_iam_role" "shared_vpc_role" {
-  name = "${local.name_prefix}-shared-vpc-role"
+  name = "${var.name_prefix}-shared-vpc-role"
   assume_role_policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -28,7 +27,7 @@ resource "aws_iam_role" "shared_vpc_role" {
 }
 
 resource "aws_iam_policy" "shared_vpc_policy" {
-  name = "${local.name_prefix}-shared-vpc-policy"
+  name = "${var.name_prefix}-shared-vpc-policy"
   policy = jsonencode({
     Version = "2012-10-17"
     Statement = [
@@ -60,7 +59,7 @@ resource "aws_iam_role_policy_attachment" "shared_vpc_role_policy_attachment" {
 }
 
 resource "aws_ram_resource_share" "shared_vpc_resource_share" {
-  name                      = "${local.name_prefix}-shared-vpc-resource-share"
+  name                      = "${var.name_prefix}-shared-vpc-resource-share"
   allow_external_principals = true
 }
 
