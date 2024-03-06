@@ -1,5 +1,6 @@
 locals {
-  tags = var.tags == null ? {} : var.tags
+  tags               = var.tags == null ? {} : var.tags
+  availability_zones = var.availability_zones != null ? var.availability_zones : slice(data.aws_availability_zones.available.names, 0, var.availability_zones_count)
 }
 
 resource "aws_vpc" "vpc" {
@@ -23,14 +24,14 @@ resource "aws_vpc_endpoint" "s3" {
 }
 
 resource "aws_subnet" "public_subnet" {
-  count = var.availability_zones_count
+  count = length(local.availability_zones)
 
   vpc_id            = aws_vpc.vpc.id
-  cidr_block        = cidrsubnet(var.vpc_cidr, var.availability_zones_count * 2, count.index)
-  availability_zone = data.aws_availability_zones.available.names[count.index % length(data.aws_availability_zones.available.names)]
+  cidr_block        = cidrsubnet(var.vpc_cidr, length(local.availability_zones) * 2, count.index)
+  availability_zone = local.availability_zones[count.index]
   tags = merge(
     {
-      "Name" = join("-", [var.name_prefix, "subnet", "public${count.index + 1}", data.aws_availability_zones.available.names[count.index % length(data.aws_availability_zones.available.names)]])
+      "Name" = join("-", [var.name_prefix, "subnet", "public${count.index + 1}", local.availability_zones[count.index]])
     },
     local.tags,
   )
@@ -40,14 +41,14 @@ resource "aws_subnet" "public_subnet" {
 }
 
 resource "aws_subnet" "private_subnet" {
-  count = var.availability_zones_count
+  count = length(local.availability_zones)
 
   vpc_id            = aws_vpc.vpc.id
-  cidr_block        = cidrsubnet(var.vpc_cidr, var.availability_zones_count * 2, count.index + var.availability_zones_count)
-  availability_zone = data.aws_availability_zones.available.names[count.index % length(data.aws_availability_zones.available.names)]
+  cidr_block        = cidrsubnet(var.vpc_cidr, length(local.availability_zones) * 2, count.index + length(local.availability_zones))
+  availability_zone = local.availability_zones[count.index]
   tags = merge(
     {
-      "Name" = join("-", [var.name_prefix, "subnet", "private${count.index + 1}", data.aws_availability_zones.available.names[count.index % length(data.aws_availability_zones.available.names)]])
+      "Name" = join("-", [var.name_prefix, "subnet", "private${count.index + 1}", local.availability_zones[count.index]])
     },
     local.tags,
   )
@@ -76,12 +77,12 @@ resource "aws_internet_gateway" "internet_gateway" {
 # Elastic IPs for NAT gateways
 #
 resource "aws_eip" "eip" {
-  count = var.availability_zones_count
+  count = length(local.availability_zones)
 
   domain = "vpc"
   tags = merge(
     {
-      "Name" = join("-", [var.name_prefix, "eip", data.aws_availability_zones.available.names[count.index % length(data.aws_availability_zones.available.names)]])
+      "Name" = join("-", [var.name_prefix, "eip", local.availability_zones[count.index]])
     },
     local.tags,
   )
@@ -94,14 +95,14 @@ resource "aws_eip" "eip" {
 # NAT gateways
 #
 resource "aws_nat_gateway" "public_nat_gateway" {
-  count = var.availability_zones_count
+  count = length(local.availability_zones)
 
   allocation_id = aws_eip.eip[count.index].id
   subnet_id     = aws_subnet.public_subnet[count.index].id
 
   tags = merge(
     {
-      "Name" = join("-", [var.name_prefix, "nat", "public${count.index}", data.aws_availability_zones.available.names[count.index % length(data.aws_availability_zones.available.names)]])
+      "Name" = join("-", [var.name_prefix, "nat", "public${count.index}", local.availability_zones[count.index]])
     },
     local.tags,
   )
@@ -127,12 +128,12 @@ resource "aws_route_table" "public_route_table" {
 }
 
 resource "aws_route_table" "private_route_table" {
-  count = var.availability_zones_count
+  count = length(local.availability_zones)
 
   vpc_id = aws_vpc.vpc.id
   tags = merge(
     {
-      "Name" = join("-", [var.name_prefix, "rtb", "private${count.index}", data.aws_availability_zones.available.names[count.index % length(data.aws_availability_zones.available.names)]])
+      "Name" = join("-", [var.name_prefix, "rtb", "private${count.index}", local.availability_zones[count.index]])
     },
     local.tags,
   )
@@ -162,7 +163,7 @@ resource "aws_route" "ipv6_egress_route" {
 
 # Send private traffic to NAT
 resource "aws_route" "private_nat" {
-  count = var.availability_zones_count
+  count = length(local.availability_zones)
 
   route_table_id         = aws_route_table.private_route_table[count.index].id
   destination_cidr_block = "0.0.0.0/0"
@@ -173,7 +174,7 @@ resource "aws_route" "private_nat" {
 
 # Private route for vpc endpoint
 resource "aws_vpc_endpoint_route_table_association" "private_vpc_endpoint_route_table_association" {
-  count = var.availability_zones_count
+  count = length(local.availability_zones)
 
   route_table_id  = aws_route_table.private_route_table[count.index].id
   vpc_endpoint_id = aws_vpc_endpoint.s3.id
@@ -183,14 +184,14 @@ resource "aws_vpc_endpoint_route_table_association" "private_vpc_endpoint_route_
 # Route table associations
 #
 resource "aws_route_table_association" "public_route_table_association" {
-  count = var.availability_zones_count
+  count = length(local.availability_zones)
 
   subnet_id      = aws_subnet.public_subnet[count.index].id
   route_table_id = aws_route_table.public_route_table.id
 }
 
 resource "aws_route_table_association" "private_route_table_association" {
-  count = var.availability_zones_count
+  count = length(local.availability_zones)
 
   subnet_id      = aws_subnet.private_subnet[count.index].id
   route_table_id = aws_route_table.private_route_table[count.index].id
