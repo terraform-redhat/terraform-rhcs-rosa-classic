@@ -180,7 +180,7 @@ data "aws_availability_zones" "available" {
 }
 
 data "aws_subnet" "provided_subnet" {
-  count = length(var.aws_subnet_ids)
+  count = length(var.aws_availability_zones) > 0 ? 0 : length(var.aws_subnet_ids)
 
   id = var.aws_subnet_ids[count.index]
 }
