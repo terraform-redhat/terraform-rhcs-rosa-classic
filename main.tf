@@ -3,10 +3,10 @@ locals {
   account_role_prefix  = coalesce(var.account_role_prefix, "${var.cluster_name}-account")
   operator_role_prefix = coalesce(var.operator_role_prefix, "${var.cluster_name}-operator")
   sts_roles = {
-    installer_role_arn    = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role${local.path}${local.account_role_prefix}-Installer-Role",
-    support_role_arn      = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role${local.path}${local.account_role_prefix}-Support-Role",
-    controlplane_role_arn = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role${local.path}${local.account_role_prefix}-ControlPlane-Role",
-    worker_role_arn       = "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role${local.path}${local.account_role_prefix}-Worker-Role"
+    installer_role_arn    = "arn:${data.aws_partition.current.partition}:iam::${data.aws_caller_identity.current.account_id}:role${local.path}${local.account_role_prefix}-Installer-Role",
+    support_role_arn      = "arn:${data.aws_partition.current.partition}:iam::${data.aws_caller_identity.current.account_id}:role${local.path}${local.account_role_prefix}-Support-Role",
+    controlplane_role_arn = "arn:${data.aws_partition.current.partition}:iam::${data.aws_caller_identity.current.account_id}:role${local.path}${local.account_role_prefix}-ControlPlane-Role",
+    worker_role_arn       = "arn:${data.aws_partition.current.partition}:iam::${data.aws_caller_identity.current.account_id}:role${local.path}${local.account_role_prefix}-Worker-Role"
   }
 }
 
@@ -269,3 +269,5 @@ resource "null_resource" "validations" {
 }
 
 data "aws_caller_identity" "current" {}
+
+data "aws_partition" "current" {}

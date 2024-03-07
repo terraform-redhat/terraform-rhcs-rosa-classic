@@ -45,6 +45,7 @@ For more info see [About IAM resources for ROSA clusters that use STS](https://d
 | [random_string.default_random](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/string) | resource |
 | [time_sleep.account_iam_resources_wait](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
 | [aws_iam_policy_document.custom_trust_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
+| [aws_partition.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/partition) | data source |
 | [rhcs_info.current](https://registry.terraform.io/providers/terraform-redhat/rhcs/latest/docs/data-sources/info) | data source |
 | [rhcs_policies.all_policies](https://registry.terraform.io/providers/terraform-redhat/rhcs/latest/docs/data-sources/policies) | data source |
 | [rhcs_versions.all_versions](https://registry.terraform.io/providers/terraform-redhat/rhcs/latest/docs/data-sources/versions) | data source |

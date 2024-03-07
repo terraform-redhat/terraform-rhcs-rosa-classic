@@ -47,6 +47,7 @@ No modules.
 | [time_sleep.role_resources_propagation](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
 | [aws_iam_policy_document.custom_trust_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
+| [aws_partition.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/partition) | data source |
 | [rhcs_rosa_operator_roles.operator_roles](https://registry.terraform.io/providers/terraform-redhat/rhcs/latest/docs/data-sources/rosa_operator_roles) | data source |
 
 ## Inputs

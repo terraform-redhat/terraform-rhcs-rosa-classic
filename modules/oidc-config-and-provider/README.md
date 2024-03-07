@@ -45,6 +45,7 @@ For more info see [About IAM resources for ROSA clusters that use STS](https://d
 | [rhcs_rosa_oidc_config_input.oidc_input](https://registry.terraform.io/providers/terraform-redhat/rhcs/latest/docs/resources/rosa_oidc_config_input) | resource |
 | [time_sleep.wait_10_seconds](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
 | [aws_iam_policy_document.allow_access_from_another_account](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
+| [aws_partition.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/partition) | data source |
 | [aws_region.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/region) | data source |
 
 ## Inputs
