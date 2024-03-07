@@ -28,6 +28,9 @@ verify:
 		echo "!! Validating $$d !!" && cd $$d && rm -rf .terraform .terraform.lock.hcl && terraform init && terraform validate && cd - ;\
 	done
 
+verify-gen: terraform-docs
+	scripts/verify-gen.sh
+
 .PHONY: tf-init
 tf-init:
 	@cd $(TERRAFORM_DIR) && terraform init -input=false -lock=false -no-color -reconfigure
