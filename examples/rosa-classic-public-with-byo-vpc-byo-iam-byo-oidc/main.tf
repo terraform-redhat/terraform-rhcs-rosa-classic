@@ -16,7 +16,7 @@ module "rosa" {
   aws_availability_zones = module.vpc.availability_zones
   multi_az               = length(module.vpc.availability_zones) > 1
   path                   = module.account_iam_resources.path
-  replicas               = length(module.vpc.availability_zones)
+  replicas               = 3
 }
 
 ############################

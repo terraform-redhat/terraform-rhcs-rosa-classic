@@ -115,7 +115,7 @@ module "rosa_cluster_classic" {
   oidc_config_id               = module.oidc_config_and_provider.oidc_config_id
   aws_subnet_ids               = module.shared-vpc-policy-and-hosted-zone.shared_subnets
   multi_az                     = length(module.vpc.availability_zones) > 1
-  replicas                     = length(module.vpc.availability_zones)
+  replicas                     = 3
   admin_credentials_username   = "kubeadmin"
   admin_credentials_password   = random_password.password.result
   base_dns_domain              = rhcs_dns_domain.dns_domain.id
