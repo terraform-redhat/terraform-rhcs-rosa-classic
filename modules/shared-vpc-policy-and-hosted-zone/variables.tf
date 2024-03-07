@@ -5,8 +5,7 @@ variable "cluster_name" {
 
 variable "name_prefix" {
   type        = string
-  default     = null
-  description = "The prefix applied to all AWS creations. If not provided, the default is to use the cluster_name."
+  description = "The prefix applied to all AWS creations."
 }
 
 variable "target_aws_account" {
