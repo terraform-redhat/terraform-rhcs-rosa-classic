@@ -4,7 +4,7 @@
 
 This Terraform sub-module is designed to manage the OpenID Connect (OIDC) provider and configuration for Red Hat OpenShift Service on AWS (ROSA) clusters. It allows users to define and configure the OIDC provider settings necessary for authentication within the ROSA cluster environment. With this module, users can easily set up OIDC integration tailored to their requirements, enabling seamless authentication and access control mechanisms for ROSA clusters deployed on AWS.
 
-For more info see [About IAM resources for ROSA clusters that use STS](https://docs.openshift.com/rosa/rosa_architecture/rosa-sts-about-iam-resources.html#rosa-sts-about-iam-resources)
+For more info see [OpenID Connect Overview](https://docs.openshift.com/rosa/rosa_architecture/rosa-oidc-overview.html)
 
 <!-- BEGIN_AUTOMATED_TF_DOCS_BLOCK -->
 ## Requirements
