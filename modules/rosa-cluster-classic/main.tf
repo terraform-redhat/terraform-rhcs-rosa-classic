@@ -5,23 +5,23 @@ locals {
     role_arn = var.installer_role_arn != null ? (
       var.installer_role_arn
       ) : (
-      "arn:aws:iam::${local.aws_account_id}:role${local.path}${var.account_role_prefix}-Installer-Role"
+      "arn:${data.aws_partition.current[0].partition}:iam::${local.aws_account_id}:role${local.path}${var.account_role_prefix}-Installer-Role"
     ),
     support_role_arn = var.support_role_arn != null ? (
       var.support_role_arn
       ) : (
-      "arn:aws:iam::${local.aws_account_id}:role${local.path}${var.account_role_prefix}-Support-Role"
+      "arn:${data.aws_partition.current[0].partition}:iam::${local.aws_account_id}:role${local.path}${var.account_role_prefix}-Support-Role"
     ),
     instance_iam_roles = {
       master_role_arn = var.controlplane_role_arn != null ? (
         var.controlplane_role_arn
         ) : (
-        "arn:aws:iam::${local.aws_account_id}:role${local.path}${var.account_role_prefix}-ControlPlane-Role"
+        "arn:${data.aws_partition.current[0].partition}:iam::${local.aws_account_id}:role${local.path}${var.account_role_prefix}-ControlPlane-Role"
       ),
       worker_role_arn = var.worker_role_arn != null ? (
         var.worker_role_arn
         ) : (
-        "arn:aws:iam::${local.aws_account_id}:role${local.path}${var.account_role_prefix}-Worker-Role"
+        "arn:${data.aws_partition.current[0].partition}:iam::${local.aws_account_id}:role${local.path}${var.account_role_prefix}-Worker-Role"
       ),
     },
     operator_role_prefix = var.operator_role_prefix,
@@ -114,6 +114,13 @@ resource "rhcs_cluster_rosa_classic" "rosa_classic_cluster" {
       ) == false
       error_message = "Either provide the \"account_role_prefix\" or specify all ARNs for account roles (\"installer_role_arn\", \"support_role_arn\", \"controlplane_role_arn\", \"worker_role_arn\")."
     }
+    precondition {
+      condition = (
+        var.installer_role_arn != null && var.support_role_arn != null && var.controlplane_role_arn != null &&
+        var.worker_role_arn != null && var.account_role_prefix != null
+      ) == false
+      error_message = "The \"account_role_prefix\" shouldn't be provided when all ARNs for account roles are specified (\"installer_role_arn\", \"support_role_arn\", \"controlplane_role_arn\", \"worker_role_arn\")."
+    }
   }
 }
 
@@ -183,4 +190,8 @@ data "aws_subnet" "provided_subnet" {
   count = length(var.aws_subnet_ids)
 
   id = var.aws_subnet_ids[count.index]
+}
+
+data "aws_partition" "current" {
+  count = var.account_role_prefix == null ? 0 : 1
 }

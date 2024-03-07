@@ -53,7 +53,7 @@ data "aws_iam_policy_document" "allow_access_from_another_account" {
     ]
 
     resources = [
-      format("arn:aws:s3:::%s/*", rhcs_rosa_oidc_config_input.oidc_input[count.index].bucket_name),
+      format("arn:${data.aws_partition.current.partition}:s3:::%s/*", rhcs_rosa_oidc_config_input.oidc_input[count.index].bucket_name),
     ]
   }
 }
@@ -133,3 +133,5 @@ resource "null_resource" "unmanaged_vars_validation" {
     }
   }
 }
+
+data "aws_partition" "current" {}

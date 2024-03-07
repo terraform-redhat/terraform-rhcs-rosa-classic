@@ -7,14 +7,14 @@ locals {
       role_type            = "installer"
       policy_details       = data.rhcs_policies.all_policies.account_role_policies["sts_installer_permission_policy"]
       principal_type       = "AWS"
-      principal_identifier = "arn:aws:iam::${data.rhcs_info.current.ocm_aws_account_id}:role/RH-Managed-OpenShift-Installer"
+      principal_identifier = "arn:${data.aws_partition.current.partition}:iam::${data.rhcs_info.current.ocm_aws_account_id}:role/RH-Managed-OpenShift-Installer"
     },
     {
       role_name            = "Support"
       role_type            = "support"
       policy_details       = data.rhcs_policies.all_policies.account_role_policies["sts_support_permission_policy"]
       principal_type       = "AWS"
-      principal_identifier = "arn:aws:iam::${data.rhcs_info.current.ocm_aws_account_id}:role/RH-Technical-Support-Access"
+      principal_identifier = "arn:${data.aws_partition.current.partition}:iam::${data.rhcs_info.current.ocm_aws_account_id}:role/RH-Technical-Support-Access"
     },
     {
       role_name            = "Worker"
@@ -140,3 +140,5 @@ resource "time_sleep" "account_iam_resources_wait" {
     path                  = var.path
   }
 }
+
+data "aws_partition" "current" {}

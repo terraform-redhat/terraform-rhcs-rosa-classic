@@ -1,5 +1,5 @@
 locals {
-  resource_arn_prefix = "arn:aws:ec2:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:subnet/"
+  resource_arn_prefix = "arn:${data.aws_partition.current.partition}:ec2:${data.aws_region.current.name}:${data.aws_caller_identity.current.account_id}:subnet/"
 }
 
 resource "aws_iam_role" "shared_vpc_role" {
@@ -104,3 +104,5 @@ resource "time_sleep" "shared_resources_propagation" {
 data "aws_caller_identity" "current" {}
 
 data "aws_region" "current" {}
+
+data "aws_partition" "current" {}
