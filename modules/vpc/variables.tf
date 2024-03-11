@@ -12,7 +12,7 @@ variable "name_prefix" {
 variable "availability_zones" {
   type        = list(string)
   default     = null
-  description = "A list of availability zones names or ids in the region."
+  description = "A list of availability zones names in the region."
 }
 
 variable "availability_zones_count" {
