@@ -1,4 +1,5 @@
 locals {
+  path                                = coalesce(var.path, "/")
   short_openshift_version             = format("%s.%s", split(".", var.openshift_version)[0], split(".", var.openshift_version)[1])
   shared_vpc_role_arn_replace         = "%%{shared_vpc_role_arn}"
   openshift_ingress_policy            = data.rhcs_policies.all_policies.operator_role_policies["openshift_ingress_operator_cloud_credentials_policy"]
@@ -54,6 +55,7 @@ resource "aws_iam_policy" "operator-policy" {
 
   name   = local.operator_roles_policy_properties[count.index].policy_name
   policy = local.operator_roles_policy_properties[count.index].policy_details
+  path   = local.path
 
   tags = merge(var.tags, {
     rosa_openshift_version = local.short_openshift_version

@@ -56,6 +56,7 @@ module "operator_policies" {
     ) : (
     local.account_role_prefix
   )
+  path              = var.create_account_roles ? module.account_iam_resources[0].path : local.path
   openshift_version = var.openshift_version
   tags              = var.tags
 }
