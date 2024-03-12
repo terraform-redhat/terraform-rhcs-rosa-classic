@@ -54,6 +54,7 @@ module "operator_policies" {
   account_role_prefix = module.account_iam_resources.account_role_prefix
   openshift_version   = module.account_iam_resources.openshift_version
   shared_vpc_role_arn = "arn:${data.aws_partition.current.partition}:iam::${data.aws_caller_identity.shared_vpc.account_id}:role/${local.shared_vpc_role_name}"
+  path                = module.account_iam_resources.path
 }
 
 ############################

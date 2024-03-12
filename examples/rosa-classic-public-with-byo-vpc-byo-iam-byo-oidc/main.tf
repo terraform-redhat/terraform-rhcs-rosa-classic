@@ -44,6 +44,7 @@ module "operator_policies" {
 
   account_role_prefix = local.account_role_prefix
   openshift_version   = "4.14.5"
+  path                = module.account_iam_resources.path
 }
 
 module "operator_roles" {

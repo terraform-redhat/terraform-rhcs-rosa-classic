@@ -91,6 +91,7 @@ module "account_iam_policy" {
   name = "${local.account_role_prefix_valid}-${local.account_roles_properties[count.index].role_name}-Role-Policy"
 
   policy = local.account_roles_properties[count.index].policy_details
+  path   = local.path
 
   tags = merge(var.tags, {
     rosa_openshift_version = local.short_openshift_version
