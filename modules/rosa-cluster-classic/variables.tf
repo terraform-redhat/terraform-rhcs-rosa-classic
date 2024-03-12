@@ -335,6 +335,12 @@ variable "aws_additional_compute_security_group_ids" {
 # Autoscaler resource variables
 ##############################################################
 
+variable "cluster_autoscaler_enabled" {
+  type        = bool
+  default     = false
+  description = "Enable Autoscaler for this cluster."
+}
+
 variable "autoscaler_balance_similar_node_groups" {
   type        = bool
   default     = null

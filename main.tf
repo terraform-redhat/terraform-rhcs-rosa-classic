@@ -150,6 +150,7 @@ module "rosa_cluster_classic" {
   #############
   # Autoscaler 
   #############
+  cluster_autoscaler_enabled                  = var.cluster_autoscaler_enabled
   autoscaler_balance_similar_node_groups      = var.autoscaler_balance_similar_node_groups
   autoscaler_skip_nodes_with_local_storage    = var.autoscaler_skip_nodes_with_local_storage
   autoscaler_log_verbosity                    = var.autoscaler_log_verbosity

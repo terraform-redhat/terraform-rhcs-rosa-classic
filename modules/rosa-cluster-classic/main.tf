@@ -121,11 +121,28 @@ resource "rhcs_cluster_rosa_classic" "rosa_classic_cluster" {
       ) == false
       error_message = "The \"account_role_prefix\" shouldn't be provided when all ARNs for account roles are specified (\"installer_role_arn\", \"support_role_arn\", \"controlplane_role_arn\", \"worker_role_arn\")."
     }
+    precondition {
+      condition = (
+        (
+          var.autoscaler_balance_similar_node_groups != null || var.autoscaler_skip_nodes_with_local_storage != null ||
+          var.autoscaler_log_verbosity != null || var.autoscaler_max_pod_grace_period != null ||
+          var.autoscaler_pod_priority_threshold != null || var.autoscaler_ignore_daemonsets_utilization != null ||
+          var.autoscaler_max_node_provision_time != null || var.autoscaler_balancing_ignored_labels != null ||
+          var.autoscaler_max_nodes_total != null || var.autoscaler_cores != null || var.autoscaler_memory != null ||
+          var.autoscaler_gpus != null || var.autoscaler_scale_down_enabled != null ||
+          var.autoscaler_scale_down_unneeded_time != null || var.autoscaler_scale_down_utilization_threshold != null ||
+          var.autoscaler_scale_down_delay_after_add != null || var.autoscaler_scale_down_delay_after_delete != null ||
+          var.autoscaler_scale_down_delay_after_failure != null
+        )
+        && var.cluster_autoscaler_enabled != true
+      ) == false
+      error_message = "Autoscaler parameters cannot be modified while the cluster autoscaler is disabled. Please ensure that cluster_autoscaler_enabled variable is set to true"
+    }
   }
 }
 
 resource "rhcs_cluster_autoscaler" "cluster_autoscaler" {
-  count = var.autoscaling_enabled == true ? 1 : 0
+  count = var.cluster_autoscaler_enabled == true ? 1 : 0
 
   cluster                       = rhcs_cluster_rosa_classic.rosa_classic_cluster.id
   balance_similar_node_groups   = var.autoscaler_balance_similar_node_groups
