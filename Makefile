@@ -81,5 +81,6 @@ change-ocp-version:
 	find . -type f -name "variables.tf" -exec sed -i -e 's/default = "${OLD_VER}"/default = "${NEW_VER}"/g' -- {} +
 
 .PHONY: terraform-docs
+# This target require teraform-docs, follow the installation guide: https://terraform-docs.io/user-guide/installation/
 terraform-docs:
 	bash scripts/terraform-docs.sh
