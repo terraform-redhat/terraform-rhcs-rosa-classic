@@ -4,6 +4,6 @@ set -xe
 
 if [[ -n "$(git status --porcelain)" ]]; then
     echo "It seems like you need to run 'make terraform-docs'. Please run it and commit the changes"
-    git status --porcelain
+    git status --porcelain | grep -v "Dockerfile"
     exit 1
 fi
