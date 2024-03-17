@@ -13,7 +13,7 @@ function runexample::usage() {
 }
 
 if (( "$#" < 1  || "$#" > 2)); then
-	echo "Error:
+	echo "run-example.sh: Error:
 	Unsupported command!!!
 	"
         runexample::usage
@@ -28,14 +28,14 @@ example_name=$1
 REPO_ROOT_DIR="$( cd -- "$(dirname "$1")" >/dev/null 2>&1 ; pwd -P )"
 EXAMPLE_PATH="${REPO_ROOT_DIR}/examples/${example_name}"
 if [ ! -d "${EXAMPLE_PATH}" ]; then
-	echo "Error:
+	echo "run-example.sh: Error:
 	Example \"${example_name}\" does not exist!!!
   Full path: \"${EXAMPLE_PATH}\"
 	"
   exit 1
 fi
 
-echo "Running example \"${example_name}\" - changing directory to \"${EXAMPLE_PATH}\""
+echo "run-example.sh: Running example \"${example_name}\" - changing directory to \"${EXAMPLE_PATH}\""
 cd ${EXAMPLE_PATH}
 
 ##############################################################
@@ -48,14 +48,14 @@ option_arr+=("--apply-only" "--destroy-only")
 if [[ $option_arg != "" ]]; then
     match=0
     for option in "${option_arr[@]}"; do
-        echo "****** $option_arg , "
+        echo "run-example: provided optional arg: $option_arg , "
         if [[ $option == "$option_arg" ]]; then
             match=1
             break
         fi
     done
     if [[ $match = 0 ]]; then
-      	echo "Error:
+      	echo "run-example.sh: Error:
       	Unsupported option!!!
       	"
               runexample::usage
@@ -77,23 +77,22 @@ env_arr+=("RHCS_TOKEN" "TF_VAR_cluster_name")
 ## For shared VPC scenario, user must provide the shared VPC AWS account details
 ## Make sure that all shared VPC examples names include "shared-vpc" substring
 if [[ "${example_name}" == *"shared-vpc"* ]]; then
-  echo "Running example with \"shared-vpc\""
+  echo "run-example.sh: Running example with \"shared-vpc\""
   env_arr+=("TF_VAR_shared_vpc_aws_access_key_id" "TF_VAR_shared_vpc_aws_secret_access_key")
 fi
 
 ## now loop through the above array
-echo "Verify environment variable defined:"
+echo "run-example.sh: Verify that required environment variables are provided"
 NEWLINE=$'\n'
 for env_name in "${env_arr[@]}"
 do
-  echo "  # ${env_name}=${!env_name}"
   if [[ -z "${!env_name}" ]]; then
     undefined_env_arr+=("${env_name}")
   fi
 done
 
 if [[ ${#undefined_env_arr[@]} > 0 ]]; then
-	echo "Error:
+	echo "run-example.sh: Error:
   The following environment variables are not defined!!!"
     for undefined_env in "${undefined_env_arr[@]}"
     do
@@ -106,13 +105,13 @@ fi
 # terraform init
 ##############################################################
 
-echo "Cleaning Terraform files ..."
+echo "run-example.sh: Cleaning Terraform files ..."
 rm -rf .terraform .terraform.lock.hcl
-echo "Cleaning Terraform files completed"
+echo "run-example.sh: Cleaning Terraform files completed"
 
-echo "Running \"terraform init\" ..."
+echo "run-example.sh: Running \"terraform init\" ..."
 terraform init
-echo "\"terraform init\" completed"
+echo "run-example.sh: \"terraform init\" completed"
 
 ##############################################################
 # terraform apply
@@ -121,15 +120,15 @@ set +e
 _apply_failed=false
     
 if [[ $option_arg == "--destroy-only" ]]; then
-    echo "destroy-only option was provided - skip apply"
+    echo "run-example.sh: destroy-only option was provided - skip apply"
 else
-    echo "Running \"terraform apply\" ..."
+    echo "run-example.sh: Running \"terraform apply\" ..."
     terraform apply -auto-approve || _apply_failed=true
     if [ $_apply_failed == true ]
     then
-        echo "\"terraform apply\" failed"
+        echo "run-example.sh: \"terraform apply\" failed"
     else
-        echo "\"terraform apply\" completed"
+        echo "run-example.sh: \"terraform apply\" completed"
     fi
 fi
 
@@ -139,11 +138,11 @@ fi
 set -e
 
 if [[ $option_arg == "--apply-only" ]]; then
-    echo "apply-only option was provided - skip destroy"
+    echo "run-example.sh: apply-only option was provided - skip destroy"
 else
-    echo "Running \"terraform destroy\" ..."
+    echo "run-example.sh: Running \"terraform destroy\" ..."
     terraform destroy -auto-approve
-    echo "\"terraform destroy\" completed"
+    echo "run-example.sh: \"terraform destroy\" completed"
 fi
 
 ##############################################################
@@ -151,7 +150,7 @@ fi
 ##############################################################
 if [ $_apply_failed == true ]
 then
-	echo "Error:
+	echo "run-example.sh: Error:
 	terraform apply was failed!!!
 	"
   exit 2
