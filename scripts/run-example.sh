@@ -123,7 +123,7 @@ if [[ $option_arg == "--destroy-only" ]]; then
     echo "run-example.sh: destroy-only option was provided - skip apply"
 else
     echo "run-example.sh: Running \"terraform apply\" ..."
-    terraform apply -auto-approve || _apply_failed=true
+    terraform apply -auto-approve | sed 's/\(aws_account_id[ ]\+=[ ]\+"\)[0-9]\+\("\)/\1***\2/g' || _apply_failed=true
     if [ $_apply_failed == true ]
     then
         echo "run-example.sh: \"terraform apply\" failed"
@@ -141,7 +141,7 @@ if [[ $option_arg == "--apply-only" ]]; then
     echo "run-example.sh: apply-only option was provided - skip destroy"
 else
     echo "run-example.sh: Running \"terraform destroy\" ..."
-    terraform destroy -auto-approve
+    terraform destroy -auto-approve | sed 's/\(aws_account_id[ ]\+=[ ]\+"\)[0-9]\+\("\)/\1***\2/g'
     echo "run-example.sh: \"terraform destroy\" completed"
 fi
 
