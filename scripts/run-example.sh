@@ -123,7 +123,7 @@ if [[ $option_arg == "--destroy-only" ]]; then
     echo "destroy-only option was provided - skip apply"
 else
     echo "Running \"terraform apply\" ..."
-    terraform apply -auto-approve || _apply_failed=true
+    terraform apply -auto-approve | sed 's/sensitive value/XXXXXXXXXX/g' || _apply_failed=true
     if [ $_apply_failed == true ]
     then
         echo "\"terraform apply\" failed"
@@ -141,7 +141,7 @@ if [[ $option_arg == "--apply-only" ]]; then
     echo "apply-only option was provided - skip destroy"
 else
     echo "Running \"terraform destroy\" ..."
-    terraform destroy -auto-approve
+    terraform destroy -auto-approve |  sed 's/sensitive value/XXXXXXXXXX/g' 
     echo "\"terraform destroy\" completed"
 fi
 
