@@ -2,13 +2,6 @@
 
 Terraform module which creates ROSA cluster
 
-## Notice
-
-This module is currently in its Alpha version and remains under active development; using it carries inherent risks that you should be aware of.
-
-For the supported provider go to https://registry.terraform.io/providers/terraform-redhat/rhcs/latest
-For the supported rosa-sts module go to https://registry.terraform.io/modules/terraform-redhat/rosa-sts/aws/latest
-
 ## Introduction
 
 This module serves as a comprehensive solution for deploying, configuring, and managing ROSA Classic clusters within your AWS environment. With a focus on simplicity and efficiency, this module streamlines the process of setting up and maintaining ROSA Classic clusters, enabling users to leverage the power of OpenShift on AWS infrastructure effortlessly.
