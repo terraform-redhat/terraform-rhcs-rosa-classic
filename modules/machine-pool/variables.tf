@@ -23,13 +23,13 @@ variable "replicas" {
 }
 
 variable "use_spot_instances" {
-  description = "Use Amazon EC2 Spot Instances."
+  description = "Use Amazon EC2 spot instances."
   type        = bool
   default     = null
 }
 
 variable "max_spot_price" {
-  description = "Max Spot price."
+  description = "Max spot price."
   type        = number
   default     = null
 }
@@ -53,7 +53,7 @@ variable "max_replicas" {
 }
 
 variable "taints" {
-  description = "Taints for a machine pool. This list will overwrite any modifications made to node taints on an ongoing basis."
+  description = "Taints for a machine pool. This list overwrites any modifications made to node taints on an ongoing basis."
   type = list(object({
     key           = string
     value         = string
@@ -63,25 +63,25 @@ variable "taints" {
 }
 
 variable "labels" {
-  description = "Labels for the machine pool. Format should be a comma-separated list of 'key = value'. This list will overwrite any modifications made to node labels on an ongoing basis."
+  description = "Labels for the machine pool. Format should be a comma-separated list of 'key = value'. This list overwrites any modifications made to node labels on an ongoing basis."
   type        = map(string)
   default     = null
 }
 
 variable "multi_availability_zone" {
-  description = "Create a multi-AZ machine pool for a multi-AZ cluster (default is `true`)"
+  description = "Create a multi-AZ machine pool for a multi-AZ cluster (default is `true`)."
   type        = bool
   default     = null
 }
 
 variable "availability_zone" {
-  description = "Select the availability zone in which to create a single AZ machine pool for a multi-AZ cluster"
+  description = "Select the availability zone in which to create a single AZ machine pool for a multi-AZ cluster."
   type        = string
   default     = null
 }
 
 variable "subnet_id" {
-  description = "Select the subnet in which to create a single AZ machine pool for BYO-VPC cluster"
+  description = "Select the subnet in which to create a single AZ machine pool for a BYO-VPC cluster."
   type        = string
   default     = null
 }
@@ -93,7 +93,7 @@ variable "disk_size" {
 }
 
 variable "aws_additional_security_group_ids" {
-  description = "AWS additional security group ids."
+  description = "AWS additional security group IDs."
   type        = list(string)
   default     = null
 }

@@ -1,13 +1,14 @@
 # ROSA Classic Cluster sub-module
 
 ## Introduction
-This Terraform sub-module is designed to facilitate the provisioning and management of ROSA Classic clusters within AWS infrastructure. Prior to using this sub-module, ensure that AWS IAM roles and policies are already established within the account, along with the necessary OIDC configuration and provider settings.
+
+This Terraform sub-module helps the provisioning and management of ROSA Classic clusters within AWS infrastructure. Prior to using this sub-module, ensure that AWS IAM roles and policies are already established in the account, along with the necessary OIDC configuration and provider settings.
 
 This sub-module also includes the following resources:
-- Autoscaler: allow users to configure and control the scaling behavior of the cluster based on workload demands through the Autoscaler feature.
-- Default Ingress: the setup and management of the default ingress configuration, enabling seamless routing of external traffic to services deployed within the cluster.
+- Autoscaler: allows you to configure and control the scaling behavior of the cluster based on workload demands through the Autoscaler feature.
+- Default Ingress: enables the setup and management of the default ingress configuration, allowing seamless routing of external traffic to services deployed within the cluster.
 
-For more info see [Creating a default ROSA Classic cluster using Terraform](https://docs.openshift.com/rosa/rosa_install_access_delete_clusters/terraform/rosa-sts-creating-a-cluster-quickly-terraform.html)
+For more information, see [Creating a default ROSA Classic cluster using Terraform](https://docs.openshift.com/rosa/rosa_install_access_delete_clusters/terraform/rosa-sts-creating-a-cluster-quickly-terraform.html) in the ROSA documentation.
 
 <!-- BEGIN_AUTOMATED_TF_DOCS_BLOCK -->
 ## Requirements

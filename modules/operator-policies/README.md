@@ -2,19 +2,16 @@
 
 ## Introduction
 
-This Terraform sub-module is responsible for overseeing the management of IAM policies linked to the roles utilized by operators within the cluster for their necessary actions within the AWS account.
+This Terraform sub-module manages the IAM policies linked to the roles used by operators within the cluster for their necessary actions in the AWS account.
 
-Included in this sub-module are the following permissions:
+The following permissions are included in this sub-module:
 - ROSA Ingress Operator IAM policy: This IAM policy grants the ROSA Ingress Operator the necessary permissions to oversee external access to a cluster.
 - ROSA back-end storage IAM policy: This IAM policy is essential for ROSA to manage back-end storage through the Container Storage Interface (CSI).
 - ROSA Machine Config Operator policy: This IAM policy furnishes the ROSA Machine Config Operator with the permissions required to execute core cluster functionalities.
 - ROSA Cloud Credential Operator policy: This IAM policy offers the ROSA Cloud Credential Operator the necessary permissions for managing cloud provider credentials.
 - ROSA Image Registry Operator policy: This IAM policy provides the ROSA Image Registry Operator with permissions to manage the OpenShift image registry storage in AWS S3 for a cluster.
 
-For more info see:
-
-- [operator-roles sub-module description](../operator-roles/README.md)
-- [About IAM resources for ROSA clusters that use STS](https://docs.openshift.com/rosa/rosa_architecture/rosa-sts-about-iam-resources.html#rosa-sts-about-iam-resources)
+For more information, see the [operator-roles sub-module description](../operator-roles/README.md) and [About IAM resources for ROSA clusters that use STS](https://docs.openshift.com/rosa/rosa_architecture/rosa-sts-about-iam-resources.html#rosa-sts-about-iam-resources) in the ROSA documentation.
 
 <!-- BEGIN_AUTOMATED_TF_DOCS_BLOCK -->
 ## Requirements

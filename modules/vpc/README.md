@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This Terraform sub-module is designed to facilitate the Bring Your Own VPC (BYO VPC) scenario for ROSA (Red Hat OpenShift Service on AWS) clusters. It enables users to provision and configure all necessary resources within an existing AWS VPC, ensuring compatibility and seamless integration with ROSA deployments. By leveraging this module, users can efficiently set up their own VPC environment, complete with networking components such as subnets, route tables, internet gateways, NAT gateways, and security groups, tailored specifically for ROSA cluster requirements. This flexibility allows for a smooth transition for users who prefer to utilize their own VPC infrastructure while leveraging the capabilities of ROSA on AWS.
+This Terraform sub-module allow you to Bring Your Own VPC (BYO VPC) for ROSA Classic clusters. It enables you to provision and configure all necessary resources within an existing AWS VPC, ensuring compatibility and seamless integration with ROSA deployments. By leveraging this module, you can efficiently set up your own VPC environment, complete with networking components such as subnets, route tables, internet gateways, NAT gateways, and security groups, tailored specifically for ROSA Classic cluster requirements. This flexibility allows for a smooth change if you prefer to use your own VPC infrastructure while leveraging the capabilities of ROSA.
 
 <!-- BEGIN_AUTOMATED_TF_DOCS_BLOCK -->
 ## Requirements

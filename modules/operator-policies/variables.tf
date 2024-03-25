@@ -12,13 +12,13 @@ variable "openshift_version" {
 variable "shared_vpc_role_arn" {
   type        = string
   default     = ""
-  description = "The role ARN used to access the private hosted zone, in case shared VPC is used"
+  description = "The role ARN used to access the private hosted zone, in case shared VPC is used."
 }
 
 variable "path" {
   type        = string
   default     = "/"
-  description = "The arn path for the account/operator roles as well as their policies. Must use the same path used for \"account_iam_roles\"."
+  description = "The ARN path for the account/operator roles as well as their policies. Must use the same path used for \"account_iam_roles\"."
 }
 
 variable "tags" {

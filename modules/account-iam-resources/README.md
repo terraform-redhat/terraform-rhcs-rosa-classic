@@ -2,10 +2,11 @@
 
 ## Introduction
 
-This Terraform sub-module oversees the management of account-wide IAM roles and their associated policies. These roles are instrumental in creating the necessary AWS resources for ROSA cluster deployment.
-These IAM resources can be created once and utilized across multiple ROSA cluster creations.
+This Terraform sub-module manages the account-wide IAM roles and their associated policies. These roles are required when creating the necessary AWS resources for ROSA Classic cluster deployment.
 
-For more info see [About IAM resources for ROSA clusters that use STS](https://docs.openshift.com/rosa/rosa_architecture/rosa-sts-about-iam-resources.html#rosa-sts-about-iam-resources)
+These IAM resources can be created once and used across multiple ROSA Classic cluster creations.
+
+For more information, see [About IAM resources for ROSA clusters that use STS](https://docs.openshift.com/rosa/rosa_architecture/rosa-sts-about-iam-resources.html#rosa-sts-about-iam-resources) in the ROSA documentation.
 
 <!-- BEGIN_AUTOMATED_TF_DOCS_BLOCK -->
 ## Requirements

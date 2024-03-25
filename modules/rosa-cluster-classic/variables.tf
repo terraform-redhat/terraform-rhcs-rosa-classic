@@ -1,35 +1,35 @@
 variable "cluster_name" {
   type        = string
-  description = "Name of the cluster. After the creation of the resource, it is not possible to update the attribute value."
+  description = "Name of the cluster. After resource creation, the attribute value cannot be updated."
 }
 
 variable "aws_region" {
   type        = string
   default     = null
-  description = "The full name of the AWS region used for the ROSA cluster installation, for example 'us-east-1'. If no information is provided, the data will be retrieved from the currently connected account."
+  description = "The full name of the AWS region used for the ROSA cluster installation, for example 'us-east-1'. If no information is provided, the data is retrieved from the currently connected account."
 }
 
 variable "path" {
   type        = string
   default     = "/"
-  description = "The arn path for the account/operator roles as well as their policies."
+  description = "The ARN path for the account/operator roles as well as their policies."
 }
 
 variable "openshift_version" {
   type        = string
-  description = "Desired version of OpenShift for the cluster, for example '4.1.0'. If version is greater than the currently running version, an upgrade will be scheduled."
+  description = "Desired version of OpenShift for the cluster, for example '4.1.0'. If the version is later than the currently running version, an upgrade is scheduled."
 }
 
 variable "aws_account_id" {
   type        = string
   default     = null
-  description = "The AWS account identifier where all resources are created during the installation of the ROSA cluster. If no information is provided, the data will be retrieved from the currently connected account."
+  description = "The AWS account identifier where all resources are created during the installation of the ROSA cluster. If no information is provided, the data is retrieved from the currently connected account."
 }
 
 variable "aws_account_arn" {
   type        = string
   default     = null
-  description = "The ARN of the AWS account where all resources are created during the installation of the ROSA cluster. If no information is provided, the data will be retrieved from the currently connected account."
+  description = "The ARN of the AWS account where all resources are created during the installation of the ROSA cluster. If no information is provided, the data is retrieved from the currently connected account."
 }
 
 variable "oidc_config_id" {
@@ -52,13 +52,13 @@ variable "support_role_arn" {
 variable "controlplane_role_arn" {
   type        = string
   default     = null
-  description = "The Amazon Resource Name (ARN) associated with the AWS IAM role that will be used by the cluster's control plane instances."
+  description = "The Amazon Resource Name (ARN) associated with the AWS IAM role that is used by the cluster's control plane instances."
 }
 
 variable "worker_role_arn" {
   type        = string
   default     = null
-  description = "The Amazon Resource Name (ARN) associated with the AWS IAM role that will be used by the cluster's compute instances."
+  description = "The Amazon Resource Name (ARN) associated with the AWS IAM role that is used by the cluster's compute instances."
 }
 
 
@@ -69,7 +69,7 @@ variable "account_role_prefix" {
 }
 variable "operator_role_prefix" {
   type        = string
-  description = "A designated prefix used for the creation of AWS IAM roles asso:willciated with operators within the ROSA environment."
+  description = "A designated prefix used for the creation of AWS IAM roles associated with operators within the ROSA environment."
 }
 
 variable "base_dns_domain" {
@@ -81,31 +81,31 @@ variable "base_dns_domain" {
 variable "aws_subnet_ids" {
   type        = list(string)
   default     = []
-  description = "The Subnet IDs to use when installing the cluster. Leave empty for installer provisioned subnet IDs."
+  description = "The Subnet IDs to use when installing the cluster. Leave blank for installer provisioned subnet IDs."
 }
 
 variable "aws_additional_infra_security_group_ids" {
   type        = list(string)
   default     = null
-  description = "The additional Security Group IDs to be added to the infra worker nodes."
+  description = "The additional security group IDs to be added to the infra worker nodes."
 }
 
 variable "aws_additional_control_plane_security_group_ids" {
   type        = list(string)
   default     = null
-  description = "The additional Security Group IDs to be added to the control plane nodes."
+  description = "The additional security group IDs to be added to the control plane nodes."
 }
 
 variable "kms_key_arn" {
   type        = string
   default     = null
-  description = "The key ARN is the Amazon Resource Name (ARN) of a CMK. It is a unique, fully qualified identifier for the CMK. A key ARN includes the AWS account, Region, and the key ID."
+  description = "The key ARN is the Amazon Resource Name (ARN) of a CMK. It is a unique, fully qualified identifier for the CMK. A key ARN includes the AWS account, region, and the key ID."
 }
 
 variable "aws_private_link" {
   type        = bool
   default     = null
-  description = "Provides private connectivity between VPCs, AWS services, and your on-premises networks, without exposing your traffic to the public internet. (default: false)"
+  description = "Provides private connectivity between VPCs, AWS services, and on-premises networks, without exposing traffic to the public internet. (default: false)"
 }
 
 variable "private" {
@@ -129,7 +129,7 @@ variable "service_cidr" {
 variable "pod_cidr" {
   type        = string
   default     = null
-  description = "Block of IP addresses from which Pod IP addresses are allocated, for example \"10.128.0.0/14\"."
+  description = "Block of IP addresses from which pod IP addresses are allocated, for example \"10.128.0.0/14\"."
 }
 
 variable "host_prefix" {
@@ -141,7 +141,7 @@ variable "host_prefix" {
 variable "ec2_metadata_http_tokens" {
   type        = string
   default     = null
-  description = "Should cluster nodes use both v1 and v2 endpoints or just v2 endpoint of EC2 Instance Metadata Service (IMDS). Available since OpenShift version 4.11.0."
+  description = "Should cluster nodes use both v1 and v2 endpoints or just v2 endpoint of EC2 Instance Metadata Service (IMDS). Available since OpenShift 4.11.0."
 }
 
 ##############################################################
@@ -169,19 +169,19 @@ variable "no_proxy" {
 variable "additional_trust_bundle" {
   type        = string
   default     = null
-  description = "A string containing a PEM-encoded X.509 certificate bundle that will be added to the nodes' trusted certificate store."
+  description = "A string containing a PEM-encoded X.509 certificate bundle that is added to the nodes' trusted certificate store."
 }
 
 variable "admin_credentials_username" {
   type        = string
   default     = null
-  description = "Admin username that will be created with the cluster. auto generated username - \"cluster-admin\""
+  description = "Admin username that is created with the cluster. auto generated username - \"cluster-admin\""
 }
 
 variable "admin_credentials_password" {
   type        = string
   default     = null
-  description = "Admin password that will be created with the cluster. The password must contain at least 14 characters (ASCII-standard) without whitespaces including uppercase letters, lowercase letters, and numbers or symbols."
+  description = "Admin password that is created with the cluster. The password must contain at least 14 characters (ASCII-standard) without whitespaces including uppercase letters, lowercase letters, and numbers or symbols."
 }
 
 variable "private_hosted_zone_id" {
@@ -249,7 +249,7 @@ variable "fips" {
 variable "disable_waiting_in_destroy" {
   type        = bool
   default     = null
-  description = "Disable addressing cluster state in the destroy resource. Default value is false, and so a `destroy` will wait for the cluster to be deleted."
+  description = "Disable addressing cluster state in the destroy resource. Default value is false, and so a `destroy` waits for the cluster to be deleted."
 }
 
 variable "destroy_timeout" {
@@ -304,7 +304,7 @@ variable "max_replicas" {
 variable "compute_machine_type" {
   type        = string
   default     = null
-  description = "Identifies the Instance type used by the default worker machine pool e.g. `m5.xlarge`. Use the `rhcs_machine_types` data source to find the possible values."
+  description = "Identifies the instance type used by the default worker machine pool e.g. `m5.xlarge`. Use the `rhcs_machine_types` data source to find the possible values."
 }
 
 variable "worker_disk_size" {
@@ -316,19 +316,19 @@ variable "worker_disk_size" {
 variable "default_mp_labels" {
   type        = map(string)
   default     = null
-  description = "Labels for the worker machine pool. This list will overwrite any modifications made to Node labels on an ongoing basis."
+  description = "Labels for the worker machine pool. This list overwrites any modifications made to node labels on an ongoing basis."
 }
 
 variable "aws_availability_zones" {
   type        = list(string)
   default     = []
-  description = "The AWS availability zones where instances of the default worker machine pool are deployed. Leave empty for the installer to pick availability zones"
+  description = "The AWS availability zones where instances of the default worker machine pool are deployed. Leave blank for the installer to pick availability zones."
 }
 
 variable "aws_additional_compute_security_group_ids" {
   type        = list(string)
   default     = null
-  description = "The additional Security Group IDs to be added to the default worker machine pool."
+  description = "The additional security group IDs to be added to the default worker machine pool."
 }
 
 ##############################################################
@@ -338,25 +338,25 @@ variable "aws_additional_compute_security_group_ids" {
 variable "cluster_autoscaler_enabled" {
   type        = bool
   default     = false
-  description = "Enable Autoscaler for this cluster."
+  description = "Enable autoscaler for this cluster."
 }
 
 variable "autoscaler_balance_similar_node_groups" {
   type        = bool
   default     = null
-  description = "Automatically identify node groups with the same instance type and the same set of labels and try to keep the respective sizes of those node groups balanced."
+  description = "Automatically identifies node groups with the same instance type and the same set of labels and tries to keep the respective sizes of those node groups balanced."
 }
 
 variable "autoscaler_skip_nodes_with_local_storage" {
   type        = bool
   default     = null
-  description = "If true cluster autoscaler will never delete nodes with pods with local storage, e.g. EmptyDir or HostPath. default is true."
+  description = "If true, cluster autoscaler never deletes nodes with pods with local storage, e.g. EmptyDir or HostPath. Default is true."
 }
 
 variable "autoscaler_log_verbosity" {
   type        = number
   default     = null
-  description = "Sets the autoscaler log level. Default value is 1, level 4 is recommended for DEBUGGING and level 6 will enable almost everything."
+  description = "Sets the autoscaler log level. Default value is 1, level 4 is recommended for DEBUGGING and level 6 enables almost everything."
 }
 
 variable "autoscaler_max_pod_grace_period" {
@@ -368,13 +368,13 @@ variable "autoscaler_max_pod_grace_period" {
 variable "autoscaler_pod_priority_threshold" {
   type        = number
   default     = null
-  description = "To allow users to schedule 'best-effort' pods, which shouldn't trigger Cluster Autoscaler actions, but only run when there are spare resources available."
+  description = "To allow users to schedule 'best-effort' pods, which does not trigger cluster autoscaler actions, but only run when there are spare resources available."
 }
 
 variable "autoscaler_ignore_daemonsets_utilization" {
   type        = bool
   default     = null
-  description = "Should cluster-autoscaler ignore DaemonSet pods when calculating resource utilization for scaling down. false by default."
+  description = "Should cluster-autoscaler ignore DaemonSet pods when calculating resource utilization for scaling down. Default is false."
 }
 
 variable "autoscaler_max_node_provision_time" {
@@ -386,13 +386,13 @@ variable "autoscaler_max_node_provision_time" {
 variable "autoscaler_balancing_ignored_labels" {
   type        = list(string)
   default     = null
-  description = "This option specifies labels that cluster autoscaler should ignore when considering node group similarity. For example, if you have nodes with 'topology.ebs.csi.aws.com/zone' label, you can add name of this label here to prevent cluster autoscaler from splitting nodes into different node groups based on its value."
+  description = "This option specifies labels that cluster autoscaler ignores when considering node group similarity. For example, if you have nodes with 'topology.ebs.csi.aws.com/zone' label, you can add name of this label here to prevent cluster autoscaler from splitting nodes into different node groups based on its value."
 }
 
 variable "autoscaler_max_nodes_total" {
   type        = number
   default     = null
-  description = "Maximum number of nodes in all node groups. Cluster autoscaler will not grow the cluster beyond this number."
+  description = "Maximum number of nodes in all node groups. Cluster autoscaler does not grow the cluster beyond this number."
 }
 
 variable "autoscaler_cores" {
@@ -401,7 +401,7 @@ variable "autoscaler_cores" {
     max = number
   })
   default     = null
-  description = "Minimum and maximum number of cores in cluster, in the format <min>:<max>. Cluster autoscaler will not scale the cluster beyond these numbers."
+  description = "Minimum and maximum number of cores in cluster, in the format <min>:<max>. Cluster autoscaler does not scale the cluster beyond these numbers."
 }
 
 variable "autoscaler_memory" {
@@ -410,7 +410,7 @@ variable "autoscaler_memory" {
     max = number
   })
   default     = null
-  description = "Minimum and maximum number of gigabytes of memory in cluster, in the format <min>:<max>. Cluster autoscaler will not scale the cluster beyond these numbers."
+  description = "Minimum and maximum number of gigabytes of memory in cluster, in the format <min>:<max>. Cluster autoscaler does not scale the cluster beyond these numbers."
 }
 
 variable "autoscaler_gpus" {
@@ -422,7 +422,7 @@ variable "autoscaler_gpus" {
     })
   }))
   default     = null
-  description = "Minimum and maximum number of different GPUs in cluster, in the format <gpu_type>:<min>:<max>. Cluster autoscaler will not scale the cluster beyond these numbers. Can be passed multiple times."
+  description = "Minimum and maximum number of different GPUs in cluster, in the format <gpu_type>:<min>:<max>. Cluster autoscaler does not scale the cluster beyond these numbers. Can be passed multiple times."
 }
 
 variable "autoscaler_scale_down_enabled" {
@@ -474,13 +474,13 @@ variable "default_ingress_id" {
 variable "default_ingress_route_selectors" {
   type        = map(string)
   default     = null
-  description = "Route Selectors for ingress. Format should be a comma-separated list of 'key=value'. If no label is specified, all routes will be exposed on both routers. For legacy ingress support these are inclusion labels, otherwise they are treated as exclusion label."
+  description = "Route Selectors for ingress. Format should be a comma-separated list of 'key=value'. If no label is specified, all routes are exposed on both routers. For legacy ingress support these are inclusion labels, otherwise they are treated as exclusion label."
 }
 
 variable "default_ingress_excluded_namespaces" {
   type        = list(string)
   default     = null
-  description = "Excluded namespaces for ingress. Format should be a comma-separated list 'value1, value2...'. If no values are specified, all namespaces will be exposed."
+  description = "Excluded namespaces for ingress. Format should be a comma-separated list 'value1, value2...'. If no values are specified, all namespaces are exposed."
 }
 
 variable "default_ingress_route_wildcard_policy" {

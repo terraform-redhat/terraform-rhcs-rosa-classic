@@ -2,17 +2,13 @@
 
 ## Introduction
 
-This Terraform sub-module is dedicated to managing the machine pool for Red Hat OpenShift Service on AWS (ROSA) clusters.
-It enables users to efficiently configure and scale machine pools post-deployment, ensuring optimal resource 
-allocation and performance for workloads within the ROSA cluster environment.
-With this module, users can easily adjust the size and specifications of machine pools, facilitating seamless 
-adaptation to changing workload demands and operational requirements in ROSA clusters hosted on AWS.
+This Terraform sub-module manages the machine pool for ROSA Classic clusters. It enables you to efficiently configure and scale machine pools after cluster deployment, ensuring optimal resource allocation and performance for workloads within the ROSA Classic cluster environment. With this module, you can easily adjust the size and specifications of machine pools, facilitating seamless adaptation to changing workload demands and operational requirements in ROSA Classic clusters.
 
-For more info see [Using machine pools on your cluster](https://registry.terraform.io/providers/terraform-redhat/rhcs/latest/docs/guides/machine-pool)
+For more information, see [Using machine pools on your cluster](https://registry.terraform.io/providers/terraform-redhat/rhcs/latest/docs/guides/machine-pool).
 
 ## Prerequisites
 
-Ensure that you have an existing Red Hat OpenShift Service on AWS (ROSA) cluster deployed on AWS. (see [rosa-cluster-classic sub-module](../rosa-cluster-classic/README.md))
+Make sure you have an existing ROSA Classic cluster. (see [rosa-cluster-classic sub-module](../rosa-cluster-classic/README.md))
 
 <!-- BEGIN_AUTOMATED_TF_DOCS_BLOCK -->
 ## Requirements

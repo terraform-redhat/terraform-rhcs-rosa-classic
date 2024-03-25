@@ -12,7 +12,7 @@ variable "openshift_version" {
 variable "path" {
   type        = string
   default     = "/"
-  description = "The arn path for the account/operator roles as well as their policies."
+  description = "The ARN path for the account/operator roles as well as their policies."
 }
 
 variable "permissions_boundary" {

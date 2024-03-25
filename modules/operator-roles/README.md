@@ -2,19 +2,16 @@
 
 ## Introduction
 
-This Terraform sub-module is responsible for overseeing the management of IAM roles utilized by operators within the cluster for their necessary actions within the AWS account.
+This Terraform sub-module manages the IAM roles used by operators within the cluster for their necessary actions in the AWS account.
 
-Included in this sub-module are the following permissions:
+The following permissions are included in this sub-module:
 - ROSA Ingress Operator IAM role.
 - ROSA back-end storage IAM role.
 - ROSA Machine Config Operator role.
 - ROSA Cloud Credential Operator role.
 - ROSA Image Registry Operator role.
 
-For more info see:
-
-- [operator-policies sub-module description](../operator-policies/README.md)
-- [About IAM resources for ROSA clusters that use STS](https://docs.openshift.com/rosa/rosa_architecture/rosa-sts-about-iam-resources.html#rosa-sts-about-iam-resources)
+For more information, see the [operator-policies sub-module description](../operator-policies/README.md) and [About IAM resources for ROSA clusters that use STS](https://docs.openshift.com/rosa/rosa_architecture/rosa-sts-about-iam-resources.html#rosa-sts-about-iam-resources) in the ROSA documentation.
 
 <!-- BEGIN_AUTOMATED_TF_DOCS_BLOCK -->
 ## Requirements

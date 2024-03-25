@@ -1,6 +1,6 @@
 variable "cluster_name" {
   type        = string
-  description = "The cluster's name for which shared resources are created. It's utilized for the Hosted Zone domain."
+  description = "The cluster's name for which shared resources are created. It is used for the hosted zone domain."
 }
 
 variable "name_prefix" {
@@ -10,30 +10,30 @@ variable "name_prefix" {
 
 variable "target_aws_account" {
   type        = string
-  description = "The AWS account number in where the cluster is going to be created."
+  description = "The AWS account number where the cluster is created."
 }
 
 variable "installer_role_arn" {
   type        = string
-  description = "Installer ARN from target account"
+  description = "Installer ARN from target account."
 }
 
 variable "ingress_operator_role_arn" {
   type        = string
-  description = "Ingress Operator ARN from target account"
+  description = "Ingress Operator ARN from target account."
 }
 
 variable "subnets" {
   type        = list(string)
-  description = "The list of the subnets that should be shared between the accounts."
+  description = "The list of the subnets that must be shared between the accounts."
 }
 
 variable "hosted_zone_base_domain" {
   type        = string
-  description = "The Base Domain that should be used for the Hosted Zone creation."
+  description = "The base domain that must be used for hosted zone creation."
 }
 
 variable "vpc_id" {
   type        = string
-  description = "The Shared VPC ID"
+  description = "The Shared VPC ID."
 }

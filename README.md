@@ -1,35 +1,36 @@
 # terraform-rhcs-rosa-classic
 
-Terraform module which creates ROSA cluster
+A Terraform module which creates ROSA Classic clusters
 
 ## Introduction
 
-This module serves as a comprehensive solution for deploying, configuring, and managing ROSA Classic clusters within your AWS environment. With a focus on simplicity and efficiency, this module streamlines the process of setting up and maintaining ROSA Classic clusters, enabling users to leverage the power of OpenShift on AWS infrastructure effortlessly.
+This module serves as a comprehensive solution for deploying, configuring, and managing Red Hat OpenShift on AWS (ROSA) Classic clusters within your AWS environment. With a focus on simplicity and efficiency, this module streamlines the process of setting up and maintaining ROSA Classic clusters, enabling users to use the power of OpenShift using AWS infrastructure effortlessly.
 
-## Sub modules
+## Sub-modules
 
 Sub-modules included in this module:
 
-- [account-iam-resources](./modules/account-iam-resources): Handles the provisioning of IAM (Identity and Access Management) resources required for managing access and permissions within the AWS account associated with the ROSA Classic cluster.
+- [account-iam-resources](./modules/account-iam-resources): Handles the provisioning of IAM (Identity and Access Management) resources required for managing access and permissions in the AWS account associated with the ROSA Classic cluster.
 - [idp](./modules/idp): Responsible for configuring Identity Providers (IDPs) within the ROSA Classic cluster, facilitating seamless integration with external authentication systems such as GitHub, GitLab, Google, HTPasswd, LDAP, and OpenID Connect (OIDC).
 - [machine-pool](./modules/machine-pool): Facilitates the management of machine pools within the ROSA Classic cluster, enabling users to scale resources and adjust specifications based on workload demands.
 - [oidc-config-and-provider](./modules/oidc-config-and-provider): Manages the configuration of OIDC (OpenID Connect) providers within the ROSA Classic cluster, enabling secure authentication and access control mechanisms.
 - [operator-policies](./modules/operator-policies): Responsible for managing policies associated with ROSA operators within the cluster, ensuring proper permissions for core cluster functionalities.
 - [operator-roles](./modules/operator-roles): Oversees the management of roles assigned to operators within the ROSA Classic cluster, enabling them to perform required actions with the appropriate permissions.
 - [rosa-cluster-classic](./modules/rosa-cluster-classic): Handles the core configuration and provisioning of the ROSA Classic cluster, including cluster networking, security settings, and other essential components.
-- [shared-vpc-policy-and-hosted-zone](./modules/shared-vpc-policy-and-hosted-zone): Manages policies and configurations related to shared Virtual Private Cloud (VPC) resources and Route 53 hosted zones, facilitating connectivity and access control within the AWS environment.
+- [shared-vpc-policy-and-hosted-zone](./modules/shared-vpc-policy-and-hosted-zone): Manages policies and configurations related to shared Virtual Private Cloud (VPC) resources and Route 53 hosted zones, facilitating connectivity and access control in the AWS environment.
 - [vpc](./modules/vpc): Handles the configuration and provisioning of the Virtual Private Cloud (VPC) infrastructure required for hosting the ROSA Classic cluster and its associated resources.
 
-The primary sub-module responsible for ROSA cluster creation includes the optional configurations for setting up account roles, operator roles, and OIDC configurations. This comprehensive module handles the entire process of provisioning and configuring ROSA clusters within the AWS environment.
+The primary sub-module responsible for ROSA Classic cluster creation includes the optional configurations for setting up account roles, operator roles, and OIDC configurations. This comprehensive module handles the entire process of provisioning and configuring ROSA Classic clusters in your AWS environment.
 
 ## Prerequisites
 
-* The [Terraform CLI](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli) (1.4.6+) installed.
-* [AWS account](https://aws.amazon.com/free/?all-free-tier) and [associated credentials](https://docs.aws.amazon.com/IAM/latest/UserGuide/security-creds.html) that allow you to create resources. The credentials configured for the AWS provider (see [Authentication and Configuration](https://registry.terraform.io/providers/hashicorp/aws/latest/docs#authentication-and-configuration) section in AWS terraform provider documentations)
-* Completed the [ROSA getting started AWS prerequisites](https://console.redhat.com/openshift/create/rosa/getstarted)
-* Valid [OpenShift Cluster Manager API Token](https://console.redhat.com/openshift/token) configured (see [Authentication and configuration](https://registry.terraform.io/providers/terraform-redhat/rhcs/latest/docs#authentication-and-configuration) for more info)
+* The [Terraform CLI](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli) (1.4.6+) must be installed.
+* An [AWS account](https://aws.amazon.com/free/?all-free-tier) and the [associated credentials](https://docs.aws.amazon.com/IAM/latest/UserGuide/security-creds.html) that allow you to create resources. These credentials must be configured for the AWS provider (see [Authentication and Configuration](https://registry.terraform.io/providers/hashicorp/aws/latest/docs#authentication-and-configuration) section in AWS terraform provider documentation.)
+* The [ROSA getting started AWS prerequisites](https://console.redhat.com/openshift/create/rosa/getstarted) must be completed.
+* A valid [OpenShift Cluster Manager API Token](https://console.redhat.com/openshift/token) must be configured (see [Authentication and configuration](https://registry.terraform.io/providers/terraform-redhat/rhcs/latest/docs#authentication-and-configuration) for more information.)
 
-Installation of the following CLI tools is recommended:
+We recommend you install the following CLI tools:
+
 * [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 * [ROSA CLI](https://docs.openshift.com/rosa/cli_reference/rosa_cli/rosa-get-started-cli.html)
 * [Openshift CLI (oc)](https://docs.openshift.com/rosa/cli_reference/openshift_cli/getting-started-cli.html)

@@ -1,7 +1,7 @@
 variable "managed" {
   type        = bool
   default     = true
-  description = "Indicates whether it is a Red Hat managed or unmanaged (Customer hosted) OIDC Configuration"
+  description = "Indicates whether it is a Red Hat managed or unmanaged (customer hosted) OIDC Configuration"
 }
 
 variable "installer_role_arn" {

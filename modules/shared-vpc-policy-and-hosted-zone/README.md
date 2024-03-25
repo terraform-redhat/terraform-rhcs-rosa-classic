@@ -2,7 +2,7 @@
 
 ## Introduction
 
-This sub-module is dedicated to orchestrating the creation of all essential AWS resources within the shared VPC account to support the shared VPC infrastructure. It encompasses the provisioning of IAM resources to facilitate sharing between accounts, ensuring seamless collaboration and resource access. Additionally, the module handles the configuration of a Route 53 hosted zone, enabling external access into the VPC for enhanced connectivity and service accessibility.
+This sub-module enables the creation of all essential AWS resources within the shared VPC account to support the shared VPC infrastructure. It encompasses the provisioning of IAM resources to facilitate sharing between accounts, ensuring seamless collaboration and resource access. Additionally, the module handles the configuration of a Route 53 hosted zone, enabling external access into the VPC for enhanced connectivity and service accessibility.
 
 <!-- BEGIN_AUTOMATED_TF_DOCS_BLOCK -->
 ## Requirements

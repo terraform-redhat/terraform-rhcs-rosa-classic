@@ -2,13 +2,13 @@
 
 ## Introduction
 
-This Terraform sub-module facilitates the configuration of Identity Providers (IDPs) for Red Hat OpenShift Service on AWS (ROSA) clusters. It offers support for various IDP types, including GitHub, GitLab, Google, HTPasswd, LDAP, and OpenID. With this module, users can seamlessly integrate external authentication mechanisms into their ROSA clusters, enhancing security and user management capabilities. By enabling the configuration of different IDP types, users can tailor authentication methods to their specific requirements, ensuring flexibility and compatibility within the ROSA cluster environment deployed on AWS.
+This Terraform sub-module assists with the configuration of identity providers (IDPs) for ROSA Classic clusters. It offers support for various IDP types, including GitHub, GitLab, Google, HTPasswd, LDAP, and OpenID. With this module, you can seamlessly integrate external authentication mechanisms into your ROSA Classic clusters, enhancing security and user management capabilities. By enabling the configuration of different IDP types, you can tailor authentication methods to their specific requirements, ensuring flexibility and compatibility within the ROSA Classic cluster environment deployed on AWS.
 
-For more info see [Configuring identity providers for STS](https://docs.openshift.com/rosa/rosa_install_access_delete_clusters/rosa-sts-config-identity-providers.html)
+For more information, see [Configuring identity providers for STS](https://docs.openshift.com/rosa/rosa_install_access_delete_clusters/rosa-sts-config-identity-providers.html) in the ROSA documentation.
 
 ## Prerequisites
 
-Ensure that you have an existing Red Hat OpenShift Service on AWS (ROSA) cluster deployed on AWS. (see [rosa-cluster-classic sub-module](../rosa-cluster-classic/README.md))
+You must have an existing Red Hat OpenShift Service on AWS (ROSA) Classic cluster deployed. (see [rosa-cluster-classic sub-module](../rosa-cluster-classic/README.md))
 
 <!-- BEGIN_AUTOMATED_TF_DOCS_BLOCK -->
 ## Requirements
