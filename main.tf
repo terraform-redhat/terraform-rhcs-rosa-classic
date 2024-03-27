@@ -107,6 +107,7 @@ module "rosa_cluster_classic" {
   tags                     = var.tags
   properties               = var.properties
 
+  create_admin_user          = var.create_admin_user
   admin_credentials_username = var.admin_credentials_username
   admin_credentials_password = var.admin_credentials_password
 
