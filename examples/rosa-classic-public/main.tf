@@ -6,6 +6,7 @@ module "rosa" {
   create_account_roles  = true
   create_operator_roles = true
   create_oidc           = true
+  create_admin_user     = true
   path                  = "/tf-example/"
 }
 
