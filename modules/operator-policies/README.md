@@ -53,8 +53,8 @@ No modules.
 |------|-------------|------|---------|:--------:|
 | <a name="input_account_role_prefix"></a> [account\_role\_prefix](#input\_account\_role\_prefix) | User-defined prefix for all generated AWS resources (default "account-role-<random>") | `string` | n/a | yes |
 | <a name="input_openshift_version"></a> [openshift\_version](#input\_openshift\_version) | The Openshift cluster version of the cluster these operator policies are used for. | `string` | n/a | yes |
-| <a name="input_path"></a> [path](#input\_path) | The arn path for the account/operator roles as well as their policies. Must use the same path used for "account\_iam\_roles". | `string` | `"/"` | no |
-| <a name="input_shared_vpc_role_arn"></a> [shared\_vpc\_role\_arn](#input\_shared\_vpc\_role\_arn) | The role ARN used to access the private hosted zone, in case shared VPC is used | `string` | `""` | no |
+| <a name="input_path"></a> [path](#input\_path) | The ARN path for the account/operator roles as well as their policies. Must use the same path used for "account\_iam\_roles". | `string` | `"/"` | no |
+| <a name="input_shared_vpc_role_arn"></a> [shared\_vpc\_role\_arn](#input\_shared\_vpc\_role\_arn) | The role ARN used to access the private hosted zone, in case shared VPC is used. | `string` | `""` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | List of AWS resource tags to apply. | `map(string)` | `null` | no |
 
 ## Outputs

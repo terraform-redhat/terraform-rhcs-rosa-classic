@@ -44,14 +44,14 @@ No modules.
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | The cluster's name for which shared resources are created. It's utilized for the Hosted Zone domain. | `string` | n/a | yes |
-| <a name="input_hosted_zone_base_domain"></a> [hosted\_zone\_base\_domain](#input\_hosted\_zone\_base\_domain) | The Base Domain that should be used for the Hosted Zone creation. | `string` | n/a | yes |
-| <a name="input_ingress_operator_role_arn"></a> [ingress\_operator\_role\_arn](#input\_ingress\_operator\_role\_arn) | Ingress Operator ARN from target account | `string` | n/a | yes |
-| <a name="input_installer_role_arn"></a> [installer\_role\_arn](#input\_installer\_role\_arn) | Installer ARN from target account | `string` | n/a | yes |
+| <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | The cluster's name for which shared resources are created. It is used for the hosted zone domain. | `string` | n/a | yes |
+| <a name="input_hosted_zone_base_domain"></a> [hosted\_zone\_base\_domain](#input\_hosted\_zone\_base\_domain) | The base domain that must be used for hosted zone creation. | `string` | n/a | yes |
+| <a name="input_ingress_operator_role_arn"></a> [ingress\_operator\_role\_arn](#input\_ingress\_operator\_role\_arn) | Ingress Operator ARN from target account. | `string` | n/a | yes |
+| <a name="input_installer_role_arn"></a> [installer\_role\_arn](#input\_installer\_role\_arn) | Installer ARN from target account. | `string` | n/a | yes |
 | <a name="input_name_prefix"></a> [name\_prefix](#input\_name\_prefix) | The prefix applied to all AWS creations. | `string` | n/a | yes |
-| <a name="input_subnets"></a> [subnets](#input\_subnets) | The list of the subnets that should be shared between the accounts. | `list(string)` | n/a | yes |
-| <a name="input_target_aws_account"></a> [target\_aws\_account](#input\_target\_aws\_account) | The AWS account number in where the cluster is going to be created. | `string` | n/a | yes |
-| <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | The Shared VPC ID | `string` | n/a | yes |
+| <a name="input_subnets"></a> [subnets](#input\_subnets) | The list of the subnets that must be shared between the accounts. | `list(string)` | n/a | yes |
+| <a name="input_target_aws_account"></a> [target\_aws\_account](#input\_target\_aws\_account) | The AWS account number where the cluster is created. | `string` | n/a | yes |
+| <a name="input_vpc_id"></a> [vpc\_id](#input\_vpc\_id) | The Shared VPC ID. | `string` | n/a | yes |
 
 ## Outputs
 

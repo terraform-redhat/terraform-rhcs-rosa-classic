@@ -54,7 +54,7 @@ No modules.
 | <a name="input_account_role_prefix"></a> [account\_role\_prefix](#input\_account\_role\_prefix) | User-defined prefix for all generated AWS resources. | `string` | n/a | yes |
 | <a name="input_oidc_endpoint_url"></a> [oidc\_endpoint\_url](#input\_oidc\_endpoint\_url) | Registered OIDC configuration issuer URL, added as the trusted relationship to the operator roles. | `string` | n/a | yes |
 | <a name="input_operator_role_prefix"></a> [operator\_role\_prefix](#input\_operator\_role\_prefix) | User-defined prefix for generated AWS operator policies. Use "account-role-prefix" in case no value provided. | `string` | `null` | no |
-| <a name="input_path"></a> [path](#input\_path) | The arn path for the account/operator roles as well as their policies. Must use the same path used for "account\_iam\_roles". | `string` | `"/"` | no |
+| <a name="input_path"></a> [path](#input\_path) | The ARN path for the account/operator roles as well as their policies. Must use the same path used for "account\_iam\_roles". | `string` | `"/"` | no |
 | <a name="input_permissions_boundary"></a> [permissions\_boundary](#input\_permissions\_boundary) | The ARN of the policy that is used to set the permissions boundary for the IAM roles in STS clusters. | `string` | `""` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | List of AWS resource tags to apply. | `map(string)` | `null` | no |
 
