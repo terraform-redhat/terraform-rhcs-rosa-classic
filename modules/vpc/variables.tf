@@ -6,7 +6,7 @@ variable "vpc_cidr" {
 
 variable "name_prefix" {
   type        = string
-  description = "User-defined prefix for all generated AWS resources of this VPC"
+  description = "User-defined prefix for all generated AWS resources of this VPC."
 }
 
 variable "availability_zones" {
@@ -18,7 +18,7 @@ variable "availability_zones" {
 variable "availability_zones_count" {
   type        = number
   default     = null
-  description = "The count of availability zones to utilize within the specified AWS Region, where pairs of public and private subnets will be generated. Valid only when availability_zones variable is not provided."
+  description = "The count of availability zones to utilize within the specified AWS region, where pairs of public and private subnets are generated. Valid only when availability_zones variable is not provided."
 }
 
 variable "tags" {

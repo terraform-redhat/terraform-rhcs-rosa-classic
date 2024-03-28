@@ -2,10 +2,11 @@
 
 ## Introduction
 
-This Terraform sub-module oversees the management of account-wide IAM roles and their associated policies. These roles are instrumental in creating the necessary AWS resources for ROSA cluster deployment.
-These IAM resources can be created once and utilized across multiple ROSA cluster creations.
+This Terraform sub-module manages the account-wide IAM roles and their associated policies. These roles are required when creating the necessary AWS resources for ROSA Classic cluster deployment.
 
-For more info see [About IAM resources for ROSA clusters that use STS](https://docs.openshift.com/rosa/rosa_architecture/rosa-sts-about-iam-resources.html#rosa-sts-about-iam-resources)
+These IAM resources can be created once and used across multiple ROSA Classic cluster creations.
+
+For more information, see [About IAM resources for ROSA clusters that use STS](https://docs.openshift.com/rosa/rosa_architecture/rosa-sts-about-iam-resources.html#rosa-sts-about-iam-resources) in the ROSA documentation.
 
 <!-- BEGIN_AUTOMATED_TF_DOCS_BLOCK -->
 ## Requirements
@@ -56,7 +57,7 @@ For more info see [About IAM resources for ROSA clusters that use STS](https://d
 |------|-------------|------|---------|:--------:|
 | <a name="input_account_role_prefix"></a> [account\_role\_prefix](#input\_account\_role\_prefix) | User-defined prefix for all generated AWS resources (default "account-role-<random>") | `string` | `null` | no |
 | <a name="input_openshift_version"></a> [openshift\_version](#input\_openshift\_version) | The Openshift cluster version of the cluster those account roles are used for. | `string` | n/a | yes |
-| <a name="input_path"></a> [path](#input\_path) | The arn path for the account/operator roles as well as their policies. | `string` | `"/"` | no |
+| <a name="input_path"></a> [path](#input\_path) | The ARN path for the account/operator roles as well as their policies. | `string` | `"/"` | no |
 | <a name="input_permissions_boundary"></a> [permissions\_boundary](#input\_permissions\_boundary) | The ARN of the policy that is used to set the permissions boundary for the IAM roles in STS clusters. | `string` | `""` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | List of AWS resource tags to apply. | `map(string)` | `null` | no |
 

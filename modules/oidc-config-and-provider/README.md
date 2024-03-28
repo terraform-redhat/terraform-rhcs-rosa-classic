@@ -2,9 +2,9 @@
 
 ## Introduction
 
-This Terraform sub-module is designed to manage the OpenID Connect (OIDC) provider and configuration for Red Hat OpenShift Service on AWS (ROSA) clusters. It allows users to define and configure the OIDC provider settings necessary for authentication within the ROSA cluster environment. With this module, users can easily set up OIDC integration tailored to their requirements, enabling seamless authentication and access control mechanisms for ROSA clusters deployed on AWS.
+This Terraform sub-module manages the OpenID Connect (OIDC) provider and configuration for ROSA Classic clusters. It allows you to define and configure the OIDC provider settings necessary for authentication within the ROSA Classic cluster environment. With this module, you can easily set up OIDC integration tailored to your requirements, enabling seamless authentication and access control mechanisms for ROSA Classic clusters.
 
-For more info see [OpenID Connect Overview](https://docs.openshift.com/rosa/rosa_architecture/rosa-oidc-overview.html)
+For more information, see [OpenID Connect Overview](https://docs.openshift.com/rosa/rosa_architecture/rosa-oidc-overview.html) in the ROSA documentation.
 
 <!-- BEGIN_AUTOMATED_TF_DOCS_BLOCK -->
 ## Requirements
@@ -53,7 +53,7 @@ For more info see [OpenID Connect Overview](https://docs.openshift.com/rosa/rosa
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
 | <a name="input_installer_role_arn"></a> [installer\_role\_arn](#input\_installer\_role\_arn) | The Amazon Resource Name (ARN) associated with the AWS IAM role used by the ROSA installer. Applicable exclusively to unmanaged OIDC; otherwise, leave empty. | `string` | `null` | no |
-| <a name="input_managed"></a> [managed](#input\_managed) | Indicates whether it is a Red Hat managed or unmanaged (Customer hosted) OIDC Configuration | `bool` | `true` | no |
+| <a name="input_managed"></a> [managed](#input\_managed) | Indicates whether it is a Red Hat managed or unmanaged (customer hosted) OIDC Configuration | `bool` | `true` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | List of AWS resource tags to apply. | `map(string)` | `null` | no |
 
 ## Outputs

@@ -2,19 +2,16 @@
 
 ## Introduction
 
-This Terraform sub-module is responsible for overseeing the management of IAM roles utilized by operators within the cluster for their necessary actions within the AWS account.
+This Terraform sub-module manages the IAM roles used by operators within the cluster for their necessary actions in the AWS account.
 
-Included in this sub-module are the following permissions:
+The following permissions are included in this sub-module:
 - ROSA Ingress Operator IAM role.
 - ROSA back-end storage IAM role.
 - ROSA Machine Config Operator role.
 - ROSA Cloud Credential Operator role.
 - ROSA Image Registry Operator role.
 
-For more info see:
-
-- [operator-policies sub-module description](../operator-policies/README.md)
-- [About IAM resources for ROSA clusters that use STS](https://docs.openshift.com/rosa/rosa_architecture/rosa-sts-about-iam-resources.html#rosa-sts-about-iam-resources)
+For more information, see the [operator-policies sub-module description](../operator-policies/README.md) and [About IAM resources for ROSA clusters that use STS](https://docs.openshift.com/rosa/rosa_architecture/rosa-sts-about-iam-resources.html#rosa-sts-about-iam-resources) in the ROSA documentation.
 
 <!-- BEGIN_AUTOMATED_TF_DOCS_BLOCK -->
 ## Requirements
@@ -57,7 +54,7 @@ No modules.
 | <a name="input_account_role_prefix"></a> [account\_role\_prefix](#input\_account\_role\_prefix) | User-defined prefix for all generated AWS resources. | `string` | n/a | yes |
 | <a name="input_oidc_endpoint_url"></a> [oidc\_endpoint\_url](#input\_oidc\_endpoint\_url) | Registered OIDC configuration issuer URL, added as the trusted relationship to the operator roles. | `string` | n/a | yes |
 | <a name="input_operator_role_prefix"></a> [operator\_role\_prefix](#input\_operator\_role\_prefix) | User-defined prefix for generated AWS operator policies. Use "account-role-prefix" in case no value provided. | `string` | `null` | no |
-| <a name="input_path"></a> [path](#input\_path) | The arn path for the account/operator roles as well as their policies. Must use the same path used for "account\_iam\_roles". | `string` | `"/"` | no |
+| <a name="input_path"></a> [path](#input\_path) | The ARN path for the account/operator roles as well as their policies. Must use the same path used for "account\_iam\_roles". | `string` | `"/"` | no |
 | <a name="input_permissions_boundary"></a> [permissions\_boundary](#input\_permissions\_boundary) | The ARN of the policy that is used to set the permissions boundary for the IAM roles in STS clusters. | `string` | `""` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | List of AWS resource tags to apply. | `map(string)` | `null` | no |
 

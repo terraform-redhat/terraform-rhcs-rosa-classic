@@ -12,7 +12,7 @@ variable "account_role_prefix" {
 variable "path" {
   type        = string
   default     = "/"
-  description = "The arn path for the account/operator roles as well as their policies. Must use the same path used for \"account_iam_roles\"."
+  description = "The ARN path for the account/operator roles as well as their policies. Must use the same path used for \"account_iam_roles\"."
 }
 
 variable "permissions_boundary" {
