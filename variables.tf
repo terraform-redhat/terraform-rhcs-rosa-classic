@@ -80,6 +80,12 @@ variable "ec2_metadata_http_tokens" {
   description = "Should cluster nodes use both v1 and v2 endpoints or just v2 endpoint of EC2 Instance Metadata Service (IMDS). Available since OpenShift 4.11.0."
 }
 
+variable "create_admin_user" {
+  type        = bool
+  default     = null
+  description = "To create cluster admin user with default username `cluster-admin` and generated password. It will be ignored if `admin_credentials_username` or `admin_credentials_password` is set. (default: false)"
+}
+
 variable "admin_credentials_username" {
   type        = string
   default     = null
