@@ -172,6 +172,12 @@ variable "additional_trust_bundle" {
   description = "A string containing a PEM-encoded X.509 certificate bundle that is added to the nodes' trusted certificate store."
 }
 
+variable "create_admin_user" {
+  type        = bool
+  default     = null
+  description = "To create cluster admin user with default username `cluster-admin` and generated password. It will be ignored if `admin_credentials_username` or `admin_credentials_password` is set. (default: false)"
+}
+
 variable "admin_credentials_username" {
   type        = string
   default     = null

@@ -109,6 +109,7 @@ We recommend you install the following CLI tools:
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | Name of the cluster. After resource creation, it is not possible to update the attribute value. | `string` | n/a | yes |
 | <a name="input_compute_machine_type"></a> [compute\_machine\_type](#input\_compute\_machine\_type) | Identifies the Instance type used by the default worker machine pool e.g. `m5.xlarge`. Use the `rhcs_machine_types` data source to find the possible values. | `string` | `null` | no |
 | <a name="input_create_account_roles"></a> [create\_account\_roles](#input\_create\_account\_roles) | Create the AWS account roles for ROSA. | `bool` | `false` | no |
+| <a name="input_create_admin_user"></a> [create\_admin\_user](#input\_create\_admin\_user) | To create cluster admin user with default username `cluster-admin` and generated password. It will be ignored if `admin_credentials_username` or `admin_credentials_password` is set. (default: false) | `bool` | `null` | no |
 | <a name="input_create_oidc"></a> [create\_oidc](#input\_create\_oidc) | Create the OIDC resources. | `bool` | `false` | no |
 | <a name="input_create_operator_roles"></a> [create\_operator\_roles](#input\_create\_operator\_roles) | Create the AWS account roles for ROSA. | `bool` | `false` | no |
 | <a name="input_default_ingress_cluster_routes_hostname"></a> [default\_ingress\_cluster\_routes\_hostname](#input\_default\_ingress\_cluster\_routes\_hostname) | Components route hostname for oauth, console, download. | `string` | `null` | no |

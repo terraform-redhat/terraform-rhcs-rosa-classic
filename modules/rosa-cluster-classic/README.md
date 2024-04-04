@@ -84,6 +84,7 @@ No modules.
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | Name of the cluster. After resource creation, the attribute value cannot be updated. | `string` | n/a | yes |
 | <a name="input_compute_machine_type"></a> [compute\_machine\_type](#input\_compute\_machine\_type) | Identifies the instance type used by the default worker machine pool e.g. `m5.xlarge`. Use the `rhcs_machine_types` data source to find the possible values. | `string` | `null` | no |
 | <a name="input_controlplane_role_arn"></a> [controlplane\_role\_arn](#input\_controlplane\_role\_arn) | The Amazon Resource Name (ARN) associated with the AWS IAM role that is used by the cluster's control plane instances. | `string` | `null` | no |
+| <a name="input_create_admin_user"></a> [create\_admin\_user](#input\_create\_admin\_user) | To create cluster admin user with default username `cluster-admin` and generated password. It will be ignored if `admin_credentials_username` or `admin_credentials_password` is set. (default: false) | `bool` | `null` | no |
 | <a name="input_default_ingress_cluster_routes_hostname"></a> [default\_ingress\_cluster\_routes\_hostname](#input\_default\_ingress\_cluster\_routes\_hostname) | Components route hostname for oauth, console, download. | `string` | `null` | no |
 | <a name="input_default_ingress_cluster_routes_tls_secret_ref"></a> [default\_ingress\_cluster\_routes\_tls\_secret\_ref](#input\_default\_ingress\_cluster\_routes\_tls\_secret\_ref) | Components route TLS secret reference for oauth, console, download. | `string` | `null` | no |
 | <a name="input_default_ingress_excluded_namespaces"></a> [default\_ingress\_excluded\_namespaces](#input\_default\_ingress\_excluded\_namespaces) | Excluded namespaces for ingress. Format should be a comma-separated list 'value1, value2...'. If no values are specified, all namespaces are exposed. | `list(string)` | `null` | no |
@@ -133,6 +134,8 @@ No modules.
 | Name | Description |
 |------|-------------|
 | <a name="output_api_url"></a> [api\_url](#output\_api\_url) | URL of the API server. |
+| <a name="output_cluster_admin_password"></a> [cluster\_admin\_password](#output\_cluster\_admin\_password) | The password of the admin user. |
+| <a name="output_cluster_admin_username"></a> [cluster\_admin\_username](#output\_cluster\_admin\_username) | The username of the admin user. |
 | <a name="output_cluster_id"></a> [cluster\_id](#output\_cluster\_id) | Unique identifier of the cluster. |
 | <a name="output_console_url"></a> [console\_url](#output\_console\_url) | URL of the console. |
 | <a name="output_current_version"></a> [current\_version](#output\_current\_version) | The currently running version of OpenShift on the cluster, for example '4.11.0'. |

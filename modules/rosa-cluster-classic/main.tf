@@ -28,6 +28,7 @@ locals {
     oidc_config_id       = var.oidc_config_id
   }
   aws_account_arn = var.aws_account_arn == null ? data.aws_caller_identity.current[0].arn : var.aws_account_arn
+  create_admin_user = var.create_admin_user
   admin_credentials = var.admin_credentials_username == null && var.admin_credentials_password == null ? (
     null
     ) : (
@@ -53,6 +54,7 @@ resource "rhcs_cluster_rosa_classic" "rosa_classic_cluster" {
     )
   )
   multi_az             = var.multi_az
+  create_admin_user    = local.create_admin_user
   admin_credentials    = local.admin_credentials
   autoscaling_enabled  = var.autoscaling_enabled
   base_dns_domain      = var.base_dns_domain
