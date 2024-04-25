@@ -20,7 +20,7 @@ For more information, see the [operator-policies sub-module description](../oper
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.0 |
-| <a name="requirement_rhcs"></a> [rhcs](#requirement\_rhcs) | >= 1.5.0 |
+| <a name="requirement_rhcs"></a> [rhcs](#requirement\_rhcs) | = 1.6.2 |
 | <a name="requirement_time"></a> [time](#requirement\_time) | >= 0.9 |
 
 ## Providers
@@ -28,7 +28,7 @@ For more information, see the [operator-policies sub-module description](../oper
 | Name | Version |
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.0 |
-| <a name="provider_rhcs"></a> [rhcs](#provider\_rhcs) | >= 1.5.0 |
+| <a name="provider_rhcs"></a> [rhcs](#provider\_rhcs) | = 1.6.2 |
 | <a name="provider_time"></a> [time](#provider\_time) | >= 0.9 |
 
 ## Modules
@@ -45,7 +45,7 @@ No modules.
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
 | [aws_iam_policy_document.custom_trust_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_partition.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/partition) | data source |
-| [rhcs_rosa_operator_roles.operator_roles](https://registry.terraform.io/providers/terraform-redhat/rhcs/latest/docs/data-sources/rosa_operator_roles) | data source |
+| [rhcs_rosa_operator_roles.operator_roles](https://registry.terraform.io/providers/terraform-redhat/rhcs/1.6.2/docs/data-sources/rosa_operator_roles) | data source |
 
 ## Inputs
 
