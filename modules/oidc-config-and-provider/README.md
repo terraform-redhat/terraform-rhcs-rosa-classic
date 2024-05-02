@@ -14,7 +14,7 @@ For more information, see [OpenID Connect Overview](https://docs.openshift.com/r
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.0 |
 | <a name="requirement_null"></a> [null](#requirement\_null) | >= 3.0.0 |
-| <a name="requirement_rhcs"></a> [rhcs](#requirement\_rhcs) | >= 1.5.0 |
+| <a name="requirement_rhcs"></a> [rhcs](#requirement\_rhcs) | = 1.6.2 |
 | <a name="requirement_time"></a> [time](#requirement\_time) | >= 0.9 |
 
 ## Providers
@@ -23,7 +23,7 @@ For more information, see [OpenID Connect Overview](https://docs.openshift.com/r
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.0 |
 | <a name="provider_null"></a> [null](#provider\_null) | >= 3.0.0 |
-| <a name="provider_rhcs"></a> [rhcs](#provider\_rhcs) | >= 1.5.0 |
+| <a name="provider_rhcs"></a> [rhcs](#provider\_rhcs) | = 1.6.2 |
 | <a name="provider_time"></a> [time](#provider\_time) | >= 0.9 |
 
 ## Modules
@@ -41,8 +41,8 @@ For more information, see [OpenID Connect Overview](https://docs.openshift.com/r
 | [aws_s3_object.discrover_doc_object](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_object) | resource |
 | [aws_s3_object.s3_object](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_object) | resource |
 | [null_resource.unmanaged_vars_validation](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
-| [rhcs_rosa_oidc_config.oidc_config](https://registry.terraform.io/providers/terraform-redhat/rhcs/latest/docs/resources/rosa_oidc_config) | resource |
-| [rhcs_rosa_oidc_config_input.oidc_input](https://registry.terraform.io/providers/terraform-redhat/rhcs/latest/docs/resources/rosa_oidc_config_input) | resource |
+| [rhcs_rosa_oidc_config.oidc_config](https://registry.terraform.io/providers/terraform-redhat/rhcs/1.6.2/docs/resources/rosa_oidc_config) | resource |
+| [rhcs_rosa_oidc_config_input.oidc_input](https://registry.terraform.io/providers/terraform-redhat/rhcs/1.6.2/docs/resources/rosa_oidc_config_input) | resource |
 | [time_sleep.wait_10_seconds](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
 | [aws_iam_policy_document.allow_access_from_another_account](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_partition.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/partition) | data source |
