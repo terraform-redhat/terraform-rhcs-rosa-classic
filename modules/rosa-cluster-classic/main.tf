@@ -108,6 +108,9 @@ resource "rhcs_cluster_rosa_classic" "rosa_classic_cluster" {
   upgrade_acknowledgements_for = var.upgrade_acknowledgements_for
 
   lifecycle {
+    ignore_changes = [
+      properties["rosa_creator_arn"]
+    ]
     precondition {
       condition = (
         !(var.installer_role_arn != null && var.support_role_arn != null && var.controlplane_role_arn != null && var.worker_role_arn != null)
