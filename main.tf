@@ -87,25 +87,28 @@ module "operator_roles" {
 module "rosa_cluster_classic" {
   source = "./modules/rosa-cluster-classic"
 
-  cluster_name             = var.cluster_name
-  operator_role_prefix     = var.create_operator_roles ? module.operator_roles[0].operator_role_prefix : local.operator_role_prefix
-  openshift_version        = var.openshift_version
-  path                     = var.create_account_roles ? module.account_iam_resources[0].path : local.path
-  installer_role_arn       = var.create_account_roles ? module.account_iam_resources[0].account_roles_arn["Installer"] : local.sts_roles.installer_role_arn
-  support_role_arn         = var.create_account_roles ? module.account_iam_resources[0].account_roles_arn["Support"] : local.sts_roles.support_role_arn
-  controlplane_role_arn    = var.create_account_roles ? module.account_iam_resources[0].account_roles_arn["ControlPlane"] : local.sts_roles.controlplane_role_arn
-  worker_role_arn          = var.create_account_roles ? module.account_iam_resources[0].account_roles_arn["Worker"] : local.sts_roles.worker_role_arn
-  oidc_config_id           = var.create_oidc ? module.oidc_config_and_provider[0].oidc_config_id : var.oidc_config_id
-  aws_subnet_ids           = var.aws_subnet_ids
-  machine_cidr             = var.machine_cidr
-  service_cidr             = var.service_cidr
-  pod_cidr                 = var.pod_cidr
-  aws_private_link         = var.aws_private_link
-  private                  = var.private
-  host_prefix              = var.host_prefix
-  ec2_metadata_http_tokens = var.ec2_metadata_http_tokens
-  tags                     = var.tags
-  properties               = var.properties
+  cluster_name                 = var.cluster_name
+  operator_role_prefix         = var.create_operator_roles ? module.operator_roles[0].operator_role_prefix : local.operator_role_prefix
+  openshift_version            = var.openshift_version
+  path                         = var.create_account_roles ? module.account_iam_resources[0].path : local.path
+  installer_role_arn           = var.create_account_roles ? module.account_iam_resources[0].account_roles_arn["Installer"] : local.sts_roles.installer_role_arn
+  support_role_arn             = var.create_account_roles ? module.account_iam_resources[0].account_roles_arn["Support"] : local.sts_roles.support_role_arn
+  controlplane_role_arn        = var.create_account_roles ? module.account_iam_resources[0].account_roles_arn["ControlPlane"] : local.sts_roles.controlplane_role_arn
+  worker_role_arn              = var.create_account_roles ? module.account_iam_resources[0].account_roles_arn["Worker"] : local.sts_roles.worker_role_arn
+  oidc_config_id               = var.create_oidc ? module.oidc_config_and_provider[0].oidc_config_id : var.oidc_config_id
+  aws_subnet_ids               = var.aws_subnet_ids
+  machine_cidr                 = var.machine_cidr
+  service_cidr                 = var.service_cidr
+  pod_cidr                     = var.pod_cidr
+  aws_private_link             = var.aws_private_link
+  private                      = var.private
+  host_prefix                  = var.host_prefix
+  ec2_metadata_http_tokens     = var.ec2_metadata_http_tokens
+  tags                         = var.tags
+  properties                   = var.properties
+  private_hosted_zone_id       = var.private_hosted_zone_id
+  private_hosted_zone_role_arn = var.private_hosted_zone_role_arn
+  base_dns_domain              = var.base_dns_domain
 
   create_admin_user          = var.create_admin_user
   admin_credentials_username = var.admin_credentials_username
