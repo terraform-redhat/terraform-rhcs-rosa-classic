@@ -98,6 +98,24 @@ variable "admin_credentials_password" {
   description = "Admin password that is created with the cluster. The password must contain at least 14 characters (ASCII-standard) without whitespaces including uppercase letters, lowercase letters, and numbers or symbols."
 }
 
+variable "private_hosted_zone_id" {
+  type        = string
+  default     = null
+  description = "ID assigned by AWS to private Route 53 hosted zone associated with intended shared VPC, e.g., 'Z05646003S02O1ENCDCSN'."
+}
+
+variable "private_hosted_zone_role_arn" {
+  type        = string
+  default     = null
+  description = "AWS IAM role ARN with a policy attached, granting permissions necessary to create and manage Route 53 DNS records in private Route 53 hosted zone associated with intended shared VPC."
+}
+
+variable "base_dns_domain" {
+  type        = string
+  default     = null
+  description = "Base DNS domain name previously reserved and matching the hosted zone name of the private Route 53 hosted zone associated with intended shared VPC, e.g., '1vo8.p1.openshiftapps.com'."
+}
+
 ##############################################################
 # Proxy variables
 ##############################################################
