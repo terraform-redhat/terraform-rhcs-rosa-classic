@@ -43,3 +43,8 @@ output "cluster_admin_password" {
   description = "The password of the admin user."
   sensitive   = true
 }
+
+output "private_hosted_zone_id" {
+  value       = rhcs_cluster_rosa_classic.rosa_classic_cluster.private_hosted_zone == null ? null : rhcs_cluster_rosa_classic.rosa_classic_cluster.private_hosted_zone.id
+  description = "ID assigned by AWS to private Route 53 hosted zone associated with intended shared VPC"
+}

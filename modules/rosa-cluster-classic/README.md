@@ -141,5 +141,6 @@ No modules.
 | <a name="output_current_version"></a> [current\_version](#output\_current\_version) | The currently running version of OpenShift on the cluster, for example '4.11.0'. |
 | <a name="output_domain"></a> [domain](#output\_domain) | DNS domain of cluster. |
 | <a name="output_infra_id"></a> [infra\_id](#output\_infra\_id) | The ROSA cluster infrastructure ID. |
+| <a name="output_private_hosted_zone_id"></a> [private\_hosted\_zone\_id](#output\_private\_hosted\_zone\_id) | ID assigned by AWS to private Route 53 hosted zone associated with intended shared VPC |
 | <a name="output_state"></a> [state](#output\_state) | The state of the cluster. |
 <!-- END_AUTOMATED_TF_DOCS_BLOCK -->
