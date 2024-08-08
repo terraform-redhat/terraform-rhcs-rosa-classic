@@ -1,5 +1,6 @@
 module "rosa" {
-  source = "../../"
+  source  = "terraform-redhat/rosa-classic/rhcs"
+  version = "1.6.3-prerelease.1"
 
   cluster_name          = var.cluster_name
   openshift_version     = var.openshift_version
@@ -9,7 +10,8 @@ module "rosa" {
 }
 
 module "machine_pool_1" {
-  source = "../../modules/machine-pool"
+  source  = "terraform-redhat/rosa-classic/rhcs//modules/machine-pool"
+  version = "1.6.3-prerelease.1"
 
   cluster_id   = module.rosa.cluster_id
   name         = "pool1"
@@ -18,7 +20,8 @@ module "machine_pool_1" {
 }
 
 module "machine_pool_2" {
-  source = "../../modules/machine-pool"
+  source  = "terraform-redhat/rosa-classic/rhcs//modules/machine-pool"
+  version = "1.6.3-prerelease.1"
 
   cluster_id   = module.rosa.cluster_id
   name         = "pool2"
@@ -27,7 +30,8 @@ module "machine_pool_2" {
 }
 
 module "gitlab_idp" {
-  source = "../../modules/idp"
+  source  = "terraform-redhat/rosa-classic/rhcs//modules/idp"
+  version = "1.6.3-prerelease.1"
 
   cluster_id = module.rosa.cluster_id
   name       = "gitlab-idp"
@@ -43,7 +47,8 @@ module "gitlab_idp" {
 }
 
 module "htpasswd_idp" {
-  source = "../../modules/idp"
+  source  = "terraform-redhat/rosa-classic/rhcs//modules/idp"
+  version = "1.6.3-prerelease.1"
 
   cluster_id         = module.rosa.cluster_id
   name               = "htpasswd-idp"
@@ -52,7 +57,8 @@ module "htpasswd_idp" {
 }
 
 module "github_idp" {
-  source = "../../modules/idp"
+  source  = "terraform-redhat/rosa-classic/rhcs//modules/idp"
+  version = "1.6.3-prerelease.1"
 
   cluster_id               = module.rosa.cluster_id
   name                     = "github-idp"
@@ -63,7 +69,8 @@ module "github_idp" {
 }
 
 module "google_idp" {
-  source = "../../modules/idp"
+  source  = "terraform-redhat/rosa-classic/rhcs//modules/idp"
+  version = "1.6.3-prerelease.1"
 
   cluster_id               = module.rosa.cluster_id
   name                     = "google-idp"
@@ -74,7 +81,8 @@ module "google_idp" {
 }
 
 module "ldap_idp" {
-  source = "../../modules/idp"
+  source  = "terraform-redhat/rosa-classic/rhcs//modules/idp"
+  version = "1.6.3-prerelease.1"
 
   cluster_id        = module.rosa.cluster_id
   name              = "ldap-idp"
@@ -85,7 +93,8 @@ module "ldap_idp" {
 }
 
 module "openid_idp" {
-  source = "../../modules/idp"
+  source  = "terraform-redhat/rosa-classic/rhcs//modules/idp"
+  version = "1.6.3-prerelease.1"
 
   cluster_id                           = module.rosa.cluster_id
   name                                 = "openid-idp"
