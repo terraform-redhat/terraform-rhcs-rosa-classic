@@ -84,3 +84,18 @@ change-ocp-version:
 # This target require teraform-docs, follow the installation guide: https://terraform-docs.io/user-guide/installation/
 terraform-docs:
 	bash scripts/terraform-docs.sh
+
+.PHONY: examples_clean_tf_states
+examples_clean_tf_states:
+	find examples/ -name 'terraform.tfstate*' -exec rm -rf {} \; || true
+
+.PHONY: examples_clean_tf_vars
+examples_clean_tf_vars:
+	find examples/ -name 'terraform.e2e.tfvars*' -exec rm -rf {} \; || true
+
+.PHONY: examples_clean_tf_init
+examples_clean_tf_init:
+	find examples/ -name '.terraform*' -exec rm -rf {} \; || true
+
+.PHONY: examples_clean_tf
+examples_clean_tf: examples_clean_tf_init examples_clean_tf_states examples_clean_tf_vars

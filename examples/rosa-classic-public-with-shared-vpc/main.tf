@@ -21,7 +21,8 @@ data "aws_region" "current" {}
 # VPC
 ############################
 module "vpc" {
-  source = "../../modules/vpc"
+  source  = "terraform-redhat/rosa-classic/rhcs//modules/vpc"
+  version = "1.6.3-prerelease.1"
 
   providers = {
     aws = aws.shared-vpc
@@ -35,7 +36,8 @@ module "vpc" {
 # Account roles includes IAM roles and IAM policies
 ##############################################################
 module "account_iam_resources" {
-  source = "../../modules/account-iam-resources"
+  source  = "terraform-redhat/rosa-classic/rhcs//modules/account-iam-resources"
+  version = "1.6.3-prerelease.1"
 
   account_role_prefix = local.account_role_prefix
   openshift_version   = var.openshift_version
@@ -49,7 +51,8 @@ data "aws_caller_identity" "shared_vpc" {
 # operator policies
 ############################
 module "operator_policies" {
-  source = "../../modules/operator-policies"
+  source  = "terraform-redhat/rosa-classic/rhcs//modules/operator-policies"
+  version = "1.6.3-prerelease.1"
 
   account_role_prefix = module.account_iam_resources.account_role_prefix
   openshift_version   = module.account_iam_resources.openshift_version
@@ -61,7 +64,8 @@ module "operator_policies" {
 # OIDC provider
 ############################
 module "oidc_config_and_provider" {
-  source = "../../modules/oidc-config-and-provider"
+  source  = "terraform-redhat/rosa-classic/rhcs//modules/oidc-config-and-provider"
+  version = "1.6.3-prerelease.1"
 
   managed = true
 }
@@ -70,7 +74,8 @@ module "oidc_config_and_provider" {
 # operator roles
 ############################
 module "operator_roles" {
-  source = "../../modules/operator-roles"
+  source  = "terraform-redhat/rosa-classic/rhcs//modules/operator-roles"
+  version = "1.6.3-prerelease.1"
 
   operator_role_prefix = local.operator_role_prefix
 
@@ -87,7 +92,8 @@ resource "rhcs_dns_domain" "dns_domain" {}
 data "aws_caller_identity" "current" {}
 
 module "shared-vpc-policy-and-hosted-zone" {
-  source = "../../modules/shared-vpc-policy-and-hosted-zone"
+  source  = "terraform-redhat/rosa-classic/rhcs//modules/shared-vpc-policy-and-hosted-zone"
+  version = "1.6.3-prerelease.1"
 
   providers = {
     aws = aws.shared-vpc
@@ -107,7 +113,8 @@ module "shared-vpc-policy-and-hosted-zone" {
 # ROSA STS cluster
 ############################
 module "rosa_cluster_classic" {
-  source = "../../modules/rosa-cluster-classic"
+  source  = "terraform-redhat/rosa-classic/rhcs//modules/rosa-cluster-classic"
+  version = "1.6.3-prerelease.1"
 
   cluster_name                 = var.cluster_name
   operator_role_prefix         = module.operator_roles.operator_role_prefix

@@ -1,5 +1,6 @@
 module "rosa" {
-  source = "../../"
+  source  = "terraform-redhat/rosa-classic/rhcs"
+  version = "1.6.3-prerelease.1"
 
   cluster_name           = var.cluster_name
   openshift_version      = var.openshift_version
@@ -17,7 +18,8 @@ module "rosa" {
 # VPC
 ############################
 module "vpc" {
-  source = "../../modules/vpc"
+  source  = "terraform-redhat/rosa-classic/rhcs//modules/vpc"
+  version = "1.6.3-prerelease.1"
 
   name_prefix        = var.cluster_name
   availability_zones = slice(data.aws_availability_zones.available.names, 0, 3)
