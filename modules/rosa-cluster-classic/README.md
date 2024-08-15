@@ -10,6 +10,20 @@ This sub-module also includes the following resources:
 
 For more information, see [Creating a default ROSA Classic cluster using Terraform](https://docs.openshift.com/rosa/rosa_install_access_delete_clusters/terraform/rosa-sts-creating-a-cluster-quickly-terraform.html) in the ROSA documentation.
 
+## Example Usage
+
+```
+module "rosa_cluster_classic" {
+  source = "terraform-redhat/rosa-classic/rhcs//modules/rosa-cluster-classic"
+
+  cluster_name           = "my-cluster"
+  account_role_prefix    = "my-cluster-account"
+  operator_role_prefix   = "my-operators"
+  openshift_version      = "4.14.24"
+  oidc_config_id         = "my-oidc-config-id"
+}
+```
+
 <!-- BEGIN_AUTOMATED_TF_DOCS_BLOCK -->
 ## Requirements
 

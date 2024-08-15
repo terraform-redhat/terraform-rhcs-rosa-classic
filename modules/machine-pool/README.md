@@ -10,6 +10,19 @@ For more information, see [Using machine pools on your cluster](https://registry
 
 Make sure you have an existing ROSA Classic cluster. (see [rosa-cluster-classic sub-module](../rosa-cluster-classic/README.md))
 
+## Example Usage
+
+```
+module "mp" {
+  source = "terraform-redhat/rosa-classic/rhcs//modules/machine-pool"
+
+  cluster_id = "cluster-id-123"
+  name         = "my-pool"
+  machine_type = "m5.xlarge"
+  replicas     = 2
+}
+```
+
 <!-- BEGIN_AUTOMATED_TF_DOCS_BLOCK -->
 ## Requirements
 

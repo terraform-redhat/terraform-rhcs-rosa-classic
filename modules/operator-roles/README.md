@@ -13,6 +13,25 @@ The following permissions are included in this sub-module:
 
 For more information, see the [operator-policies sub-module description](../operator-policies/README.md) and [About IAM resources for ROSA clusters that use STS](https://docs.openshift.com/rosa/rosa_architecture/rosa-sts-about-iam-resources.html#rosa-sts-about-iam-resources) in the ROSA documentation.
 
+## Example Usage
+
+```
+module "operator_policies" {
+  source = "terraform-redhat/rosa-classic/rhcs//modules/operator-policies"
+
+  account_role_prefix  = "my-cluster-account"
+  openshift_version    = "4.14.24"
+}
+
+module "operator_roles" {
+  source = "terraform-redhat/rosa-classic/rhcs//modules/operator-roles"
+
+  operator_role_prefix = "my-cluster-operator"
+  account_role_prefix  = "my-cluster-account"
+  oidc_endpoint_url    = "my-url"
+}
+```
+
 <!-- BEGIN_AUTOMATED_TF_DOCS_BLOCK -->
 ## Requirements
 
