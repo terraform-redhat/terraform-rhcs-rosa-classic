@@ -10,6 +10,28 @@ For more information, see [Configuring identity providers for STS](https://docs.
 
 You must have an existing Red Hat OpenShift Service on AWS (ROSA) Classic cluster deployed. (see [rosa-cluster-classic sub-module](../rosa-cluster-classic/README.md))
 
+## Example Usage
+
+```
+module "htpasswd_idp" {
+  source = "terraform-redhat/rosa-classic/rhcs//modules/idp"
+
+  cluster_id         = "cluster-id-123"
+  name               = "htpasswd-idp"
+  idp_type           = "htpasswd"
+  htpasswd_idp_users = [{ username = "test-user", password = random_password.password.result }]
+}
+
+resource "random_password" "password" {
+  length  = 14
+  special = true
+  min_lower = 1
+  min_numeric = 1
+  min_special = 1
+  min_upper = 1
+}
+```
+
 <!-- BEGIN_AUTOMATED_TF_DOCS_BLOCK -->
 ## Requirements
 

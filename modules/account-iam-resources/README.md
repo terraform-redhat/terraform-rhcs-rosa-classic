@@ -8,6 +8,17 @@ These IAM resources can be created once and used across multiple ROSA Classic cl
 
 For more information, see [About IAM resources for ROSA clusters that use STS](https://docs.openshift.com/rosa/rosa_architecture/rosa-sts-about-iam-resources.html#rosa-sts-about-iam-resources) in the ROSA documentation.
 
+## Example Usage
+
+```
+module "account_iam_resources" {
+  source = "terraform-redhat/rosa-classic/rhcs//modules/account-iam-resources"
+
+  account_role_prefix  = "my-cluster-account"
+  openshift_version    = "4.14.24"
+}
+```
+
 <!-- BEGIN_AUTOMATED_TF_DOCS_BLOCK -->
 ## Requirements
 

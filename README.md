@@ -6,6 +6,20 @@ A Terraform module which creates ROSA Classic clusters
 
 This module serves as a comprehensive solution for deploying, configuring, and managing Red Hat OpenShift on AWS (ROSA) Classic clusters within your AWS environment. With a focus on simplicity and efficiency, this module streamlines the process of setting up and maintaining ROSA Classic clusters, enabling users to use the power of OpenShift using AWS infrastructure effortlessly.
 
+## Example Usage
+```
+module "rosa_cluster_classic" {
+  source = "terraform-redhat/rosa-classic/rhcs"
+
+  cluster_name          = "my-cluster"
+  openshift_version     = "4.14.24"
+  create_account_roles  = true
+  create_operator_roles = true
+  create_oidc           = true
+  create_admin_user     = true
+}
+```
+
 ## Sub-modules
 
 Sub-modules included in this module:
