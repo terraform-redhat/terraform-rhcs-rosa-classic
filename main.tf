@@ -8,6 +8,7 @@ locals {
     controlplane_role_arn = "arn:${data.aws_partition.current.partition}:iam::${data.aws_caller_identity.current.account_id}:role${local.path}${local.account_role_prefix}-ControlPlane-Role",
     worker_role_arn       = "arn:${data.aws_partition.current.partition}:iam::${data.aws_caller_identity.current.account_id}:role${local.path}${local.account_role_prefix}-Worker-Role"
   }
+  shared_vpc_role_arn = var.private_hosted_zone_role_arn
 }
 
 ##############################################################
@@ -56,9 +57,10 @@ module "operator_policies" {
     ) : (
     local.account_role_prefix
   )
-  path              = var.create_account_roles ? module.account_iam_resources[0].path : local.path
-  openshift_version = var.openshift_version
-  tags              = var.tags
+  path                = var.create_account_roles ? module.account_iam_resources[0].path : local.path
+  openshift_version   = var.openshift_version
+  tags                = var.tags
+  shared_vpc_role_arn = coalesce(local.shared_vpc_role_arn, "")
 }
 
 ############################
@@ -107,7 +109,7 @@ module "rosa_cluster_classic" {
   tags                         = var.tags
   properties                   = var.properties
   private_hosted_zone_id       = var.private_hosted_zone_id
-  private_hosted_zone_role_arn = var.private_hosted_zone_role_arn
+  private_hosted_zone_role_arn = local.shared_vpc_role_arn
   base_dns_domain              = var.base_dns_domain
 
   create_admin_user          = var.create_admin_user
