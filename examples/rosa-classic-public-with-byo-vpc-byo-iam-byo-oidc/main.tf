@@ -35,7 +35,7 @@ module "account_iam_resources" {
   source = "../../modules/account-iam-resources"
 
   account_role_prefix = local.account_role_prefix
-  openshift_version   = "4.14.5"
+  openshift_version   = var.openshift_version
   path                = "/tf-example/"
 }
 
@@ -43,7 +43,7 @@ module "operator_policies" {
   source = "../../modules/operator-policies"
 
   account_role_prefix = local.account_role_prefix
-  openshift_version   = "4.14.5"
+  openshift_version   = var.openshift_version
   path                = module.account_iam_resources.path
 }
 
