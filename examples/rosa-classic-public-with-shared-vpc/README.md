@@ -31,7 +31,7 @@ For more info about shared VPC, see [Configuring a shared VPC for ROSA clusters]
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.0 |
 | <a name="requirement_null"></a> [null](#requirement\_null) | >= 3.0.0 |
 | <a name="requirement_random"></a> [random](#requirement\_random) | >= 2.0 |
-| <a name="requirement_rhcs"></a> [rhcs](#requirement\_rhcs) | = 1.6.2 |
+| <a name="requirement_rhcs"></a> [rhcs](#requirement\_rhcs) | >= 1.6.2 |
 
 ## Providers
 
@@ -41,7 +41,7 @@ For more info about shared VPC, see [Configuring a shared VPC for ROSA clusters]
 | <a name="provider_aws.shared-vpc"></a> [aws.shared-vpc](#provider\_aws.shared-vpc) | >= 4.0 |
 | <a name="provider_null"></a> [null](#provider\_null) | >= 3.0.0 |
 | <a name="provider_random"></a> [random](#provider\_random) | >= 2.0 |
-| <a name="provider_rhcs"></a> [rhcs](#provider\_rhcs) | = 1.6.2 |
+| <a name="provider_rhcs"></a> [rhcs](#provider\_rhcs) | >= 1.6.2 |
 
 ## Modules
 
@@ -61,7 +61,7 @@ For more info about shared VPC, see [Configuring a shared VPC for ROSA clusters]
 |------|------|
 | [null_resource.validations](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
 | [random_password.password](https://registry.terraform.io/providers/hashicorp/random/latest/docs/resources/password) | resource |
-| [rhcs_dns_domain.dns_domain](https://registry.terraform.io/providers/terraform-redhat/rhcs/1.6.2/docs/resources/dns_domain) | resource |
+| [rhcs_dns_domain.dns_domain](https://registry.terraform.io/providers/terraform-redhat/rhcs/latest/docs/resources/dns_domain) | resource |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
 | [aws_caller_identity.shared_vpc](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
 | [aws_partition.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/partition) | data source |

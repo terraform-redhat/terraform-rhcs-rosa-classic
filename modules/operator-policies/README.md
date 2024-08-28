@@ -32,7 +32,7 @@ module "operator_policies" {
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.0 |
 | <a name="requirement_null"></a> [null](#requirement\_null) | >= 3.0.0 |
-| <a name="requirement_rhcs"></a> [rhcs](#requirement\_rhcs) | = 1.6.2 |
+| <a name="requirement_rhcs"></a> [rhcs](#requirement\_rhcs) | >= 1.6.2 |
 | <a name="requirement_time"></a> [time](#requirement\_time) | >= 0.9 |
 
 ## Providers
@@ -41,7 +41,7 @@ module "operator_policies" {
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.0 |
 | <a name="provider_null"></a> [null](#provider\_null) | >= 3.0.0 |
-| <a name="provider_rhcs"></a> [rhcs](#provider\_rhcs) | = 1.6.2 |
+| <a name="provider_rhcs"></a> [rhcs](#provider\_rhcs) | >= 1.6.2 |
 | <a name="provider_time"></a> [time](#provider\_time) | >= 0.9 |
 
 ## Modules
@@ -55,8 +55,8 @@ No modules.
 | [aws_iam_policy.operator-policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy) | resource |
 | [null_resource.validate_openshift_version](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
 | [time_sleep.operator_policy_wait](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
-| [rhcs_policies.all_policies](https://registry.terraform.io/providers/terraform-redhat/rhcs/1.6.2/docs/data-sources/policies) | data source |
-| [rhcs_versions.all_versions](https://registry.terraform.io/providers/terraform-redhat/rhcs/1.6.2/docs/data-sources/versions) | data source |
+| [rhcs_policies.all_policies](https://registry.terraform.io/providers/terraform-redhat/rhcs/latest/docs/data-sources/policies) | data source |
+| [rhcs_versions.all_versions](https://registry.terraform.io/providers/terraform-redhat/rhcs/latest/docs/data-sources/versions) | data source |
 
 ## Inputs
 

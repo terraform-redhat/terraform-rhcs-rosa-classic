@@ -28,7 +28,7 @@ module "account_iam_resources" {
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.0 |
 | <a name="requirement_null"></a> [null](#requirement\_null) | >= 3.0.0 |
 | <a name="requirement_random"></a> [random](#requirement\_random) | >= 2.0 |
-| <a name="requirement_rhcs"></a> [rhcs](#requirement\_rhcs) | = 1.6.2 |
+| <a name="requirement_rhcs"></a> [rhcs](#requirement\_rhcs) | >= 1.6.2 |
 | <a name="requirement_time"></a> [time](#requirement\_time) | >= 0.9 |
 
 ## Providers
@@ -38,7 +38,7 @@ module "account_iam_resources" {
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.0 |
 | <a name="provider_null"></a> [null](#provider\_null) | >= 3.0.0 |
 | <a name="provider_random"></a> [random](#provider\_random) | >= 2.0 |
-| <a name="provider_rhcs"></a> [rhcs](#provider\_rhcs) | = 1.6.2 |
+| <a name="provider_rhcs"></a> [rhcs](#provider\_rhcs) | >= 1.6.2 |
 | <a name="provider_time"></a> [time](#provider\_time) | >= 0.9 |
 
 ## Modules
@@ -58,9 +58,9 @@ module "account_iam_resources" {
 | [time_sleep.account_iam_resources_wait](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
 | [aws_iam_policy_document.custom_trust_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 | [aws_partition.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/partition) | data source |
-| [rhcs_info.current](https://registry.terraform.io/providers/terraform-redhat/rhcs/1.6.2/docs/data-sources/info) | data source |
-| [rhcs_policies.all_policies](https://registry.terraform.io/providers/terraform-redhat/rhcs/1.6.2/docs/data-sources/policies) | data source |
-| [rhcs_versions.all_versions](https://registry.terraform.io/providers/terraform-redhat/rhcs/1.6.2/docs/data-sources/versions) | data source |
+| [rhcs_info.current](https://registry.terraform.io/providers/terraform-redhat/rhcs/latest/docs/data-sources/info) | data source |
+| [rhcs_policies.all_policies](https://registry.terraform.io/providers/terraform-redhat/rhcs/latest/docs/data-sources/policies) | data source |
+| [rhcs_versions.all_versions](https://registry.terraform.io/providers/terraform-redhat/rhcs/latest/docs/data-sources/versions) | data source |
 
 ## Inputs
 
