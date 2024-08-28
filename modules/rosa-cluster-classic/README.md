@@ -17,14 +17,14 @@ For more information, see [Creating a default ROSA Classic cluster using Terrafo
 |------|---------|
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.0 |
-| <a name="requirement_rhcs"></a> [rhcs](#requirement\_rhcs) | = 1.6.2 |
+| <a name="requirement_rhcs"></a> [rhcs](#requirement\_rhcs) | >= 1.6.2 |
 
 ## Providers
 
 | Name | Version |
 |------|---------|
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.0 |
-| <a name="provider_rhcs"></a> [rhcs](#provider\_rhcs) | = 1.6.2 |
+| <a name="provider_rhcs"></a> [rhcs](#provider\_rhcs) | >= 1.6.2 |
 
 ## Modules
 
@@ -34,9 +34,9 @@ No modules.
 
 | Name | Type |
 |------|------|
-| [rhcs_cluster_autoscaler.cluster_autoscaler](https://registry.terraform.io/providers/terraform-redhat/rhcs/1.6.2/docs/resources/cluster_autoscaler) | resource |
-| [rhcs_cluster_rosa_classic.rosa_classic_cluster](https://registry.terraform.io/providers/terraform-redhat/rhcs/1.6.2/docs/resources/cluster_rosa_classic) | resource |
-| [rhcs_default_ingress.default_ingress](https://registry.terraform.io/providers/terraform-redhat/rhcs/1.6.2/docs/resources/default_ingress) | resource |
+| [rhcs_cluster_autoscaler.cluster_autoscaler](https://registry.terraform.io/providers/terraform-redhat/rhcs/latest/docs/resources/cluster_autoscaler) | resource |
+| [rhcs_cluster_rosa_classic.rosa_classic_cluster](https://registry.terraform.io/providers/terraform-redhat/rhcs/latest/docs/resources/cluster_rosa_classic) | resource |
+| [rhcs_default_ingress.default_ingress](https://registry.terraform.io/providers/terraform-redhat/rhcs/latest/docs/resources/default_ingress) | resource |
 | [aws_availability_zones.available](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/availability_zones) | data source |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
 | [aws_partition.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/partition) | data source |
