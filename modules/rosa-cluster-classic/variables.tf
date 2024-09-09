@@ -188,6 +188,7 @@ variable "admin_credentials_password" {
   type        = string
   default     = null
   description = "Admin password that is created with the cluster. The password must contain at least 14 characters (ASCII-standard) without whitespaces including uppercase letters, lowercase letters, and numbers or symbols."
+  sensitive   = true
 }
 
 variable "private_hosted_zone_id" {
