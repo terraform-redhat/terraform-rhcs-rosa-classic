@@ -23,6 +23,7 @@ variable "shared_vpc_aws_secret_access_key" {
   type        = string
   default     = ""
   description = "The secret key paired with the access key. Together, they provide the necessary credentials for Terraform to authenticate with the shared-vpc AWS account and manage resources securely."
+  sensitive   = true
 }
 
 variable "shared_vpc_aws_profile" {
