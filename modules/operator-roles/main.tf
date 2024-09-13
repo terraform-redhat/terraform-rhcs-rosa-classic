@@ -5,7 +5,7 @@ locals {
   # Validation within the "rhcs_rosa_operator_roles.operator_roles" data source ensures that this
   # value matches the actual length returned from the data source.
   operator_roles_count = 6
-  operator_role_prefix = var.operator_role_prefix != null ? var.operator_role_prefix : var.account_role_prefix
+  operator_role_prefix = (var.operator_role_prefix != null && var.operator_role_prefix != "") ? var.operator_role_prefix : var.account_role_prefix
   path                 = coalesce(var.path, "/")
 }
 
