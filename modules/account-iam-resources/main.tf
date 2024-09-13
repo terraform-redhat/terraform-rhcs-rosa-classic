@@ -39,7 +39,7 @@ locals {
     ) : (
     []
   )
-  account_role_prefix_valid = var.account_role_prefix != null ? (
+  account_role_prefix_valid = (var.account_role_prefix != null && var.account_role_prefix != "") ? (
     var.account_role_prefix
     ) : (
     "account-role-${random_string.default_random[0].result}"
