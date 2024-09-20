@@ -113,7 +113,7 @@ data "rhcs_policies" "all_policies" {}
 data "rhcs_versions" "all_versions" {}
 
 resource "random_string" "default_random" {
-  count = var.account_role_prefix != null ? 0 : 1
+  count = (var.account_role_prefix != null && var.account_role_prefix != "") ? 0 : 1
 
   length  = 4
   special = false
