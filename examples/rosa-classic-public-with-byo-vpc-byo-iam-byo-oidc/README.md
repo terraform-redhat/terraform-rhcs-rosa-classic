@@ -22,6 +22,67 @@ This example includes:
     * [ROSA CLI](https://docs.openshift.com/rosa/cli_reference/rosa_cli/rosa-get-started-cli.html)
     * [Openshift CLI (oc)](https://docs.openshift.com/rosa/cli_reference/openshift_cli/getting-started-cli.html)
 
+## Example Usage
+
+```
+module "rosa" {
+  source = "terraform-redhat/rosa-classic/rhcs"
+
+  cluster_name           = "my-cluster"
+  openshift_version      = "4.16.13"
+  account_role_prefix    = module.account_iam_resources.account_role_prefix
+  operator_role_prefix   = module.operator_roles.operator_role_prefix
+  oidc_config_id         = module.oidc_config_and_provider.oidc_config_id # replace with variable once split out properly
+  machine_cidr           = module.vpc.cidr_block
+  aws_subnet_ids         = concat(module.vpc.public_subnets, module.vpc.private_subnets)
+  aws_availability_zones = module.vpc.availability_zones
+  multi_az               = length(module.vpc.availability_zones) > 1
+  path                   = module.account_iam_resources.path
+  replicas               = 3
+}
+
+############################
+# VPC
+############################
+module "vpc" {
+  source = "terraform-redhat/rosa-classic/rhcs//modules/vpc"
+
+  name_prefix              = "my-cluster"
+  availability_zones_count = 3
+}
+
+module "account_iam_resources" {
+  source = "terraform-redhat/rosa-classic/rhcs//modules/account-iam-resources"
+
+  account_role_prefix = "my-cluster-account"
+  openshift_version   = "4.16.13"
+  path                = "/tf-example/"
+}
+
+module "operator_policies" {
+  source = "terraform-redhat/rosa-classic/rhcs//modules/operator-policies"
+
+  account_role_prefix = "my-cluster-account"
+  openshift_version   = "4.16.13"
+  path                = module.account_iam_resources.path
+}
+
+module "operator_roles" {
+  source = "terraform-redhat/rosa-classic/rhcs//modules/operator-roles"
+
+  operator_role_prefix = "my-cluster-operator"
+  account_role_prefix  = module.operator_policies.account_role_prefix
+  path                 = module.account_iam_resources.path
+  oidc_endpoint_url    = module.oidc_config_and_provider.oidc_endpoint_url
+}
+
+module "oidc_config_and_provider" {
+  source = "terraform-redhat/rosa-classic/rhcs//modules/oidc-config-and-provider"
+
+  managed = true
+}
+```
+
 <!-- BEGIN_AUTOMATED_TF_DOCS_BLOCK -->
 ## Requirements
 

@@ -20,6 +20,22 @@ This example includes:
     * [ROSA CLI](https://docs.openshift.com/rosa/cli_reference/rosa_cli/rosa-get-started-cli.html)
     * [Openshift CLI (oc)](https://docs.openshift.com/rosa/cli_reference/openshift_cli/getting-started-cli.html)
 
+## Example Usage
+
+```
+module "rosa" {
+  source = "terraform-redhat/rosa-classic/rhcs"
+
+  cluster_name          = "my-cluster"
+  openshift_version     = "4.16.13"
+  create_account_roles  = true
+  create_operator_roles = true
+  create_oidc           = true
+  managed_oidc          = false
+}
+
+```
+
 <!-- BEGIN_AUTOMATED_TF_DOCS_BLOCK -->
 ## Requirements
 
