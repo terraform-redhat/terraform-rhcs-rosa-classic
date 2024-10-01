@@ -23,6 +23,85 @@ Note: This example involves the creation of various identity providers using pla
     * [ROSA CLI](https://docs.openshift.com/rosa/cli_reference/rosa_cli/rosa-get-started-cli.html)
     * [Openshift CLI (oc)](https://docs.openshift.com/rosa/cli_reference/openshift_cli/getting-started-cli.html)
 
+## Example Usage
+
+```
+module "rosa" {
+  source = "terraform-redhat/rosa-classic/rhcs"
+
+  cluster_name          = "my-cluster"
+  openshift_version     = "4.16.13"
+  create_account_roles  = true
+  create_operator_roles = true
+  create_oidc           = true
+  machine_pools = {
+    pool1 = {
+      name         = "pool1"
+      machine_type = "r5.xlarge"
+      replicas     = 3
+    },
+    pool2 = {
+      name         = "pool2"
+      machine_type = "r5.xlarge"
+      replicas     = 3
+    },
+  }
+  identity_providers = {
+    gitlab-idp = {
+      name                     = "gitlab-idp"
+      idp_type                 = "gitlab"
+      gitlab_idp_client_id     = <replace-with-valid-client-id>
+      gitlab_idp_client_secret = <replace-with-valid-client-secret>
+      gitlab_idp_url           = "https://gitlab.com"
+    },
+    htpasswd-idp = {
+      name               = "htpasswd-idp"
+      idp_type           = "htpasswd"
+      htpasswd_idp_users = jsonencode([{ username = "test-user", password = random_password.password.result }])
+    },
+    github-idp = {
+      name                     = "github-idp"
+      idp_type                 = "github"
+      github_idp_client_id     = <replace-with-valid-client-id>
+      github_idp_client_secret = <replace-with-valid-client-secret>
+      github_idp_organizations = jsonencode(["example"])
+    },
+    google-idp = {
+      name                     = "google-idp"
+      idp_type                 = "google"
+      google_idp_client_id     = <replace-with-valid-client-id>
+      google_idp_client_secret = <replace-with-valid-client-secret>
+      google_idp_hosted_domain = "example.com"
+    },
+    ldap-idp = {
+      name              = "ldap-idp"
+      idp_type          = "ldap"
+      ldap_idp_ca       = ""
+      ldap_idp_url      = "ldap://ldap.forumsys.com/dc=example,dc=com?uid"
+      ldap_idp_insecure = true
+    },
+    openid-idp = {
+      name                                 = "openid-idp"
+      idp_type                             = "openid"
+      openid_idp_client_id                 = <replace-with-valid-client-id>
+      openid_idp_client_secret             = <replace-with-valid-client-secret>
+      openid_idp_ca                        = ""
+      openid_idp_issuer                    = "https://example.com"
+      openid_idp_claims_email              = jsonencode(["example@email.com"])
+      openid_idp_claims_groups             = jsonencode(["example"])
+      openid_idp_claims_name               = jsonencode(["example"])
+      openid_idp_claims_preferred_username = jsonencode(["example"])
+    },
+  }
+}
+
+resource "random_password" "password" {
+  length  = 14
+  special = true
+}
+
+```
+
 <!-- BEGIN_AUTOMATED_TF_DOCS_BLOCK -->
 ## Requirements
 

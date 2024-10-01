@@ -20,6 +20,45 @@ This example includes:
     * [ROSA CLI](https://docs.openshift.com/rosa/cli_reference/rosa_cli/rosa-get-started-cli.html)
     * [Openshift CLI (oc)](https://docs.openshift.com/rosa/cli_reference/openshift_cli/getting-started-cli.html)
 
+## Example Usage
+
+```
+module "rosa" {
+  source = "terraform-redhat/rosa-classic/rhcs"
+
+  cluster_name           = "my-cluster"
+  openshift_version      = "4.16.13"
+  machine_cidr           = module.vpc.cidr_block
+  create_account_roles   = true
+  create_operator_roles  = true
+  create_oidc            = true
+  aws_subnet_ids         = concat(module.vpc.public_subnets, module.vpc.private_subnets)
+  aws_availability_zones = module.vpc.availability_zones
+  multi_az               = length(module.vpc.availability_zones) > 1
+  replicas               = 3
+}
+
+############################
+# VPC
+############################
+module "vpc" {
+  source = "terraform-redhat/rosa-classic/rhcs//modules/vpc"
+
+  name_prefix        = "my-cluster"
+  availability_zones = slice(data.aws_availability_zones.available.names, 0, 3)
+}
+
+data "aws_availability_zones" "available" {
+  state = "available"
+
+  # New configuration to exclude Local Zones
+  filter {
+    name   = "opt-in-status"
+    values = ["opt-in-not-required"]
+  }
+}
+```
+
 <!-- BEGIN_AUTOMATED_TF_DOCS_BLOCK -->
 ## Requirements
 

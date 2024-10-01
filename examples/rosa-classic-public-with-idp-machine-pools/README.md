@@ -23,6 +23,113 @@ Note: This example involves the creation of various identity providers using pla
     * [ROSA CLI](https://docs.openshift.com/rosa/cli_reference/rosa_cli/rosa-get-started-cli.html)
     * [Openshift CLI (oc)](https://docs.openshift.com/rosa/cli_reference/openshift_cli/getting-started-cli.html)
 
+## Example Usage
+
+```
+module "rosa" {
+  source = "terraform-redhat/rosa-classic/rhcs"
+
+  cluster_name          = "my-cluster"
+  openshift_version     = "4.16.13"
+  create_account_roles  = true
+  create_operator_roles = true
+  create_oidc           = true
+}
+
+module "machine_pool_1" {
+  source = "terraform-redhat/rosa-classic/rhcs//modules/machine-pool"
+
+  cluster_id   = module.rosa.cluster_id
+  name         = "pool1"
+  machine_type = "r5.xlarge"
+  replicas     = 3
+}
+
+module "machine_pool_2" {
+  source = "terraform-redhat/rosa-classic/rhcs//modules/machine-pool"
+
+  cluster_id   = module.rosa.cluster_id
+  name         = "pool2"
+  machine_type = "r5.xlarge"
+  replicas     = 3
+}
+
+module "gitlab_idp" {
+  source = "terraform-redhat/rosa-classic/rhcs//modules/idp"
+
+  cluster_id = module.rosa.cluster_id
+  name       = "gitlab-idp"
+  idp_type   = "gitlab"
+  gitlab_idp_client_id     = <replace-with-valid-client-id>
+  gitlab_idp_client_secret = <replace-with-valid-client-secret>
+  gitlab_idp_url           = "https://gitlab.com"
+}
+
+module "htpasswd_idp" {
+  source = "terraform-redhat/rosa-classic/rhcs//modules/modules/idp"
+
+  cluster_id         = module.rosa.cluster_id
+  name               = "htpasswd-idp"
+  idp_type           = "htpasswd"
+  htpasswd_idp_users = [{ username = "test-user", password = random_password.password.result }]
+}
+
+module "github_idp" {
+  source = "terraform-redhat/rosa-classic/rhcs//modules/idp"
+
+  cluster_id               = module.rosa.cluster_id
+  name                     = "github-idp"
+  idp_type                 = "github"
+  github_idp_client_id     = <replace-with-valid-client-id>
+  github_idp_client_secret = <replace-with-valid-client-secret>
+  github_idp_organizations = ["example"]
+}
+
+module "google_idp" {
+  source = "terraform-redhat/rosa-classic/rhcs//modules/idp"
+
+  cluster_id               = module.rosa.cluster_id
+  name                     = "google-idp"
+  idp_type                 = "google"
+  google_idp_client_id     = <replace-with-valid-client-id>
+  google_idp_client_secret = <replace-with-valid-client-secret>
+  google_idp_hosted_domain = "example.com"
+}
+
+module "ldap_idp" {
+  source = "terraform-redhat/rosa-classic/rhcs//modules/idp"
+
+  cluster_id        = module.rosa.cluster_id
+  name              = "ldap-idp"
+  idp_type          = "ldap"
+  ldap_idp_ca       = ""
+  ldap_idp_url      = "ldap://ldap.forumsys.com/dc=example,dc=com?uid"
+  ldap_idp_insecure = true
+}
+
+module "openid_idp" {
+  source = "terraform-redhat/rosa-classic/rhcs//modules/idp"
+
+  cluster_id                           = module.rosa.cluster_id
+  name                                 = "openid-idp"
+  idp_type                             = "openid"
+  openid_idp_client_id                 = <replace-with-valid-client-id>
+  openid_idp_client_secret             = <replace-with-valid-client-secret>
+  openid_idp_ca                        = ""
+  openid_idp_issuer                    = "https://example.com"
+  openid_idp_claims_email              = ["example@email.com"]
+  openid_idp_claims_groups             = ["example"]
+  openid_idp_claims_name               = ["example"]
+  openid_idp_claims_preferred_username = ["example"]
+}
+
+resource "random_password" "password" {
+  length  = 14
+  special = true
+}
+
+```
+
 <!-- BEGIN_AUTOMATED_TF_DOCS_BLOCK -->
 ## Requirements
 
