@@ -22,6 +22,150 @@ This example includes:
 
 For more info about shared VPC, see [Configuring a shared VPC for ROSA clusters](https://docs.openshift.com/rosa/rosa_install_access_delete_clusters/rosa-shared-vpc-config.html).
 
+## Example Usage
+
+```
+provider "aws" {
+  alias = "shared-vpc"
+
+  access_key               = "<shared_vpc_aws_access_key_id>"
+  secret_key               = "<shared_vpc_aws_secret_access_key>"
+  region                   = data.aws_region.current.name
+  profile                  = "<shared_vpc_aws_profile>"
+  shared_credentials_files = "<shared_vpc_aws_shared_credentials_files>"
+}
+
+locals {
+  account_role_prefix          = "my-shared-vpc-cluster-account"
+  operator_role_prefix         = "my-shared-vpc-cluster-operator"
+  shared_resources_name_prefix = "my-shared-vpc-cluster"
+  shared_vpc_role_name         = "${local.shared_resources_name_prefix}-shared-vpc-role"
+}
+
+data "aws_region" "current" {}
+
+############################
+# VPC
+############################
+module "vpc" {
+  source  = "terraform-redhat/rosa-classic/rhcs//modules/vpc"
+  version = "1.6.2-prerelease.2"
+
+  providers = {
+    aws = aws.shared-vpc
+  }
+
+  name_prefix              = local.shared_resources_name_prefix
+  availability_zones_count = 3
+}
+
+##############################################################
+# Account roles includes IAM roles and IAM policies
+##############################################################
+module "account_iam_resources" {
+  source  = "terraform-redhat/rosa-classic/rhcs//modules/account-iam-resources"
+  version = "1.6.2-prerelease.2"
+
+  account_role_prefix = local.account_role_prefix
+  openshift_version   = "4.16.13"
+}
+
+data "aws_caller_identity" "shared_vpc" {
+  provider = aws.shared-vpc
+}
+
+############################
+# operator policies
+############################
+module "operator_policies" {
+  source  = "terraform-redhat/rosa-classic/rhcs//modules/operator-policies"
+  version = "1.6.2-prerelease.2"
+
+  account_role_prefix = module.account_iam_resources.account_role_prefix
+  openshift_version   = module.account_iam_resources.openshift_version
+  shared_vpc_role_arn = "arn:${data.aws_partition.current.partition}:iam::${data.aws_caller_identity.shared_vpc.account_id}:role/${local.shared_vpc_role_name}"
+  path                = module.account_iam_resources.path
+}
+
+############################
+# OIDC provider
+############################
+module "oidc_config_and_provider" {
+  source  = "terraform-redhat/rosa-classic/rhcs//modules/oidc-config-and-provider"
+  version = "1.6.2-prerelease.2"
+
+  managed = true
+}
+
+############################
+# operator roles
+############################
+module "operator_roles" {
+  source  = "terraform-redhat/rosa-classic/rhcs//modules/operator-roles"
+  version = "1.6.2-prerelease.2"
+
+  operator_role_prefix = local.operator_role_prefix
+
+  account_role_prefix = module.operator_policies.account_role_prefix
+  path                = module.account_iam_resources.path
+  oidc_endpoint_url   = module.oidc_config_and_provider.oidc_endpoint_url
+}
+
+resource "rhcs_dns_domain" "dns_domain" {}
+
+############################
+# shared-vpc-policy-and-hosted-zone
+############################
+data "aws_caller_identity" "current" {}
+
+module "shared-vpc-policy-and-hosted-zone" {
+  source  = "terraform-redhat/rosa-classic/rhcs//modules/shared-vpc-policy-and-hosted-zone"
+  version = "1.6.2-prerelease.2"
+
+  providers = {
+    aws = aws.shared-vpc
+  }
+
+  cluster_name              = "my-shared-vpc-cluster"
+  name_prefix               = local.shared_resources_name_prefix
+  target_aws_account        = data.aws_caller_identity.current.account_id
+  installer_role_arn        = module.account_iam_resources.account_roles_arn["Installer"]
+  ingress_operator_role_arn = module.operator_roles.operator_roles_arn["openshift-ingress-operator"]
+  subnets                   = concat(module.vpc.private_subnets, module.vpc.public_subnets)
+  hosted_zone_base_domain   = rhcs_dns_domain.dns_domain.id
+  vpc_id                    = module.vpc.vpc_id
+}
+
+############################
+# ROSA STS cluster
+############################
+module "rosa_cluster_classic" {
+  source  = "terraform-redhat/rosa-classic/rhcs//modules/rosa-cluster-classic"
+  version = "1.6.2-prerelease.2"
+
+  cluster_name                 = "my-shared-vpc-cluster"
+  operator_role_prefix         = module.operator_roles.operator_role_prefix
+  account_role_prefix          = module.account_iam_resources.account_role_prefix
+  openshift_version            = "4.16.13"
+  oidc_config_id               = module.oidc_config_and_provider.oidc_config_id
+  aws_subnet_ids               = module.shared-vpc-policy-and-hosted-zone.shared_subnets
+  multi_az                     = length(module.vpc.availability_zones) > 1
+  replicas                     = 3
+  admin_credentials_username   = "kubeadmin"
+  admin_credentials_password   = random_password.password.result
+  base_dns_domain              = rhcs_dns_domain.dns_domain.id
+  private_hosted_zone_id       = module.shared-vpc-policy-and-hosted-zone.hosted_zone_id
+  private_hosted_zone_role_arn = module.shared-vpc-policy-and-hosted-zone.shared_role
+}
+
+resource "random_password" "password" {
+  length  = 14
+  special = true
+}
+
+data "aws_partition" "current" {}
+```
+
 <!-- BEGIN_AUTOMATED_TF_DOCS_BLOCK -->
 ## Requirements
 
