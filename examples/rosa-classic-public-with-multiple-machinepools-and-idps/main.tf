@@ -1,5 +1,6 @@
 module "rosa" {
-  source = "../../"
+  source  = "terraform-redhat/rosa-classic/rhcs"
+  version = "1.6.4-prerelease.2"
 
   cluster_name          = var.cluster_name
   openshift_version     = var.openshift_version
