@@ -60,7 +60,7 @@ module "operator_policies" {
   path                = var.create_account_roles ? module.account_iam_resources[0].path : local.path
   openshift_version   = var.openshift_version
   tags                = var.tags
-  shared_vpc_role_arn = coalesce(local.shared_vpc_role_arn, "")
+  shared_vpc_role_arn = local.shared_vpc_role_arn != null ? local.shared_vpc_role_arn : ""
 }
 
 ############################
