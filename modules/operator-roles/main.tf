@@ -9,10 +9,25 @@ locals {
   path                 = coalesce(var.path, "/")
 }
 
+data "rhcs_rosa_operator_roles" "operator_roles" {
+  operator_role_prefix = local.operator_role_prefix
+  account_role_prefix  = var.account_role_prefix
+
+  lifecycle {
+    # The operator_iam_roles should contains 6 elements 
+    postcondition {
+      condition     = length(self.operator_iam_roles) == local.operator_roles_count
+      error_message = "The operator roles list returned has a length of ${length(self.operator_iam_roles)}, which differs from the expected value of ${local.operator_roles_count}. To solve this, you need to update \"local.operator_roles_count\" value to ${length(self.operator_iam_roles)} and apply again."
+    }
+  }
+}
+data "aws_caller_identity" "current" {}
+data "aws_partition" "current" {}
+
 resource "aws_iam_role" "operator_role" {
   count = local.operator_roles_count
 
-  name                 = data.rhcs_rosa_operator_roles.operator_roles.operator_iam_roles[count.index].role_name
+  name                 = substr("${local.operator_role_prefix}-${data.rhcs_rosa_operator_roles.operator_roles.operator_iam_roles[count.index].operator_namespace}-${data.rhcs_rosa_operator_roles.operator_roles.operator_iam_roles[count.index].operator_name}", 0, 64)
   path                 = local.path
   permissions_boundary = var.permissions_boundary
 
@@ -50,21 +65,6 @@ data "aws_iam_policy_document" "custom_trust_policy" {
   }
 }
 
-data "rhcs_rosa_operator_roles" "operator_roles" {
-  operator_role_prefix = local.operator_role_prefix
-  account_role_prefix  = var.account_role_prefix
-
-  lifecycle {
-    # The operator_iam_roles should contains 6 elements 
-    postcondition {
-      condition     = length(self.operator_iam_roles) == local.operator_roles_count
-      error_message = "The operator roles list returned has a length of ${length(self.operator_iam_roles)}, which differs from the expected value of ${local.operator_roles_count}. To solve this, you need to update \"local.operator_roles_count\" value to ${length(self.operator_iam_roles)} and apply again."
-    }
-  }
-}
-
-data "aws_caller_identity" "current" {}
-
 # Wait 20 seconds after the operator role is created in order to avoid error in cluster create
 resource "time_sleep" "role_resources_propagation" {
   create_duration = "20s"
@@ -76,4 +76,3 @@ resource "time_sleep" "role_resources_propagation" {
   }
 }
 
-data "aws_partition" "current" {}

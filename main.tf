@@ -52,12 +52,8 @@ module "operator_policies" {
   source = "./modules/operator-policies"
   count  = var.create_operator_roles ? 1 : 0
 
-  account_role_prefix = var.create_account_roles ? (
-    module.account_iam_resources[0].account_role_prefix
-    ) : (
-    local.account_role_prefix
-  )
-  path                = var.create_account_roles ? module.account_iam_resources[0].path : local.path
+  account_role_prefix = local.account_role_prefix
+  path                = local.path
   openshift_version   = var.openshift_version
   tags                = var.tags
   shared_vpc_role_arn = local.shared_vpc_role_arn != null ? local.shared_vpc_role_arn : ""
@@ -71,16 +67,13 @@ module "operator_roles" {
   count  = var.create_operator_roles ? 1 : 0
 
   operator_role_prefix = local.operator_role_prefix
-  account_role_prefix = var.create_account_roles ? (
-    module.account_iam_resources[0].account_role_prefix
-    ) : (
-    local.account_role_prefix
-  )
-  path                 = var.create_account_roles ? module.account_iam_resources[0].path : local.path
+  account_role_prefix  = local.account_role_prefix
+  path                 = local.path
   oidc_endpoint_url    = var.create_oidc ? module.oidc_config_and_provider[0].oidc_endpoint_url : var.oidc_endpoint_url
-  depends_on           = [module.operator_policies]
   tags                 = var.tags
   permissions_boundary = var.permissions_boundary
+  
+  depends_on           = [module.operator_policies]
 }
 
 ############################
