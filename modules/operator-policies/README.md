@@ -55,6 +55,7 @@ No modules.
 | [aws_iam_policy.operator-policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy) | resource |
 | [null_resource.validate_openshift_version](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
 | [time_sleep.operator_policy_wait](https://registry.terraform.io/providers/hashicorp/time/latest/docs/resources/sleep) | resource |
+| [rhcs_info.current](https://registry.terraform.io/providers/terraform-redhat/rhcs/latest/docs/data-sources/info) | data source |
 | [rhcs_policies.all_policies](https://registry.terraform.io/providers/terraform-redhat/rhcs/latest/docs/data-sources/policies) | data source |
 | [rhcs_versions.all_versions](https://registry.terraform.io/providers/terraform-redhat/rhcs/latest/docs/data-sources/versions) | data source |
 

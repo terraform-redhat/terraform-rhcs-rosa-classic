@@ -5,7 +5,14 @@ locals {
   openshift_ingress_policy            = data.rhcs_policies.all_policies.operator_role_policies["openshift_ingress_operator_cloud_credentials_policy"]
   shared_vpc_openshift_ingress_policy = replace(data.rhcs_policies.all_policies.operator_role_policies["shared_vpc_openshift_ingress_operator_cloud_credentials_policy"], local.shared_vpc_role_arn_replace, var.shared_vpc_role_arn)
 
-  operator_roles_policy_properties = [
+  # Add aws vpce operator policy only for GovCloud
+  additional_policies = strcontains(data.rhcs_info.current.ocm_api, "gov") ? [{
+      policy_name    = substr("${var.account_role_prefix}-openshift-aws-vpce-operator-avo-aws-creds", 0, 64)
+      policy_details = data.rhcs_policies.all_policies.operator_role_policies["openshift_aws_vpce_operator_avo_aws_creds_policy"]
+      namespace      = "openshift-aws-vpce-operator"
+      operator_name  = "aws-vpce-operator"
+  }] : []
+  operator_roles_policy_properties = concat([
     {
       policy_name    = substr("${var.account_role_prefix}-openshift-cloud-network-config-controller-cloud-credentials", 0, 64)
       policy_details = data.rhcs_policies.all_policies.operator_role_policies["openshift_cloud_network_config_controller_cloud_credentials_policy"]
@@ -41,7 +48,7 @@ locals {
       policy_details = data.rhcs_policies.all_policies.operator_role_policies["openshift_cluster_csi_drivers_ebs_cloud_credentials_policy"]
       namespace      = "openshift-cluster-csi-drivers"
       operator_name  = "ebs-cloud-credentials"
-  }]
+  }], local.additional_policies)
   patch_version_list = [for s in data.rhcs_versions.all_versions.items : s.name]
   minor_version_list = length(local.patch_version_list) > 0 ? (
     distinct([for s in local.patch_version_list : format("%s.%s", split(".", s)[0], split(".", s)[1])])
@@ -88,3 +95,5 @@ resource "null_resource" "validate_openshift_version" {
 }
 
 data "rhcs_versions" "all_versions" {}
+
+data "rhcs_info" "current" {}
