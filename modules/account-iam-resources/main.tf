@@ -10,10 +10,10 @@ locals {
       principal_identifier = "arn:${data.aws_partition.current.partition}:iam::${data.rhcs_info.current.ocm_aws_account_id}:role/RH-Managed-OpenShift-Installer"
     },
     {
-      role_name            = "Support"
-      role_type            = "support"
-      policy_details       = data.rhcs_policies.all_policies.account_role_policies["sts_support_permission_policy"]
-      principal_type       = "AWS"
+      role_name      = "Support"
+      role_type      = "support"
+      policy_details = data.rhcs_policies.all_policies.account_role_policies["sts_support_permission_policy"]
+      principal_type = "AWS"
       // This is a SRE RH Support role which is used to assume this support role
       principal_identifier = data.rhcs_policies.all_policies.account_role_policies["sts_support_rh_sre_role"]
     },

@@ -7,10 +7,10 @@ locals {
 
   # Add aws vpce operator policy only for GovCloud
   additional_policies = strcontains(data.rhcs_info.current.ocm_api, "gov") ? [{
-      policy_name    = substr("${var.account_role_prefix}-openshift-aws-vpce-operator-avo-aws-creds", 0, 64)
-      policy_details = data.rhcs_policies.all_policies.operator_role_policies["openshift_aws_vpce_operator_avo_aws_creds_policy"]
-      namespace      = "openshift-aws-vpce-operator"
-      operator_name  = "aws-vpce-operator"
+    policy_name    = substr("${var.account_role_prefix}-openshift-aws-vpce-operator-avo-aws-creds", 0, 64)
+    policy_details = replace(data.rhcs_policies.all_policies.operator_role_policies["shared_vpc_openshift_ingress_operator_cloud_credentials_policy"], local.shared_vpc_role_arn_replace, var.shared_vpc_role_arn)
+    namespace      = "openshift-aws-vpce-operator"
+    operator_name  = "aws-vpce-operator"
   }] : []
   operator_roles_policy_properties = concat([
     {
