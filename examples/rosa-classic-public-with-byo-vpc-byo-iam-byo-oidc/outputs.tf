@@ -36,6 +36,7 @@ output "state" {
 output "cluster_admin_username" {
   value       = module.rosa.cluster_admin_username
   description = "The username of the admin user."
+  sensitive   = true
 }
 
 output "cluster_admin_password" {
