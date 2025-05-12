@@ -19,6 +19,7 @@ module "rosa" {
   multi_az                   = length(module.vpc.availability_zones) > 1
   cluster_autoscaler_enabled = true
   autoscaler_log_verbosity   = 4
+  govcloud                   = false
 }
 
 ############################
