@@ -11,6 +11,7 @@ module "rosa" {
   aws_availability_zones = module.vpc.availability_zones
   multi_az               = length(module.vpc.availability_zones) > 1
   replicas               = 3
+  govcloud               = false
 }
 
 ############################

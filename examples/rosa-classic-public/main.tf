@@ -8,5 +8,6 @@ module "rosa" {
   create_oidc           = true
   create_admin_user     = true
   path                  = "/tf-example/"
+  govcloud              = false
 }
 
