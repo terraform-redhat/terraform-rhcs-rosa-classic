@@ -68,6 +68,7 @@ module "operator_roles" {
   oidc_endpoint_url    = var.create_oidc ? module.oidc_config_and_provider[0].oidc_endpoint_url : var.oidc_endpoint_url
   tags                 = var.tags
   permissions_boundary = var.permissions_boundary
+  govcloud             = var.govcloud
 
   depends_on = [module.operator_policies]
 }
