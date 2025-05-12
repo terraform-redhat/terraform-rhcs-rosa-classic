@@ -1,11 +1,5 @@
 locals {
-  # The "count" value should not rely on data source outputs that are undetermined during
-  # the planning stage (at first apply).
-  # Therefore, the "operator_roles_count" local variable introduced with a hardcoded value.
-  # Validation within the "rhcs_rosa_operator_roles.operator_roles" data source ensures that this
-  # value matches the actual length returned from the data source. Must use a toggle to add
-  # an additional role for GovCloud accounts.
-  operator_roles_count = strcontains(data.rhcs_info.current.ocm_api, "gov") ? 7 : 6
+  operator_roles_count = (var.govcloud == true) ? 7 : 6
   operator_role_prefix = (var.operator_role_prefix != null && var.operator_role_prefix != "") ? var.operator_role_prefix : var.account_role_prefix
   path                 = coalesce(var.path, "/")
 }

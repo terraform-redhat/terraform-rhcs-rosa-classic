@@ -17,6 +17,7 @@ module "rosa" {
   multi_az               = length(module.vpc.availability_zones) > 1
   path                   = module.account_iam_resources.path
   replicas               = 3
+  govcloud               = false
 }
 
 ############################

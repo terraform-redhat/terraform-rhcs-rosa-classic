@@ -543,3 +543,9 @@ variable "identity_providers" {
   default     = {}
   description = "Provides a generic approach to add multiple identity providers after the creation of the cluster. This variable allows users to specify configurations for multiple identity providers in a flexible and customizable manner, facilitating the management of resources post-cluster deployment. For additional details regarding the variables utilized, refer to the [idp sub-module](./modules/idp). For non-primitive variables (such as maps, lists, and objects), supply the JSON-encoded string."
 }
+
+variable "govcloud" {
+  type = bool
+  default = false
+  description = "Whether or not resources are to be used in a Govcloud environment."
+}
