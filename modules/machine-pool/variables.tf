@@ -94,6 +94,5 @@ variable "disk_size" {
 
 variable "aws_additional_security_group_ids" {
   description = "AWS additional security group IDs."
-  type        = list(string)
-  default     = null
+  type        = optional(list(string))
 }
