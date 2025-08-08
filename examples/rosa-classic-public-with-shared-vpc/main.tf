@@ -3,7 +3,7 @@ provider "aws" {
 
   access_key               = var.shared_vpc_aws_access_key_id
   secret_key               = var.shared_vpc_aws_secret_access_key
-  region                   = data.aws_region.current.name
+  region                   = data.aws_region.current.region
   profile                  = var.shared_vpc_aws_profile
   shared_credentials_files = var.shared_vpc_aws_shared_credentials_files
 }

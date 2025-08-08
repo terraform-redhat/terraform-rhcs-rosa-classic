@@ -61,7 +61,7 @@ data "aws_iam_policy_document" "allow_access_from_another_account" {
 resource "rhcs_rosa_oidc_config_input" "oidc_input" {
   count = var.managed ? 0 : 1
 
-  region = data.aws_region.current.name
+  region = data.aws_region.current.region
 }
 
 module "aws_secrets_manager" {
