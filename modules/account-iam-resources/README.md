@@ -46,7 +46,7 @@ module "account_iam_resources" {
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_account_iam_policy"></a> [account\_iam\_policy](#module\_account\_iam\_policy) | terraform-aws-modules/iam/aws//modules/iam-policy | >=5.34.0 |
-| <a name="module_account_iam_role"></a> [account\_iam\_role](#module\_account\_iam\_role) | terraform-aws-modules/iam/aws//modules/iam-assumable-role | >=5.34.0 |
+| <a name="module_account_iam_role"></a> [account\_iam\_role](#module\_account\_iam\_role) | terraform-aws-modules/iam/aws//modules/iam-assumable-role | >=5.34.0, < 6.0 |
 
 ## Resources
 
