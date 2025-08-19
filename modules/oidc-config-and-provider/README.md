@@ -41,7 +41,7 @@ module "oidc_config_and_provider" {
 | Name | Source | Version |
 |------|--------|---------|
 | <a name="module_aws_s3_bucket"></a> [aws\_s3\_bucket](#module\_aws\_s3\_bucket) | terraform-aws-modules/s3-bucket/aws | >=4.1.0 |
-| <a name="module_aws_secrets_manager"></a> [aws\_secrets\_manager](#module\_aws\_secrets\_manager) | terraform-aws-modules/secrets-manager/aws | >=1.1.1 |
+| <a name="module_aws_secrets_manager"></a> [aws\_secrets\_manager](#module\_aws\_secrets\_manager) | terraform-aws-modules/secrets-manager/aws | ~>1.3.1 |
 
 ## Resources
 
