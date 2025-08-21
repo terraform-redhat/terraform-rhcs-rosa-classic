@@ -38,7 +38,7 @@ locals {
 
 resource "rhcs_cluster_rosa_classic" "rosa_classic_cluster" {
   name           = var.cluster_name
-  cloud_region   = var.aws_region == null ? data.aws_region.current[0].region : var.aws_region
+  cloud_region   = var.aws_region == null ? data.aws_region.current[0].name : var.aws_region
   aws_account_id = local.aws_account_id
   replicas       = var.replicas
   version        = var.openshift_version

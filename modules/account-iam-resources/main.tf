@@ -85,7 +85,7 @@ module "account_iam_role" {
 
 module "account_iam_policy" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-policy"
-  version = ">=5.34.0"
+  version = ">=5.34.0, <6.0"
 
   count = local.account_roles_count
 
