@@ -4,6 +4,55 @@
 
 This sub-module enables the creation of all essential AWS resources within the shared VPC account to support the shared VPC infrastructure. It encompasses the provisioning of IAM resources to facilitate sharing between accounts, ensuring seamless collaboration and resource access. Additionally, the module handles the configuration of a Route 53 hosted zone, enabling external access into the VPC for enhanced connectivity and service accessibility.
 
+## Example Usage
+
+```
+resource "rhcs_dns_domain" "dns_domain" {}
+data "aws_caller_identity" "current" {}
+
+module "operator_policies" {
+  source = "terraform-redhat/rosa-classic/rhcs//modules/operator-policies"
+
+  account_role_prefix  = "my-cluster-account"
+  openshift_version    = "4.14.24"
+}
+
+module "operator_roles" {
+  source = "terraform-redhat/rosa-classic/rhcs//modules/operator-roles"
+
+  operator_role_prefix = "my-cluster-operator"
+  account_role_prefix  = "my-cluster-account"
+  oidc_endpoint_url    = "my-url"
+}
+
+module "account_iam_resources" {
+  source = "terraform-redhat/rosa-classic/rhcs//modules/account-iam-resources"
+
+  account_role_prefix  = "my-cluster-account"
+  openshift_version    = "4.14.24"
+}
+
+module "vpc" {
+  source = "terraform-redhat/rosa-classic/rhcs//modules/vpc"
+
+  name_prefix              = "my-vpc"
+  availability_zones_count = 3
+}
+
+module "shared-vpc-policy-and-hosted-zone" {
+  source  = "terraform-redhat/rosa-classic/rhcs//modules/shared-vpc-policy-and-hosted-zone"
+
+  cluster_name              = "my-shared-vpc-cluster"
+  name_prefix               = "my-vpc"
+  target_aws_account        = data.aws_caller_identity.current.account_id
+  installer_role_arn        = module.account_iam_resources.account_roles_arn["Installer"]
+  ingress_operator_role_arn = module.operator_roles.operator_roles_arn["openshift-ingress-operator"]
+  subnets                   = concat(module.vpc.private_subnets, module.vpc.public_subnets)
+  hosted_zone_base_domain   = rhcs_dns_domain.dns_domain.id
+  vpc_id                    = module.vpc.vpc_id
+}
+```
+
 <!-- BEGIN_AUTOMATED_TF_DOCS_BLOCK -->
 ## Requirements
 

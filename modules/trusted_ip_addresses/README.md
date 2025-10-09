@@ -7,6 +7,14 @@ This facilitates users to now have a static machine-parseable list of IPs for ad
 
 For more info see [Red Hat Trusted IP Addresses](https://source.redhat.com/personal_blogs/listing_red_hats_trusted_ip_addresses_using_an_api_enpoint)
 
+## Example Usage
+
+```
+module "trusted_ip_addresses" {
+  source  = "terraform-redhat/rosa-classic/rhcs//modules/trusted_ip_addresses"
+}
+```
+
 <!-- BEGIN_AUTOMATED_TF_DOCS_BLOCK -->
 ## Requirements
 
