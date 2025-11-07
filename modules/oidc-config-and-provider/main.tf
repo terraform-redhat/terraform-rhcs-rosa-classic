@@ -62,6 +62,7 @@ resource "rhcs_rosa_oidc_config_input" "oidc_input" {
   count = var.managed ? 0 : 1
 
   region = data.aws_region.current.region
+  prefix = var.oidc_prefix
 }
 
 module "aws_secrets_manager" {
