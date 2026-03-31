@@ -20,7 +20,7 @@ resource "aws_iam_openid_connect_provider" "oidc_provider" {
 
 module "aws_s3_bucket" {
   source  = "terraform-aws-modules/s3-bucket/aws"
-  version = ">=4.1.0"
+  version = "~>5.11.0"
 
   count = var.managed ? 0 : 1
 
