@@ -53,7 +53,7 @@ module "operator_policies" {
   openshift_version   = var.openshift_version
   tags                = var.tags
   shared_vpc_role_arn = local.shared_vpc_role_arn != null ? local.shared_vpc_role_arn : ""
-  govcloud             = var.govcloud
+  govcloud            = var.govcloud
 }
 
 ############################

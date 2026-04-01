@@ -27,7 +27,7 @@ locals {
     operator_role_prefix = var.operator_role_prefix,
     oidc_config_id       = var.oidc_config_id
   }
-  aws_account_arn = var.aws_account_arn == null ? data.aws_caller_identity.current[0].arn : var.aws_account_arn
+  aws_account_arn   = var.aws_account_arn == null ? data.aws_caller_identity.current[0].arn : var.aws_account_arn
   create_admin_user = var.create_admin_user
   admin_credentials = var.admin_credentials_username == null && var.admin_credentials_password == null ? (
     null

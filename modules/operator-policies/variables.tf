@@ -28,7 +28,7 @@ variable "tags" {
 }
 
 variable "govcloud" {
-  type = bool
-  default = false
+  type        = bool
+  default     = false
   description = "Whether or not resources are to be used in a Govcloud environment."
 }

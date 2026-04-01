@@ -36,9 +36,20 @@ Sub-modules included in this module:
 
 The primary sub-module responsible for ROSA Classic cluster creation includes the optional configurations for setting up account roles, operator roles, and OIDC configurations. This comprehensive module handles the entire process of provisioning and configuring ROSA Classic clusters in your AWS environment.
 
+## Testing
+
+Contributors are encouraged to add Terraform tests when introducing or substantially changing a submodule, so configuration stays aligned with provider behavior before changes merge.
+
+Two Makefile targets help with that:
+
+- **`make lint`** — Runs `terraform fmt -check -recursive` and [tflint](https://github.com/terraform-linters/tflint) across the root module and submodules so formatting and common Terraform issues are caught early.
+- **`make unit-tests`** — For each module directory that contains **`test/*.tftest.hcl`** files, runs `terraform init -backend=false` and `terraform test -test-directory=test` (requires **Terraform 1.6+**). If no matching files exist, the target succeeds without running tests. This is separate from **`make tests`**, which runs the legacy `tests.sh` script.
+
+Place tests under a **`test/`** directory beside the module’s `.tf` files (for example `modules/my-module/test/example.tftest.hcl`). You need the Terraform CLI and tflint on your PATH; `make lint` runs `tflint --init`, which may download plugins from [.tflint.hcl](.tflint.hcl).
+
 ## Prerequisites
 
-* The [Terraform CLI](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli) (1.4.6+) must be installed.
+* The [Terraform CLI](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli) (1.6+) must be installed.
 * An [AWS account](https://aws.amazon.com/free/?all-free-tier) and the [associated credentials](https://docs.aws.amazon.com/IAM/latest/UserGuide/security-creds.html) that allow you to create resources. These credentials must be configured for the AWS provider (see [Authentication and Configuration](https://registry.terraform.io/providers/hashicorp/aws/latest/docs#authentication-and-configuration) section in AWS terraform provider documentation.)
 * The [ROSA getting started AWS prerequisites](https://console.redhat.com/openshift/create/rosa/getstarted) must be completed.
 * A valid [OpenShift Cluster Manager API Token](https://console.redhat.com/openshift/token) must be configured (see [Authentication and configuration](https://registry.terraform.io/providers/terraform-redhat/rhcs/latest/docs#authentication-and-configuration) for more information.)
@@ -54,7 +65,7 @@ We recommend you install the following CLI tools:
 
 | Name | Version |
 |------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.6 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.0 |
 | <a name="requirement_null"></a> [null](#requirement\_null) | >= 3.0.0 |
 | <a name="requirement_rhcs"></a> [rhcs](#requirement\_rhcs) | >= 1.6.2 |
@@ -96,14 +107,14 @@ We recommend you install the following CLI tools:
 | <a name="input_admin_credentials_username"></a> [admin\_credentials\_username](#input\_admin\_credentials\_username) | Admin username that is created with the cluster. auto generated username - "cluster-admin" | `string` | `null` | no |
 | <a name="input_autoscaler_balance_similar_node_groups"></a> [autoscaler\_balance\_similar\_node\_groups](#input\_autoscaler\_balance\_similar\_node\_groups) | Automatically identify node groups with the same instance type and the same set of labels and try to keep the respective sizes of those node groups balanced. | `bool` | `null` | no |
 | <a name="input_autoscaler_balancing_ignored_labels"></a> [autoscaler\_balancing\_ignored\_labels](#input\_autoscaler\_balancing\_ignored\_labels) | This option specifies labels that cluster autoscaler should ignore when considering node group similarity. For example, if you have nodes with 'topology.ebs.csi.aws.com/zone' label, you can add name of this label here to prevent cluster autoscaler from splitting nodes into different node groups based on its value. | `list(string)` | `null` | no |
-| <a name="input_autoscaler_cores"></a> [autoscaler\_cores](#input\_autoscaler\_cores) | Minimum and maximum number of cores in cluster, in the format <min>:<max>. Cluster autoscaler does not scale the cluster beyond these numbers. | <pre>object({<br>    min = number<br>    max = number<br>  })</pre> | `null` | no |
-| <a name="input_autoscaler_gpus"></a> [autoscaler\_gpus](#input\_autoscaler\_gpus) | Minimum and maximum number of different GPUs in cluster, in the format <gpu\_type>:<min>:<max>. Cluster autoscaler does not scale the cluster beyond these numbers. Can be passed multiple times. | <pre>list(object({<br>    type = string<br>    range = object({<br>      min = number<br>      max = number<br>    })<br>  }))</pre> | `null` | no |
+| <a name="input_autoscaler_cores"></a> [autoscaler\_cores](#input\_autoscaler\_cores) | Minimum and maximum number of cores in cluster, in the format <min>:<max>. Cluster autoscaler does not scale the cluster beyond these numbers. | <pre>object({<br/>    min = number<br/>    max = number<br/>  })</pre> | `null` | no |
+| <a name="input_autoscaler_gpus"></a> [autoscaler\_gpus](#input\_autoscaler\_gpus) | Minimum and maximum number of different GPUs in cluster, in the format <gpu\_type>:<min>:<max>. Cluster autoscaler does not scale the cluster beyond these numbers. Can be passed multiple times. | <pre>list(object({<br/>    type = string<br/>    range = object({<br/>      min = number<br/>      max = number<br/>    })<br/>  }))</pre> | `null` | no |
 | <a name="input_autoscaler_ignore_daemonsets_utilization"></a> [autoscaler\_ignore\_daemonsets\_utilization](#input\_autoscaler\_ignore\_daemonsets\_utilization) | Should cluster-autoscaler ignore DaemonSet pods when calculating resource utilization for scaling down. Default is false. | `bool` | `null` | no |
 | <a name="input_autoscaler_log_verbosity"></a> [autoscaler\_log\_verbosity](#input\_autoscaler\_log\_verbosity) | Sets the autoscaler log level. Default value is 1, level 4 is recommended for DEBUGGING and level 6 enables almost everything. | `number` | `null` | no |
 | <a name="input_autoscaler_max_node_provision_time"></a> [autoscaler\_max\_node\_provision\_time](#input\_autoscaler\_max\_node\_provision\_time) | Maximum time cluster-autoscaler waits for node to be provisioned. | `string` | `null` | no |
 | <a name="input_autoscaler_max_nodes_total"></a> [autoscaler\_max\_nodes\_total](#input\_autoscaler\_max\_nodes\_total) | Maximum number of nodes in all node groups. Cluster autoscaler does not grow the cluster beyond this number. | `number` | `null` | no |
 | <a name="input_autoscaler_max_pod_grace_period"></a> [autoscaler\_max\_pod\_grace\_period](#input\_autoscaler\_max\_pod\_grace\_period) | Gives pods graceful termination time before scaling down. | `number` | `null` | no |
-| <a name="input_autoscaler_memory"></a> [autoscaler\_memory](#input\_autoscaler\_memory) | Minimum and maximum number of gigabytes of memory in cluster, in the format <min>:<max>. Cluster autoscaler does not scale the cluster beyond these numbers. | <pre>object({<br>    min = number<br>    max = number<br>  })</pre> | `null` | no |
+| <a name="input_autoscaler_memory"></a> [autoscaler\_memory](#input\_autoscaler\_memory) | Minimum and maximum number of gigabytes of memory in cluster, in the format <min>:<max>. Cluster autoscaler does not scale the cluster beyond these numbers. | <pre>object({<br/>    min = number<br/>    max = number<br/>  })</pre> | `null` | no |
 | <a name="input_autoscaler_pod_priority_threshold"></a> [autoscaler\_pod\_priority\_threshold](#input\_autoscaler\_pod\_priority\_threshold) | To allow users to schedule 'best-effort' pods, which shouldn't trigger cluster autoscaler actions, but only run when there are spare resources available. | `number` | `null` | no |
 | <a name="input_autoscaler_scale_down_delay_after_add"></a> [autoscaler\_scale\_down\_delay\_after\_add](#input\_autoscaler\_scale\_down\_delay\_after\_add) | How long after scale up that scale down evaluation resumes. | `string` | `null` | no |
 | <a name="input_autoscaler_scale_down_delay_after_delete"></a> [autoscaler\_scale\_down\_delay\_after\_delete](#input\_autoscaler\_scale\_down\_delay\_after\_delete) | How long after node deletion that scale down evaluation resumes. | `string` | `null` | no |
