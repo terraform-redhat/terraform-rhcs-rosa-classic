@@ -6,16 +6,16 @@
 # Usage: GH_TOKEN, REPOSITORY (owner/name), BRANCH, COMMIT_MESSAGE must be set.
 # Remaining arguments: paths of files to include (repo-relative), readable from CWD.
 
-set -euo pipefail
-
 log() {
-  echo "[github-app-single-commit] $*" >&2
+  echo "[github-app-single-commit] $*" >> ./github-app-single-commit.out
 }
 
 : "${GH_TOKEN:?GH_TOKEN is required}"
 : "${REPOSITORY:?REPOSITORY is required}"
 : "${BRANCH:?BRANCH is required}"
 : "${COMMIT_MESSAGE:?COMMIT_MESSAGE is required}"
+
+COMMIT_MESSAGE+=$'\n\n'"Signed-off-by: terraform-redhat-bot <126015336+red-hat-[bot]@users.noreply.github.com>"
 
 if [ "$#" -lt 1 ]; then
   log "error: no file paths passed"
