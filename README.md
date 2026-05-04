@@ -43,13 +43,13 @@ Contributors are encouraged to add Terraform tests when introducing or substanti
 Two Makefile targets help with that:
 
 - **`make lint`** — Runs `terraform fmt -check -recursive` and [tflint](https://github.com/terraform-linters/tflint) across the root module and submodules so formatting and common Terraform issues are caught early.
-- **`make unit-tests`** — For each module directory that contains **`test/*.tftest.hcl`** files, runs `terraform init -backend=false` and `terraform test -test-directory=test` (requires **Terraform 1.6+**). If no matching files exist, the target succeeds without running tests. This is separate from **`make tests`**, which runs the legacy `tests.sh` script.
+- **`make unit-tests`** — For each submodule that contains **`modules/<name>/tests/*.tftest.hcl`**, runs `terraform init -backend=false` and `terraform test` from `modules/<name>/` (CI uses a current Terraform release; tests that use **`mock_provider`** need **Terraform 1.7+**). If no matching files exist, the target succeeds without running tests. This is separate from **`make tests`**, which runs the legacy `tests.sh` script.
 
-Place tests under a **`test/`** directory beside the module’s `.tf` files (for example `modules/my-module/test/example.tftest.hcl`). You need the Terraform CLI and tflint on your PATH; `make lint` runs `tflint --init`, which may download plugins from [.tflint.hcl](.tflint.hcl).
+Place tests under a **`tests/`** directory beside the module’s `.tf` files (for example `modules/my-module/tests/example.tftest.hcl`). You need the Terraform CLI and tflint on your PATH; `make lint` runs `tflint --init`, which may download plugins from [.tflint.hcl](.tflint.hcl).
 
 ## Prerequisites
 
-* The [Terraform CLI](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli) (1.6+) must be installed.
+* The [Terraform CLI](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli) (**>= 1.5.7**) must be installed to run this module. Pin to a [released module version](https://github.com/terraform-redhat/terraform-rhcs-rosa-classic/releases) rather than tracking `main`.
 * An [AWS account](https://aws.amazon.com/free/?all-free-tier) and the [associated credentials](https://docs.aws.amazon.com/IAM/latest/UserGuide/security-creds.html) that allow you to create resources. These credentials must be configured for the AWS provider (see [Authentication and Configuration](https://registry.terraform.io/providers/hashicorp/aws/latest/docs#authentication-and-configuration) section in AWS terraform provider documentation.)
 * The [ROSA getting started AWS prerequisites](https://console.redhat.com/openshift/create/rosa/getstarted) must be completed.
 * A valid [OpenShift Cluster Manager API Token](https://console.redhat.com/openshift/token) must be configured (see [Authentication and configuration](https://registry.terraform.io/providers/terraform-redhat/rhcs/latest/docs#authentication-and-configuration) for more information.)
@@ -64,8 +64,8 @@ We recommend you install the following CLI tools:
 ## Requirements
 
 | Name | Version |
-|------|---------|
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.6 |
+| ---- | ------- |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.7 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.0 |
 | <a name="requirement_null"></a> [null](#requirement\_null) | >= 3.0.0 |
 | <a name="requirement_rhcs"></a> [rhcs](#requirement\_rhcs) | >= 1.6.2 |
@@ -73,14 +73,14 @@ We recommend you install the following CLI tools:
 ## Providers
 
 | Name | Version |
-|------|---------|
+| ---- | ------- |
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.0 |
 | <a name="provider_null"></a> [null](#provider\_null) | >= 3.0.0 |
 
 ## Modules
 
 | Name | Source | Version |
-|------|--------|---------|
+| ---- | ------ | ------- |
 | <a name="module_account_iam_resources"></a> [account\_iam\_resources](#module\_account\_iam\_resources) | ./modules/account-iam-resources | n/a |
 | <a name="module_oidc_config_and_provider"></a> [oidc\_config\_and\_provider](#module\_oidc\_config\_and\_provider) | ./modules/oidc-config-and-provider | n/a |
 | <a name="module_operator_policies"></a> [operator\_policies](#module\_operator\_policies) | ./modules/operator-policies | n/a |
@@ -92,7 +92,7 @@ We recommend you install the following CLI tools:
 ## Resources
 
 | Name | Type |
-|------|------|
+| ---- | ---- |
 | [null_resource.validations](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |
 | [aws_caller_identity.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/caller_identity) | data source |
 | [aws_partition.current](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/partition) | data source |
@@ -100,7 +100,7 @@ We recommend you install the following CLI tools:
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
+| ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_account_role_prefix"></a> [account\_role\_prefix](#input\_account\_role\_prefix) | User-defined prefix for all generated AWS resources (default "account-role-<random>"). | `string` | `null` | no |
 | <a name="input_additional_trust_bundle"></a> [additional\_trust\_bundle](#input\_additional\_trust\_bundle) | A string containing a PEM-encoded X.509 certificate bundle that will be added to the nodes' trusted certificate store. | `string` | `null` | no |
 | <a name="input_admin_credentials_password"></a> [admin\_credentials\_password](#input\_admin\_credentials\_password) | Admin password that is created with the cluster. The password must contain at least 14 characters (ASCII-standard) without whitespaces including uppercase letters, lowercase letters, and numbers or symbols. | `string` | `null` | no |
@@ -188,7 +188,7 @@ We recommend you install the following CLI tools:
 ## Outputs
 
 | Name | Description |
-|------|-------------|
+| ---- | ----------- |
 | <a name="output_account_role_prefix"></a> [account\_role\_prefix](#output\_account\_role\_prefix) | The prefix used for all generated AWS resources. |
 | <a name="output_account_roles_arn"></a> [account\_roles\_arn](#output\_account\_roles\_arn) | A map of Amazon Resource Names (ARNs) associated with the AWS IAM roles created. The key in the map represents the name of an AWS IAM role, while the corresponding value represents the associated Amazon Resource Name (ARN) of that role. |
 | <a name="output_api_url"></a> [api\_url](#output\_api\_url) | URL of the API server. |
