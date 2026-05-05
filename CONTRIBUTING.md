@@ -21,3 +21,53 @@ This repo is **ROSA Classic** only. The sibling **ROSA HCP** module is [`terrafo
 3. **Docs** — If you changed variables, outputs, modules, or root wiring: run `make verify-gen` (runs `terraform-docs` via [`scripts/terraform-docs.sh`](scripts/terraform-docs.sh), then [`scripts/verify-gen.sh`](scripts/verify-gen.sh) to ensure README inject blocks are committed).
 4. **Module tests** — If a submodule under `modules/<name>/tests/` has `*.tftest.hcl`, run `terraform init -backend=false && terraform test` from `modules/<name>/`.
 5. **Provider** — Treat [`terraform-redhat/rhcs`](https://github.com/terraform-redhat/terraform-provider-rhcs) as the source of truth: mirror its schemas in variables and docs. Add `validation` / `precondition` only to echo the provider’s required fields and allowed values (fail fast); do not duplicate or tighten rules the provider already enforces.
+
+## Commit format
+
+This repository enforces commit subjects in this format:
+
+`[JIRA-TICKET] | [TYPE][(scope)][!]: [short description]`
+
+Examples:
+
+- `OCM-12345 | feat: add day-1 setting support`
+- `OCM-12345 | fix(cluster): validate machine pool defaults`
+- `OCM-12345 | feat!: change upgrade behavior`
+- `OCM-00000 | chore: adjust CI workflow`
+
+Allowed `TYPE` values:
+
+- `feat`: A new feature
+- `fix`: A bug fix
+- `docs`: Documentation-only changes
+- `style`: Formatting and non-functional style changes
+- `refactor`: Refactoring with no behavior change
+- `test`: Add or correct tests
+- `chore`: Build/task/maintenance work
+- `build`: Build system or dependency updates
+- `ci`: Continuous integration changes
+- `perf`: Performance improvements
+
+CI validates commit messages on pull requests targeting `main` with:
+
+- `.github/workflows/check-commit-format.yml`
+- `make commits/check`
+- `hack/commit-msg-verify.sh`
+
+## Release process and changelog automation
+
+The changelog is generated with [git-cliff](https://git-cliff.org/) using `cliff.toml`.
+Only the `CHANGELOG.md` in the `main` branch contains the full changelog history.
+
+Workflow:
+
+1. Push a stable release tag (for example, `v1.7.3`).
+2. GitHub Actions validates the tag and finds the previous stable release tag.
+3. The workflow generates changelog entries and opens a pull request to `main` with label `changelog`.
+
+Manual changelog generation:
+
+```bash
+# Generate changelog for a specific release range
+git-cliff v1.7.2..v1.7.3 --prepend CHANGELOG.md
+```
