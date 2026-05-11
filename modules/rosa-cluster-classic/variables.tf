@@ -1,3 +1,6 @@
+# Copyright Red Hat
+# SPDX-License-Identifier: Apache-2.0
+
 variable "cluster_name" {
   type        = string
   description = "Name of the cluster. After resource creation, the attribute value cannot be updated."

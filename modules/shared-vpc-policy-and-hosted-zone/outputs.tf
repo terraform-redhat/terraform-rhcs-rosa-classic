@@ -1,3 +1,6 @@
+# Copyright Red Hat
+# SPDX-License-Identifier: Apache-2.0
+
 output "shared_role" {
   description = "Shared VPC Role ARN"
   value       = time_sleep.shared_resources_propagation.triggers["shared_vpc_role_arn"]
