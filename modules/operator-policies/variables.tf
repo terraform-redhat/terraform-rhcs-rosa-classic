@@ -1,3 +1,6 @@
+# Copyright Red Hat
+# SPDX-License-Identifier: Apache-2.0
+
 variable "account_role_prefix" {
   // This variable is mandatory as the account roles are already created
   type        = string

@@ -1,3 +1,6 @@
+// Copyright Red Hat
+// SPDX-License-Identifier: Apache-2.0
+
 mock_provider "rhcs" {
   mock_resource "rhcs_identity_provider" {
     defaults = {

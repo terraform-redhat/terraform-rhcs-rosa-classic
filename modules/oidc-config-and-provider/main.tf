@@ -1,3 +1,6 @@
+# Copyright Red Hat
+# SPDX-License-Identifier: Apache-2.0
+
 resource "rhcs_rosa_oidc_config" "oidc_config" {
   managed            = var.managed
   secret_arn         = var.managed ? null : module.aws_secrets_manager[0].secret_arn

@@ -1,3 +1,6 @@
+# Copyright Red Hat
+# SPDX-License-Identifier: Apache-2.0
+
 locals {
   operator_roles_count = (var.govcloud == true) ? 7 : 6
   operator_role_prefix = (var.operator_role_prefix != null && var.operator_role_prefix != "") ? var.operator_role_prefix : var.account_role_prefix
