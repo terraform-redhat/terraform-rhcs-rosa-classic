@@ -57,7 +57,7 @@ module "shared-vpc-policy-and-hosted-zone" {
 ## Requirements
 
 | Name | Version |
-|------|---------|
+| ---- | ------- |
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.0 |
 | <a name="requirement_time"></a> [time](#requirement\_time) | >= 0.9 |
@@ -65,7 +65,7 @@ module "shared-vpc-policy-and-hosted-zone" {
 ## Providers
 
 | Name | Version |
-|------|---------|
+| ---- | ------- |
 | <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.0 |
 | <a name="provider_time"></a> [time](#provider\_time) | >= 0.9 |
 
@@ -76,7 +76,7 @@ No modules.
 ## Resources
 
 | Name | Type |
-|------|------|
+| ---- | ---- |
 | [aws_iam_policy.shared_vpc_policy](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy) | resource |
 | [aws_iam_role.shared_vpc_role](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
 | [aws_iam_role_policy_attachment.shared_vpc_role_policy_attachment](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
@@ -92,7 +92,7 @@ No modules.
 ## Inputs
 
 | Name | Description | Type | Default | Required |
-|------|-------------|------|---------|:--------:|
+| ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | The cluster's name for which shared resources are created. It is used for the hosted zone domain. | `string` | n/a | yes |
 | <a name="input_hosted_zone_base_domain"></a> [hosted\_zone\_base\_domain](#input\_hosted\_zone\_base\_domain) | The base domain that must be used for hosted zone creation. | `string` | n/a | yes |
 | <a name="input_ingress_operator_role_arn"></a> [ingress\_operator\_role\_arn](#input\_ingress\_operator\_role\_arn) | Ingress Operator ARN from target account. | `string` | n/a | yes |
@@ -105,7 +105,7 @@ No modules.
 ## Outputs
 
 | Name | Description |
-|------|-------------|
+| ---- | ----------- |
 | <a name="output_hosted_zone_id"></a> [hosted\_zone\_id](#output\_hosted\_zone\_id) | Hosted Zone ID |
 | <a name="output_shared_role"></a> [shared\_role](#output\_shared\_role) | Shared VPC Role ARN |
 | <a name="output_shared_subnets"></a> [shared\_subnets](#output\_shared\_subnets) | The Amazon Resource Names (ARN) of the resource share |

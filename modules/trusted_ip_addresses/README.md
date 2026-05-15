@@ -19,14 +19,14 @@ module "trusted_ip_addresses" {
 ## Requirements
 
 | Name | Version |
-|------|---------|
+| ---- | ------- |
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0 |
 | <a name="requirement_rhcs"></a> [rhcs](#requirement\_rhcs) | >= 1.5.0 |
 
 ## Providers
 
 | Name | Version |
-|------|---------|
+| ---- | ------- |
 | <a name="provider_rhcs"></a> [rhcs](#provider\_rhcs) | >= 1.5.0 |
 
 ## Modules
@@ -36,7 +36,7 @@ No modules.
 ## Resources
 
 | Name | Type |
-|------|------|
+| ---- | ---- |
 | [rhcs_trusted_ip_addresses.all](https://registry.terraform.io/providers/terraform-redhat/rhcs/latest/docs/data-sources/trusted_ip_addresses) | data source |
 
 ## Inputs
@@ -46,6 +46,6 @@ No inputs.
 ## Outputs
 
 | Name | Description |
-|------|-------------|
+| ---- | ----------- |
 | <a name="output_trusted_ip_addresses"></a> [trusted\_ip\_addresses](#output\_trusted\_ip\_addresses) | Trusted Ip Addresses |
 <!-- END_AUTOMATED_TF_DOCS_BLOCK -->

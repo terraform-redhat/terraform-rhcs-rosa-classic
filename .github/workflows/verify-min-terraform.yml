@@ -1,0 +1,22 @@
+# Validates examples with the module's minimum supported Terraform (root versions.tf).
+# Intentionally separate from test.yml so Renovate only tracks terraform_version in test.yml.
+name: Verify (minimum Terraform)
+
+on:
+  pull_request:
+
+jobs:
+  verify-terraform-1-5-7:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@v6.0.2
+
+      - uses: hashicorp/setup-terraform@v4.0.0
+        with:
+          terraform_version: "1.5.7"
+          terraform_wrapper: false
+
+      - name: Validate examples (minimum supported Terraform)
+        run: make verify
