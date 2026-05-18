@@ -118,7 +118,7 @@ ENHANCEMENTS:
    * Allow enabling autoscaler even when autoscaling disabled in default MachinePool
    * Add Makefile target for docs generation verification
    * Examples - decouple the relationship between replicas and availability zones count
-   * Use AWS partition variable instead of hardcoded "aws"
+   * Use AWS partition variable instead of hard-coded "aws"
    * Avoid getting availability_zones from "aws_subnet" data source when user provided availability_zones list
    * Shared vpc resources name_prefix changes
    * Expose availability_zones as parameter in vpc sub-module

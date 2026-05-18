@@ -1,3 +1,6 @@
+# Local tool binaries (for example Vale installed via make docs-lint)
+/bin/
+
 # Local .terraform directories
 **/.terraform/*
 

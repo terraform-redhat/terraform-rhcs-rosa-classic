@@ -21,7 +21,7 @@ variable "availability_zones" {
 variable "availability_zones_count" {
   type        = number
   default     = null
-  description = "The count of availability zones to utilize within the specified AWS region, where pairs of public and private subnets are generated. Valid only when availability_zones variable is not provided."
+  description = "The count of availability zones to use within the specified AWS region, where pairs of public and private subnets are generated. Valid only when availability_zones variable is not provided."
 }
 
 variable "tags" {
