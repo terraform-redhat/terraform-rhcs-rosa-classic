@@ -43,7 +43,7 @@ Useful skills for this codebase:
 
 ## Architecture reference
 
-- [AWS — ROSA vs HCP vs Classic](https://docs.aws.amazon.com/rosa/latest/userguide/rosa-architecture-models.html#rosa-architecture-differences)
+- [AWS — ROSA, HCP, and Classic comparison](https://docs.aws.amazon.com/rosa/latest/userguide/rosa-architecture-models.html#rosa-architecture-differences)
 
 ## Security
 
@@ -51,7 +51,7 @@ Useful skills for this codebase:
 
 **Agent-oriented checks** when editing Terraform, **`examples/`**, and tests:
 
-- Do **not** hardcode secrets, API keys, or long-lived AWS access keys in Terraform, examples, or tests. Prefer patterns in existing **`examples/`** and Red Hat documentation (STS, OIDC, IRSA, short-lived credentials).
+- Do **not** hard code secrets, API keys, or long-lived AWS access keys in Terraform, examples, or tests. Prefer patterns in existing **`examples/`** and Red Hat documentation (STS, OIDC, IRSA, short-lived credentials).
 - Use **`sensitive`** on variables and outputs where values must not appear in logs or casual `terraform show` output; avoid echoing secrets in `local` values used only for debugging.
 - Do not add logging, outputs, or comments that expose credentials or session tokens.
 
@@ -68,7 +68,7 @@ When **`trivy config`** reports a **misconfiguration** (check IDs like **`AWS-01
 ## Critical module guardrails
 
 - **Breaking changes:** Do **not** change existing variable names or types without a migration plan (refactor-module skill).
-- **Classic specifics:** Always verify if a feature applies to **Classic** vs **HCP**. This repo centers on **`rhcs_cluster_rosa_classic`** and related Classic resources — do not copy HCP-only resource shapes from the HCP module.
+- **Classic specifics:** Always verify if a feature applies to **Classic** compared to **HCP**. This repo centers on **`rhcs_cluster_rosa_classic`** and related Classic resources — do not copy HCP-only resource shapes from the HCP module.
 
 ## Workflow logic for agents
 
