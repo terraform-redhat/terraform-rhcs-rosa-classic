@@ -20,16 +20,18 @@ This repo is **ROSA Classic** only. The sibling **ROSA HCP** module is [`terrafo
 2. **Validate** — `make verify` (runs `terraform init` + `validate` in each `examples/*` directory; compatible with the minimum Terraform version in root **`versions.tf`**, currently **>= 1.5.7**). Fix failures in examples you touch or that your change breaks.
 3. **Docs** — If you changed variables, outputs, modules, or root wiring: run `make verify-gen` (runs `terraform-docs` via [`scripts/terraform-docs.sh`](scripts/terraform-docs.sh), then [`scripts/verify-gen.sh`](scripts/verify-gen.sh) to ensure README inject blocks are committed).
 4. **Module tests** — If a submodule under `modules/<name>/tests/` has `*.tftest.hcl`, run `terraform init -backend=false && terraform test` from `modules/<name>/`, or run `make unit-tests` for all modules with tests.
-5. **Documentation lint** — `make docs-lint` runs the pinned [Vale](https://docs.vale.sh/) CLI with Red Hat documentation styles (see [`.vale.ini`](.vale.ini)). Building Vale uses `CGO_ENABLED=1` and requires a C compiler toolchain on the first install.
+5. **Documentation lint** — `make docs-lint` runs the pinned [Vale](https://docs.vale.sh/) CLI (release binary from [vale-cli/vale](https://github.com/vale-cli/vale)) with Red Hat documentation styles (see [`.vale.ini`](.vale.ini)).
 6. **Provider** — Treat [`terraform-redhat/rhcs`](https://github.com/terraform-redhat/terraform-provider-rhcs) as the source of truth: mirror its schemas in variables and docs. Add `validation` / `precondition` only to echo the provider’s required fields and allowed values (fail fast); do not duplicate or tighten rules the provider already enforces.
 
-Run the full local verification flow (same steps planned for CI) with:
+Run the full local verification flow (same steps as the planned single OpenShift Prow presubmit) with:
 
 ```shell
 make pre-push-checks
 ```
 
-`make pre-push-checks` runs `verify`, `verify-gen`, `lint`, `unit-tests`, `license-check`, and `docs-lint` in order (fail-fast). Individual targets are available in the `Makefile` if you need to run or debug one step at a time.
+`make pre-push-checks` runs `tools` (installs pinned CLI versions from the Makefile), then `verify`, `verify-gen`, `lint`, `unit-tests`, `license-check`, and `docs-lint` in order (fail-fast). Install tools alone with `make tools`. Run individual check targets when debugging one step. OpenShift Prow will use `make pre-push-checks` as the presubmit merge gate after `openshift/release` is updated (client image from the root [`Dockerfile`](Dockerfile) pins the newest Terraform release for integration jobs). GitHub Actions runs **`verify-min-terraform.yml`** on every PR to validate examples at the module minimum in root **`versions.tf`**. Run `make pre-push-checks` locally before opening a PR (use a Terraform version that satisfies **`versions.tf`** locally, or match the versions you need to debug).
+
+**Security (separate from the merge gate):** `make security-check` runs [Gitleaks](https://github.com/gitleaks/gitleaks) secret detection on the **current tree** (`--no-git`; config: [`.gitleaks.toml`](.gitleaks.toml)) and [Checkov](https://www.checkov.io/) Terraform static analysis ([`checkov.yaml`](checkov.yaml); fails on **HIGH** and **CRITICAL**; **`--skip-download`** for offline use, no Prisma Cloud API key). Install both locally with `make security-check-bin` (or `make gitleaks` / `make checkov`). Checkov GitHub release zips have no upstream checksum file; when bumping **`CHECKOV_VERSION`**, add or update **`hack/checksums/checkov-<version>.sha256sums`** (one line per platform zip) and verify with `sha256sum -c` before committing.
 
 ## Commit format
 

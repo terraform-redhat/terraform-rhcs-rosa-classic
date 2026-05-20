@@ -22,46 +22,51 @@
   "customManagers": [
     {
       "customType": "regex",
-      "description": "Manage bumping the version of the common bash library",
+      "description": "Makefile pre-push-checks CLI tool versions",
       "managerFilePatterns": [
-        "/(^|\\/)scripts\\/terraform-docs\\.sh$/"
+        "/Makefile$/"
       ],
       "matchStrings": [
-        "datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\s.*?VERSION=(?<currentValue>.*)\\s"
+        "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)\\s+(?<indent>\\S+)_VERSION \\?= (?<currentValue>\\S+)"
       ],
-      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
+      "versioningTemplate": "semver"
     },
     {
       "customType": "regex",
-      "description": "Terraform CLI version for hashicorp/setup-terraform (tracks github.com/hashicorp/terraform releases)",
+      "description": "Dockerfile ARG tool versions",
       "managerFilePatterns": [
-        "/^\\.github\\/workflows\\/test\\.ya?ml$/"
+        "/Dockerfile$/"
       ],
       "matchStrings": [
-        "terraform_version:\\s*[\"'](?<currentValue>[0-9]+\\.[0-9]+\\.[0-9]+)[\"']"
+        "# renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\sARG .*?_VERSION=(?<currentValue>.*)\\s"
       ],
-      "datasourceTemplate": "github-releases",
-      "packageNameTemplate": "hashicorp/terraform",
-      "versioningTemplate": "hashicorp"
+      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
     }
   ],
   "packageRules": [
     {
-      "description": "Terraform CLI version pinned in .github/workflows (custom regex manager)",
+      "description": "Makefile CLI tool versions (addlicense, terraform-docs, tflint, vale, checkov, gitleaks)",
       "matchManagers": [
         "custom.regex"
       ],
-      "matchDatasources": [
-        "github-releases"
+      "matchFileNames": [
+        "Makefile"
       ],
-      "matchPackageNames": [
-        "hashicorp/terraform"
+      "groupName": "Makefile pre-push tools",
+      "groupSlug": "makefile-pre-push-tools",
+      "commitMessagePrefix": "chore(deps): ",
+      "automerge": false
+    },
+    {
+      "description": "CI Dockerfile (UBI base, AWS CLI, ROSA CLI)",
+      "matchManagers": [
+        "custom.regex"
       ],
       "matchFileNames": [
-        ".github/workflows/**"
+        "Dockerfile"
       ],
-      "groupName": "Terraform CLI (CI)",
-      "groupSlug": "terraform-cli-ci",
+      "groupName": "CI client image",
+      "groupSlug": "ci-client-image",
       "commitMessagePrefix": "chore(deps): ",
       "automerge": false
     },
