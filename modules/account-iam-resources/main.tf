@@ -63,8 +63,9 @@ data "aws_iam_policy_document" "custom_trust_policy" {
 }
 
 module "account_iam_role" {
-  source  = "terraform-aws-modules/iam/aws//modules/iam-assumable-role"
-  version = ">=5.34.0, <6.0"
+  source = "terraform-aws-modules/iam/aws//modules/iam-assumable-role"
+  # Stay on 5.x: v6.0.0 renames iam-assumable-role → iam-role — https://github.com/terraform-aws-modules/terraform-aws-iam/releases/tag/v6.0.0
+  version = ">= 5.34.0, < 6.0.0"
 
   count = local.account_roles_count
 
@@ -87,8 +88,9 @@ module "account_iam_role" {
 }
 
 module "account_iam_policy" {
-  source  = "terraform-aws-modules/iam/aws//modules/iam-policy"
-  version = ">=5.34.0, <6.0"
+  source = "terraform-aws-modules/iam/aws//modules/iam-policy"
+  # Stay on 5.x: v6.0.0 breaking submodule/API changes — https://github.com/terraform-aws-modules/terraform-aws-iam/releases/tag/v6.0.0
+  version = ">= 5.34.0, < 6.0.0"
 
   count = local.account_roles_count
 

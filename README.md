@@ -40,7 +40,7 @@ The primary sub-module responsible for ROSA Classic cluster creation includes th
 
 Contributors are encouraged to add Terraform tests when introducing or substantially changing a submodule, so configuration stays aligned with provider behavior before changes merge.
 
-Two Makefile targets help with that:
+Before opening a PR, run **`make pre-push-checks`** (or the individual targets below). That flow is the intended single merge gate for OpenShift Prow once `openshift/release` is updated.
 
 - **`make lint`** — Runs `terraform fmt -check -recursive` and [tflint](https://github.com/terraform-linters/tflint) across the root module and submodules so formatting and common Terraform issues are caught early.
 - **`make unit-tests`** — For each submodule that contains **`modules/<name>/tests/*.tftest.hcl`**, runs `terraform init -backend=false` and `terraform test` from `modules/<name>/` (CI uses a current Terraform release; tests that use **`mock_provider`** need **Terraform 1.7+**). If no matching files exist, the target succeeds without running tests. This is separate from **`make tests`**, which runs the legacy `tests.sh` script.
