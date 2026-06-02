@@ -71,7 +71,7 @@ resource "rhcs_rosa_oidc_config_input" "oidc_input" {
 module "aws_secrets_manager" {
   source = "terraform-aws-modules/secrets-manager/aws"
   # Module 2.x requires Terraform >= 1.11; pin last 1.x for ROSA module floor (Terraform 1.5.7) — https://github.com/terraform-aws-modules/terraform-aws-secrets-manager/releases/tag/v2.0.0
-  version = "1.3.1"
+  version = "2.1.0"
 
   count = var.managed ? 0 : 1
 
