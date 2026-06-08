@@ -90,24 +90,26 @@ verify:
 	done
 
 .PHONY: verify-gen
-verify-gen: terraform-docs
-	scripts/verify-gen.sh
+verify-gen: $(TERRAFORM_DOCS)
+	@TERRAFORM_DOCS_BIN="$(TERRAFORM_DOCS)" TERRAFORM_DOCS_VERSION="$(TERRAFORM_DOCS_VERSION)" bash scripts/verify-gen.sh
 
 .PHONY: lint
-lint: $(TFLINT)
+lint:
 	terraform fmt -check -recursive
-	terraform init -backend=false -input=false
+	@command -v tflint >/dev/null 2>&1 || { echo "tflint not found; see https://github.com/terraform-linters/tflint"; exit 1; }
 	@set -euo pipefail; \
+	rm -rf .terraform .terraform.lock.hcl; \
+	terraform init -backend=false -input=false; \
 	for d in modules/account-iam-resources modules/oidc-config-and-provider; do \
 	  echo "!! terraform init $$d (terraform-aws-modules for tflint) !!"; \
-	  ( cd "$$d" && terraform init -backend=false -input=false ); \
+	  ( cd "$$d" && rm -rf .terraform .terraform.lock.hcl && terraform init -backend=false -input=false ); \
 	done; \
 	for d in examples/*/; do \
 	  echo "!! terraform init $$d (tflint) !!"; \
-	  ( cd "$$d" && terraform init -backend=false -input=false ); \
+	  ( cd "$$d" && rm -rf .terraform .terraform.lock.hcl && terraform init -backend=false -input=false ); \
 	done
-	"$(TFLINT)" --init
-	"$(TFLINT)" --recursive \
+	tflint --init
+	tflint --recursive \
 		--minimum-failure-severity=error \
 		--disable-rule=terraform_required_providers \
 		--disable-rule=terraform_unused_declarations \
@@ -120,7 +122,7 @@ unit-tests:
 	  echo "== $$submodule =="; \
 	  cd "$$submodule/tests" 2>/dev/null || continue; \
 	  echo "== running tests for $$submodule =="; \
-	  (cd .. && terraform init -backend=false -input=false && terraform test); \
+	  (cd .. && rm -rf .terraform .terraform.lock.hcl && terraform init -backend=false -input=false && terraform test); \
 	  cd ../../..; \
 	done
 
