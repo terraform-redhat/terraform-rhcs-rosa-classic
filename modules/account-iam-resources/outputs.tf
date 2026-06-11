@@ -20,3 +20,12 @@ output "path" {
   value       = time_sleep.account_iam_resources_wait.triggers["path"]
   description = "The arn path for the account/operator roles as well as their policies."
 }
+
+output "trust_policy_external_id" {
+  value = (
+    time_sleep.account_iam_resources_wait.triggers["trust_policy_external_id"] != ""
+    ? time_sleep.account_iam_resources_wait.triggers["trust_policy_external_id"]
+    : null
+  )
+  description = "External ID for trust policy condition in account roles"
+}

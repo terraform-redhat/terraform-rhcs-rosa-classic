@@ -4,6 +4,9 @@
 locals {
   path                    = coalesce(var.path, "/")
   short_openshift_version = format("%s.%s", split(".", var.openshift_version)[0], split(".", var.openshift_version)[1])
+  trust_policy_external_id = (
+    var.trust_policy_external_id != null && var.trust_policy_external_id != ""
+  ) ? var.trust_policy_external_id : null
   account_roles_properties = [
     {
       role_name            = "Installer"
@@ -11,6 +14,7 @@ locals {
       policy_details       = data.rhcs_policies.all_policies.account_role_policies["sts_installer_permission_policy"]
       principal_type       = "AWS"
       principal_identifier = "arn:${data.aws_partition.current.partition}:iam::${data.rhcs_info.current.ocm_aws_account_id}:role/RH-Managed-OpenShift-Installer"
+      external_id          = local.trust_policy_external_id
     },
     {
       role_name      = "Support"
@@ -19,6 +23,7 @@ locals {
       principal_type = "AWS"
       // This is a SRE RH Support role which is used to assume this support role
       principal_identifier = data.rhcs_policies.all_policies.account_role_policies["sts_support_rh_sre_role"]
+      external_id          = local.trust_policy_external_id
     },
     {
       role_name            = "Worker"
@@ -26,6 +31,7 @@ locals {
       policy_details       = data.rhcs_policies.all_policies.account_role_policies["sts_instance_worker_permission_policy"]
       principal_type       = "Service"
       principal_identifier = "ec2.amazonaws.com"
+      external_id          = null
     },
     {
       role_name            = "ControlPlane"
@@ -33,10 +39,15 @@ locals {
       policy_details       = data.rhcs_policies.all_policies.account_role_policies["sts_instance_controlplane_permission_policy"]
       principal_type       = "Service"
       principal_identifier = "ec2.amazonaws.com"
+      external_id          = null
     }
   ]
   account_roles_count = null_resource.validate_openshift_version != null ? length(local.account_roles_properties) : 0
-  patch_version_list  = [for s in data.rhcs_versions.all_versions.items : s.name]
+  # terraform test cannot mock ListNested attributes (items) reliably; fall back to singular item.
+  patch_version_list = distinct(concat(
+    try([for s in data.rhcs_versions.all_versions.items : s.name], []),
+    try([data.rhcs_versions.all_versions.item.name], []),
+  ))
   minor_version_list = length(local.patch_version_list) > 0 ? (
     distinct([for s in local.patch_version_list : format("%s.%s", split(".", s)[0], split(".", s)[1])])
     ) : (
@@ -47,19 +58,32 @@ locals {
     ) : (
     "account-role-${random_string.default_random[0].result}"
   )
-}
-
-data "aws_iam_policy_document" "custom_trust_policy" {
-  count = local.account_roles_count
-
-  statement {
-    effect  = "Allow"
-    actions = ["sts:AssumeRole"]
-    principals {
-      type        = local.account_roles_properties[count.index].principal_type
-      identifiers = [local.account_roles_properties[count.index].principal_identifier]
-    }
-  }
+  # Hand-rolled jsonencode instead of aws_iam_policy_document for terraform test compatibility.
+  custom_trust_policy_json = [
+    for idx in range(local.account_roles_count) : jsonencode({
+      Version = "2012-10-17"
+      Statement = [
+        merge(
+          {
+            Effect = "Allow"
+            Action = "sts:AssumeRole"
+            Principal = local.account_roles_properties[idx].principal_type == "AWS" ? {
+              AWS = local.account_roles_properties[idx].principal_identifier
+              } : {
+              Service = local.account_roles_properties[idx].principal_identifier
+            }
+          },
+          local.account_roles_properties[idx].external_id != null ? {
+            Condition = {
+              StringEquals = {
+                "sts:ExternalId" = local.account_roles_properties[idx].external_id
+              }
+            }
+          } : {}
+        )
+      ]
+    })
+  ]
 }
 
 module "account_iam_role" {
@@ -77,7 +101,7 @@ module "account_iam_role" {
   role_permissions_boundary_arn = var.permissions_boundary
 
   create_custom_role_trust_policy = true
-  custom_role_trust_policy        = data.aws_iam_policy_document.custom_trust_policy[count.index].json
+  custom_role_trust_policy        = local.custom_trust_policy_json[count.index]
 
   tags = merge(var.tags, {
     red-hat-managed        = true
@@ -140,11 +164,12 @@ resource "time_sleep" "account_iam_resources_wait" {
   destroy_duration = "10s"
   create_duration  = "10s"
   triggers = {
-    account_iam_role_name = jsonencode([for value in aws_iam_role_policy_attachment.role_policy_attachment : value.role])
-    account_roles_arn     = jsonencode({ for idx, value in module.account_iam_role : local.account_roles_properties[idx].role_name => value.iam_role_arn })
-    account_role_prefix   = local.account_role_prefix_valid
-    openshift_version     = var.openshift_version
-    path                  = var.path
+    account_iam_role_name    = jsonencode([for value in aws_iam_role_policy_attachment.role_policy_attachment : value.role])
+    account_roles_arn        = jsonencode({ for idx, value in module.account_iam_role : local.account_roles_properties[idx].role_name => value.iam_role_arn })
+    account_role_prefix      = local.account_role_prefix_valid
+    openshift_version        = var.openshift_version
+    path                     = var.path
+    trust_policy_external_id = local.trust_policy_external_id != null ? local.trust_policy_external_id : ""
   }
 }
 
