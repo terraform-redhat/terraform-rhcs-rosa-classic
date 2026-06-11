@@ -26,6 +26,7 @@ Sub-modules included in this module:
 
 - [account-iam-resources](./modules/account-iam-resources): Handles the provisioning of IAM (Identity and Access Management) resources required for managing access and permissions in the AWS account associated with the ROSA Classic cluster.
 - [idp](./modules/idp): Responsible for configuring Identity Providers (IDPs) within the ROSA Classic cluster, facilitating seamless integration with external authentication systems such as GitHub, GitLab, Google, HTPasswd, LDAP, and OpenID Connect (OIDC).
+- [ocm-role](./modules/ocm-role): Creates and links the AWS IAM OCM role with the required ROSA CLI-parity naming, tagging, trust policy, and permission policies.
 - [machine-pool](./modules/machine-pool): Facilitates the management of machine pools within the ROSA Classic cluster, enabling users to scale resources and adjust specifications based on workload demands.
 - [oidc-config-and-provider](./modules/oidc-config-and-provider): Manages the configuration of OIDC (OpenID Connect) providers within the ROSA Classic cluster, enabling secure authentication and access control mechanisms.
 - [operator-policies](./modules/operator-policies): Responsible for managing policies associated with ROSA operators within the cluster, ensuring proper permissions for core cluster functionalities.
@@ -68,7 +69,7 @@ We recommend you install the following CLI tools:
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.7 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.0 |
 | <a name="requirement_null"></a> [null](#requirement\_null) | >= 3.3.0 |
-| <a name="requirement_rhcs"></a> [rhcs](#requirement\_rhcs) | >= 1.7.6 |
+| <a name="requirement_rhcs"></a> [rhcs](#requirement\_rhcs) | >= 1.7.7 |
 
 ## Providers
 
