@@ -1,3 +1,26 @@
+## 1.7.3 (16 Jun, 2026)
+
+FEATURES:
+   * Align OCM role module with reviewer-approved HCP shape
+
+ENHANCEMENTS:
+ * Chores
+   * Allow only patch version updates for the s3-bucket module
+   * Consolidate checks under make pre-push-checks
+   * Add Vale inclusive-language check
+   * Replace version by sha in github actions
+   * Add LICENSE and automation for checking it
+   * Update Terraform package rules in renovate.json
+   * Update renovate.json with dependencyDashboard
+   * Add minimumReleaseAge configuration to renovate.json
+   * Add workflow, renovate and tests
+   * Add contributor and AI assistant documentation
+   * Add pr and issue templates
+ * Documentation
+   * Specify DCO sign-off requirement in CONTRIBUTING.md
+ * Other
+   * Require Terraform >=1.5.7, CI verify and Renovate
+
 ## 1.7.2 (04 Feb, 2026)
 
 ENHANCEMENTS:
