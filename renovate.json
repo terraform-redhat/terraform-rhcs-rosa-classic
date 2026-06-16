@@ -1,161 +1,161 @@
 {
-   "$schema":"https://docs.renovatebot.com/renovate-schema.json",
-   "extends":[
-      "config:recommended",
-      "customManagers:dockerfileVersions",
-      ":gitSignOff"
-   ],
-   "dependencyDashboard":true,
-   "minimumReleaseAge":"3 days",
-   "commitMessagePrefix":"OCM-00000 | ci: ",
-   "prConcurrentLimit":2,
-   "prHourlyLimit":0,
-   "reviewersFromCodeOwners":true,
-   "tekton":{
-      "schedule":[
-         "at any time"
-      ]
-   },
-   "labels":[
-      "ok-to-test"
-   ],
-   "customManagers":[
-      {
-         "customType":"regex",
-         "description":"Makefile pre-push-checks CLI tool versions",
-         "managerFilePatterns":[
-            "/Makefile$/"
-         ],
-         "matchStrings":[
-            "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)\\s+(?<indent>\\S+)_VERSION \\?= (?<currentValue>\\S+)"
-         ],
-         "versioningTemplate":"semver"
-      },
-      {
-         "customType":"regex",
-         "description":"Dockerfile ARG tool versions",
-         "managerFilePatterns":[
-            "/Dockerfile$/"
-         ],
-         "matchStrings":[
-            "# renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\sARG .*?_VERSION=(?<currentValue>.*)\\s"
-         ],
-         "versioningTemplate":"{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
-      }
-   ],
-   "packageRules":[
-      {
-         "description":"Makefile CLI tool versions (addlicense, terraform-docs, tflint, vale, checkov, gitleaks)",
-         "matchManagers":[
-            "custom.regex"
-         ],
-         "matchFileNames":[
-            "Makefile"
-         ],
-         "groupName":"Makefile pre-push tools",
-         "groupSlug":"makefile-pre-push-tools",
-         "commitMessagePrefix":"chore(deps): ",
-         "automerge":false
-      },
-      {
-         "description":"CI Dockerfile (UBI base, AWS CLI, ROSA CLI)",
-         "matchManagers":[
-            "custom.regex"
-         ],
-         "matchFileNames":[
-            "Dockerfile"
-         ],
-         "groupName":"CI client image",
-         "groupSlug":"ci-client-image",
-         "commitMessagePrefix":"chore(deps): ",
-         "automerge":false
-      },
-      {
-         "description":"Terraform providers in the root versions.tf",
-         "rangeStrategy":"bump",
-         "matchManagers":[
-            "terraform"
-         ],
-         "matchDepTypes":[
-            "required_provider"
-         ],
-         "matchFileNames":[
-            "versions.tf"
-         ],
-         "groupName":"Terraform Providers",
-         "groupSlug":"tf-providers",
-         "commitMessagePrefix":"chore(deps): ",
-         "automerge":false
-      },
-      {
-         "description":"Do not auto-bump minimum Terraform core (root module required_version); change deliberately (OCM-24461)",
-         "matchManagers":[
-            "terraform"
-         ],
-         "matchDepTypes":[
-            "required_version"
-         ],
-         "matchFileNames":[
-            "versions.tf"
-         ],
-         "enabled":false
-      },
-      {
-         "description":"Terraform providers and version in modules are disabled",
-         "matchManagers":[
-            "terraform"
-         ],
-         "matchDepTypes":[
-            "required_provider",
-            "required_version"
-         ],
-         "matchFileNames":[
-            "modules/**/versions.tf"
-         ],
-         "enabled":false
-      },
-      {
-         "description":"Group GitHub Actions updates to avoid many CI pull requests",
-         "matchManagers":[
-            "github-actions"
-         ],
-         "groupName":"GitHub Actions Dependencies",
-         "groupSlug":"gh-actions",
-         "commitMessagePrefix":"chore(deps): ",
-         "automerge":false
-      },
-      {
-         "description":"Terraform modules grouped by source",
-         "matchManagers":[
-            "terraform"
-         ],
-         "matchDepTypes":[
-            "module"
-         ],
-         "matchFileNames":[
-            "modules/**"
-         ],
-         "groupName":"Terraform Modules",
-         "groupSlug":"tf-modules",
-         "rangeStrategy":"bump",
-         "automerge":false
-      },
-      {
-         "description":"Block major version bumps for specific Terraform modules",
-         "matchManagers":[
-            "terraform"
-         ],
-         "matchDepTypes":[
-            "module"
-         ],
-         "matchPackageNames":[
-            "terraform-aws-modules/iam/aws",
-            "terraform-aws-modules/secrets-manager/aws"
-         ],
-         "matchUpdateTypes":[
-            "major"
-         ],
-         "enabled":false
-      }
-   ]
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:recommended",
+    "customManagers:dockerfileVersions",
+    ":gitSignOff"
+  ],
+  "dependencyDashboard": true,
+  "minimumReleaseAge": "3 days",
+  "commitMessagePrefix": "OCM-00000 | ci: ",
+  "prConcurrentLimit": 2,
+  "prHourlyLimit": 0,
+  "reviewersFromCodeOwners": true,
+  "tekton": {
+    "schedule": [
+      "at any time"
+    ]
+  },
+  "labels": [
+    "ok-to-test"
+  ],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "Makefile pre-push-checks CLI tool versions",
+      "managerFilePatterns": [
+        "/Makefile$/"
+      ],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>\\S+) depName=(?<depName>\\S+)\\s+(?<indent>\\S+)_VERSION \\?= (?<currentValue>\\S+)"
+      ],
+      "versioningTemplate": "semver"
+    },
+    {
+      "customType": "regex",
+      "description": "Dockerfile ARG tool versions",
+      "managerFilePatterns": [
+        "/Dockerfile$/"
+      ],
+      "matchStrings": [
+        "# renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\sARG .*?_VERSION=(?<currentValue>.*)\\s"
+      ],
+      "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
+    }
+  ],
+  "packageRules": [
+    {
+      "description": "Makefile CLI tool versions (addlicense, terraform-docs, tflint, vale, checkov, gitleaks)",
+      "matchManagers": [
+        "custom.regex"
+      ],
+      "matchFileNames": [
+        "Makefile"
+      ],
+      "groupName": "Makefile pre-push tools",
+      "groupSlug": "makefile-pre-push-tools",
+      "commitMessagePrefix": "chore(deps): ",
+      "automerge": false
+    },
+    {
+      "description": "CI Dockerfile (UBI base, AWS CLI, ROSA CLI)",
+      "matchManagers": [
+        "custom.regex"
+      ],
+      "matchFileNames": [
+        "Dockerfile"
+      ],
+      "groupName": "CI client image",
+      "groupSlug": "ci-client-image",
+      "commitMessagePrefix": "chore(deps): ",
+      "automerge": false
+    },
+    {
+      "description": "Terraform providers in the root versions.tf",
+      "rangeStrategy": "bump",
+      "matchManagers": [
+        "terraform"
+      ],
+      "matchDepTypes": [
+        "required_provider"
+      ],
+      "matchFileNames": [
+        "versions.tf"
+      ],
+      "groupName": "Terraform Providers",
+      "groupSlug": "tf-providers",
+      "commitMessagePrefix": "chore(deps): ",
+      "automerge": false
+    },
+    {
+      "description": "Do not auto-bump minimum Terraform core (root module required_version); change deliberately (OCM-24461)",
+      "matchManagers": [
+        "terraform"
+      ],
+      "matchDepTypes": [
+        "required_version"
+      ],
+      "matchFileNames": [
+        "versions.tf"
+      ],
+      "enabled": false
+    },
+    {
+      "description": "Terraform providers and version in modules are disabled",
+      "matchManagers": [
+        "terraform"
+      ],
+      "matchDepTypes": [
+        "required_provider",
+        "required_version"
+      ],
+      "matchFileNames": [
+        "modules/**/versions.tf"
+      ],
+      "enabled": false
+    },
+    {
+      "description": "Group GitHub Actions updates to avoid many CI pull requests",
+      "matchManagers": [
+        "github-actions"
+      ],
+      "groupName": "GitHub Actions Dependencies",
+      "groupSlug": "gh-actions",
+      "commitMessagePrefix": "chore(deps): ",
+      "automerge": false
+    },
+    {
+      "description": "Terraform modules grouped by source",
+      "matchManagers": [
+        "terraform"
+      ],
+      "matchDepTypes": [
+        "module"
+      ],
+      "matchFileNames": [
+        "modules/**"
+      ],
+      "groupName": "Terraform Modules",
+      "groupSlug": "tf-modules",
+      "rangeStrategy": "bump",
+      "automerge": false
+    },
+    {
+      "description": "Block major version bumps for specific Terraform modules",
+      "matchManagers": [
+        "terraform"
+      ],
+      "matchDepTypes": [
+        "module"
+      ],
+      "matchPackageNames": [
+        "terraform-aws-modules/iam/aws",
+        "terraform-aws-modules/secrets-manager/aws"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "enabled": false
+    }
+  ]
 }
