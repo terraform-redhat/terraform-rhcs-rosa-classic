@@ -139,6 +139,23 @@
       "groupSlug": "tf-modules",
       "rangeStrategy": "bump",
       "automerge": false
+    },
+    {
+      "description": "Block major version bumps for specific Terraform modules",
+      "matchManagers": [
+        "terraform"
+      ],
+      "matchDepTypes": [
+        "module"
+      ],
+      "matchPackageNames": [
+        "terraform-aws-modules/iam/aws",
+        "terraform-aws-modules/secrets-manager/aws"
+      ],
+      "matchUpdateTypes": [
+        "major"
+      ],
+      "enabled": false
     }
   ]
 }
