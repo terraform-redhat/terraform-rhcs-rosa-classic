@@ -37,7 +37,7 @@ locals {
   )
 }
 
-data "rhcs_hcp_policies" "all_policies" {}
+data "rhcs_policies" "all_policies" {}
 
 data "rhcs_info" "current" {}
 
@@ -45,7 +45,7 @@ resource "aws_iam_role" "ocm_role" {
   name                  = local.role_name
   permissions_boundary  = var.permissions_boundary
   path                  = local.path
-  assume_role_policy    = data.rhcs_hcp_policies.all_policies.ocm_role_policies.sts_ocm_trust_policy
+  assume_role_policy    = data.rhcs_policies.all_policies.ocm_role_policies.sts_ocm_trust_policy
   force_detach_policies = true
 
   tags = local.role_tags
@@ -56,7 +56,7 @@ resource "aws_iam_policy" "standard_permission_policy" {
 
   name   = substr("${local.role_name}-Policy", 0, local.max_policy_name_length)
   path   = local.path
-  policy = data.rhcs_hcp_policies.all_policies.ocm_role_policies.sts_ocm_permission_policy
+  policy = data.rhcs_policies.all_policies.ocm_role_policies.sts_ocm_permission_policy
 
   tags = local.base_tags
 }
@@ -73,7 +73,7 @@ resource "aws_iam_policy" "ocm_admin_permission_policy" {
 
   name   = substr("${local.role_name}-Admin-Policy", 0, local.max_policy_name_length)
   path   = local.path
-  policy = data.rhcs_hcp_policies.all_policies.ocm_role_policies.sts_ocm_admin_permission_policy
+  policy = data.rhcs_policies.all_policies.ocm_role_policies.sts_ocm_admin_permission_policy
 
   tags = merge(local.base_tags, {
     rosa_admin_role = true
@@ -92,7 +92,7 @@ resource "aws_iam_policy" "ocm_no_console_permission_policy" {
 
   name   = substr("${local.role_name}-NoConsole-Policy", 0, local.max_policy_name_length)
   path   = local.path
-  policy = data.rhcs_hcp_policies.all_policies.ocm_role_policies.sts_ocm_no_console_permission_policy
+  policy = data.rhcs_policies.all_policies.ocm_role_policies.sts_ocm_no_console_permission_policy
 
   tags = merge(local.base_tags, {
     rosa_no_console_role = true

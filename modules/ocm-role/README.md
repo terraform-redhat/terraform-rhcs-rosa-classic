@@ -51,8 +51,8 @@ No modules.
 | [aws_iam_role_policy_attachment.ocm_no_console_permission_policy_attachment](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
 | [aws_iam_role_policy_attachment.standard_permission_policy_attachment](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
 | [rhcs_rosa_ocm_role_link.this](https://registry.terraform.io/providers/terraform-redhat/rhcs/latest/docs/resources/rosa_ocm_role_link) | resource |
-| [rhcs_hcp_policies.all_policies](https://registry.terraform.io/providers/terraform-redhat/rhcs/latest/docs/data-sources/hcp_policies) | data source |
 | [rhcs_info.current](https://registry.terraform.io/providers/terraform-redhat/rhcs/latest/docs/data-sources/info) | data source |
+| [rhcs_policies.all_policies](https://registry.terraform.io/providers/terraform-redhat/rhcs/latest/docs/data-sources/policies) | data source |
 
 ## Inputs
 

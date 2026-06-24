@@ -17,7 +17,7 @@ mock_provider "rhcs" {
     }
   }
 
-  mock_data "rhcs_hcp_policies" {
+  mock_data "rhcs_policies" {
     defaults = {
       ocm_role_policies = {
         sts_ocm_trust_policy                 = "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Action\":\"sts:AssumeRole\",\"Principal\":{\"AWS\":\"arn:aws:iam::000000000000:root\"}}]}"
@@ -47,7 +47,7 @@ mock_provider "rhcs" {
     }
   }
 
-  mock_data "rhcs_hcp_policies" {
+  mock_data "rhcs_policies" {
     defaults = {
       ocm_role_policies = {
         sts_ocm_trust_policy                 = "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Action\":\"sts:AssumeRole\",\"Principal\":{\"AWS\":\"arn:aws:iam::000000000000:root\"}}]}"
@@ -77,7 +77,7 @@ mock_provider "rhcs" {
     }
   }
 
-  mock_data "rhcs_hcp_policies" {
+  mock_data "rhcs_policies" {
     defaults = {
       ocm_role_policies = {
         sts_ocm_trust_policy                 = "{\"Version\":\"2012-10-17\",\"Statement\":[{\"Effect\":\"Allow\",\"Action\":\"sts:AssumeRole\",\"Principal\":{\"AWS\":\"arn:aws:iam::000000000000:root\"}}]}"
