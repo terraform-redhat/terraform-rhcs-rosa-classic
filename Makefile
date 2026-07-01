@@ -83,11 +83,7 @@ pre-push-checks: tools
 # https://github.com/openshift/release/tree/master/ci-operator/config/terraform-redhat/terraform-rhcs-rosa-classic
 .PHONY: verify
 verify:
-	@set -euo pipefail; \
-	for d in examples/*/; do \
-		echo "!! Validating $$d !!"; \
-		( cd "$$d" && rm -rf .terraform .terraform.lock.hcl && terraform init -backend=false -input=false && terraform validate ); \
-	done
+	@bash scripts/verify.sh
 
 .PHONY: verify-gen
 verify-gen: $(TERRAFORM_DOCS)

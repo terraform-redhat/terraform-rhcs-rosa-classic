@@ -48,6 +48,13 @@ Before opening a PR, run **`make pre-push-checks`** (or the individual targets b
 
 Place tests under a **`tests/`** directory beside the module’s `.tf` files (for example `modules/my-module/tests/example.tftest.hcl`). You need the Terraform CLI and tflint on your PATH; `make lint` runs `tflint --init`, which may download plugins from [.tflint.hcl](.tflint.hcl).
 
+- **`make verify`** — Runs [`scripts/verify.sh`](scripts/verify.sh): `terraform init` + `validate` for each example and the root module at the **effective AWS provider floor** (pinned) and at **latest** matching the declared `>=` constraints. See [`developer-docs/providers-and-versions.md`](developer-docs/providers-and-versions.md).
+
+## Provider compatibility
+
+- **Required (consumer floor):** declared in root [`versions.tf`](versions.tf) `required_providers` — bump manually when needed.
+- **Last tested latest:** `# tested_aws_provider_latest` in [`versions.tf`](versions.tf) — updated by Renovate; CI exercises new releases without raising the consumer floor.
+
 ## Prerequisites
 
 * The [Terraform CLI](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli) (**>= 1.5.7**) must be installed to run this module. Pin to a [released module version](https://github.com/terraform-redhat/terraform-rhcs-rosa-classic/releases) rather than tracking `main`.
