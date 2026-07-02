@@ -29,3 +29,14 @@ variable "tags" {
   default     = null
   description = "List of AWS resource tags to apply."
 }
+
+variable "trust_policy_external_id" {
+  type        = string
+  default     = null
+  description = "External ID for trust policy condition in installer and support account roles."
+
+  validation {
+    condition     = var.trust_policy_external_id == null ? true : length(trimspace(var.trust_policy_external_id)) > 0
+    error_message = "trust_policy_external_id must be null or a non-empty, non-whitespace string"
+  }
+}
