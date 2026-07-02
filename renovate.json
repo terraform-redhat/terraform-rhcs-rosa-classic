@@ -41,6 +41,19 @@
         "# renovate: datasource=(?<datasource>.*?) depName=(?<depName>.*?)( versioning=(?<versioning>.*?))?\\sARG .*?_VERSION=(?<currentValue>.*)\\s"
       ],
       "versioningTemplate": "{{#if versioning}}{{{versioning}}}{{else}}semver{{/if}}"
+    },
+    {
+      "customType": "regex",
+      "description": "Track last CI-tested AWS provider in versions.tf comment (ROSAENG-61027)",
+      "managerFilePatterns": [
+        "/^versions\\.tf$/"
+      ],
+      "matchStrings": [
+        "# renovate: datasource=terraform-provider depName=hashicorp/aws\\s+# tested_aws_provider_latest = (?<currentValue>\\d+\\.\\d+\\.\\d+)"
+      ],
+      "datasourceTemplate": "terraform-provider",
+      "depNameTemplate": "hashicorp/aws",
+      "versioningTemplate": "hashicorp"
     }
   ],
   "packageRules": [
@@ -54,6 +67,7 @@
       ],
       "groupName": "Makefile pre-push tools",
       "groupSlug": "makefile-pre-push-tools",
+      "commitMessagePrefix": "chore(deps): ",
       "automerge": false
     },
     {
@@ -66,11 +80,26 @@
       ],
       "groupName": "CI client image",
       "groupSlug": "ci-client-image",
+      "commitMessagePrefix": "chore(deps): ",
       "automerge": false
     },
     {
-      "description": "Terraform providers in the root versions.tf",
-      "rangeStrategy": "bump",
+      "description": "Renovate AWS tested-version comment in versions.tf (ROSAENG-61027)",
+      "matchManagers": [
+        "custom.regex"
+      ],
+      "matchFileNames": [
+        "versions.tf"
+      ],
+      "matchDepNames": [
+        "hashicorp/aws"
+      ],
+      "groupName": "AWS provider tested version",
+      "groupSlug": "aws-provider-tested",
+      "automerge": false
+    },
+    {
+      "description": "Auto-bump rhcs provider in root versions.tf",
       "matchManagers": [
         "terraform"
       ],
@@ -80,9 +109,30 @@
       "matchFileNames": [
         "versions.tf"
       ],
-      "groupName": "Terraform Providers",
-      "groupSlug": "tf-providers",
+      "matchPackageNames": [
+        "rhcs",
+        "terraform-redhat/rhcs"
+      ],
+      "rangeStrategy": "bump",
+      "groupName": "Terraform rhcs provider",
+      "groupSlug": "tf-rhcs-provider",
       "automerge": false
+    },
+    {
+      "description": "Do not auto-bump aws/null required_provider in root versions.tf (ROSAENG-61027)",
+      "matchManagers": [
+        "terraform"
+      ],
+      "matchDepTypes": [
+        "required_provider"
+      ],
+      "matchFileNames": [
+        "versions.tf"
+      ],
+      "matchPackageNames": [
+        "!rhcs"
+      ],
+      "enabled": false
     },
     {
       "description": "Do not auto-bump minimum Terraform core (root module required_version); change deliberately (OCM-24461)",
@@ -118,10 +168,11 @@
       ],
       "groupName": "GitHub Actions Dependencies",
       "groupSlug": "gh-actions",
+      "commitMessagePrefix": "chore(deps): ",
       "automerge": false
     },
     {
-      "description": "Terraform modules grouped by source",
+      "description": "Do not auto-bump Terraform module version pins (ROSAENG-61027)",
       "matchManagers": [
         "terraform"
       ],
@@ -130,26 +181,6 @@
       ],
       "matchFileNames": [
         "modules/**"
-      ],
-      "groupName": "Terraform Modules",
-      "groupSlug": "tf-modules",
-      "rangeStrategy": "bump",
-      "automerge": false
-    },
-    {
-      "description": "Block major version bumps for specific Terraform modules",
-      "matchManagers": [
-        "terraform"
-      ],
-      "matchDepTypes": [
-        "module"
-      ],
-      "matchPackageNames": [
-        "terraform-aws-modules/iam/aws",
-        "terraform-aws-modules/secrets-manager/aws"
-      ],
-      "matchUpdateTypes": [
-        "major"
       ],
       "enabled": false
     }

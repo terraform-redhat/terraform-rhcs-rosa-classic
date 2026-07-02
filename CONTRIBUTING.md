@@ -17,12 +17,13 @@ This repo is **ROSA Classic** only. The sibling **ROSA HCP** module is [`terrafo
 ## Before you open a PR
 
 1. **Format** — `terraform fmt -recursive` (or format only dirs you changed).
-2. **Validate** — `make verify` (runs `terraform init` + `validate` in each `examples/*` directory; compatible with the minimum Terraform version in root **`versions.tf`**, currently **>= 1.5.7**). Fix failures in examples you touch or that your change breaks.
+2. **Validate** — `make verify` (runs [`scripts/verify.sh`](scripts/verify.sh): `terraform init` + `validate` for each example and the root module at the **effective AWS provider floor** and at **latest**; compatible with the minimum Terraform version in root **`versions.tf`**, currently **>= 1.5.7**). Fix failures in examples you touch or that your change breaks.
 3. **Docs** — If you changed variables, outputs, modules, or root wiring: run `make verify-gen` (runs `terraform-docs` via [`scripts/terraform-docs.sh`](scripts/terraform-docs.sh), then [`scripts/verify-gen.sh`](scripts/verify-gen.sh) to ensure README inject blocks are committed).
 4. **Module tests** — If a submodule under `modules/<name>/tests/` has `*.tftest.hcl`, run `terraform init -backend=false && terraform test` from `modules/<name>/`, or run `make unit-tests` for all modules with tests.
 5. **Documentation lint** — `make docs-lint` runs the pinned [Vale](https://docs.vale.sh/) CLI (release binary from [vale-cli/vale](https://github.com/vale-cli/vale)) with Red Hat documentation styles (see [`.vale.ini`](.vale.ini)).
 6. **Variables** — Follow [`developer-docs/variables.md`](developer-docs/variables.md) (provider-aligned schemas, validation, naming, and layout).
 7. **Submodules (AWS-only)** — If the change adds or expands **AWS-only** configuration (no `rhcs` surface), confirm it matches [`developer-docs/submodules.md`](developer-docs/submodules.md). In the PR, **link official Red Hat or cited ROSA Classic documentation** that supports shipping it in-repo, or explain why an exception is justified.
+8. **Provider floors** — Bump **aws** / **null** / module pins in **`versions.tf`** or **`modules/**`** manually when required; do not rely on Renovate (see [`developer-docs/providers-and-versions.md`](developer-docs/providers-and-versions.md)). Renovate may bump **rhcs** and the **`# tested_aws_provider_latest`** comment only.
 
 Run the full local verification flow (same steps as the planned single OpenShift Prow presubmit) with:
 

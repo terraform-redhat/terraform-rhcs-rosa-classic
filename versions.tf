@@ -19,3 +19,6 @@ terraform {
     }
   }
 }
+
+# renovate: datasource=terraform-provider depName=hashicorp/aws
+# tested_aws_provider_latest = 6.52.0
