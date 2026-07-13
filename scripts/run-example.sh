@@ -115,6 +115,9 @@ echo "run-example.sh: Cleaning Terraform files completed"
 echo "run-example.sh: Running \"terraform init\" ..."
 terraform init
 echo "run-example.sh: \"terraform init\" completed"
+aws_ver=$(grep -A1 '"hashicorp/aws"' .terraform.lock.hcl | sed -n 's/.*version.*=.*"\([^"]*\)".*/\1/p')
+rhcs_ver=$(grep -A1 '"terraform-redhat/rhcs"' .terraform.lock.hcl | sed -n 's/.*version.*=.*"\([^"]*\)".*/\1/p')
+echo "run-example.sh: Provider versions — aws: ${aws_ver} rhcs: ${rhcs_ver}"
 
 ##############################################################
 # terraform apply

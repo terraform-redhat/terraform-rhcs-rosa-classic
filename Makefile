@@ -81,12 +81,26 @@ pre-push-checks: tools
 
 # Prow today (until consolidated): verify-format → make verify, verify-gen → make verify-gen.
 # https://github.com/openshift/release/tree/master/ci-operator/config/terraform-redhat/terraform-rhcs-rosa-classic
+# Validates each example at pinned provider versions (examples/**/versions.tf) and at
+# the AWS floor (examples/**/.aws-provider-floor). See developer-docs/providers-and-versions.md.
 .PHONY: verify
 verify:
 	@set -euo pipefail; \
 	for d in examples/*/; do \
-		echo "!! Validating $$d !!"; \
+		if [ ! -f "$${d}.aws-provider-floor" ]; then \
+			echo "ERROR: $${d}.aws-provider-floor not found" >&2; exit 1; \
+		fi; \
+		floor=$$(cat "$${d}.aws-provider-floor"); \
+		echo "!! Validating $$d (pinned) !!"; \
 		( cd "$$d" && rm -rf .terraform .terraform.lock.hcl && terraform init -backend=false -input=false && terraform validate ); \
+		echo "!! Validating $$d (floor $$floor) !!"; \
+		absd=$$(readlink -f "$$d"); \
+		cp "$${d}versions.tf" "$${d}versions.tf.bak"; \
+		( \
+			trap "mv -f \"$${absd}/versions.tf.bak\" \"$${absd}/versions.tf\" 2>/dev/null || true" EXIT; \
+			sed -i '/source[[:space:]]*=[[:space:]]*"hashicorp\/aws"/{n;s/version[[:space:]]*=[[:space:]]*"[^"]*"/version = "= '"$$floor"'"/;}' "$${d}versions.tf"; \
+			cd "$$d" && rm -rf .terraform .terraform.lock.hcl && terraform init -backend=false -input=false && terraform validate; \
+		); \
 	done
 
 .PHONY: verify-gen

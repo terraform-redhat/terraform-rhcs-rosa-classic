@@ -48,6 +48,17 @@ Before opening a PR, run **`make pre-push-checks`** (or the individual targets b
 
 Place tests under a **`tests/`** directory beside the module’s `.tf` files (for example `modules/my-module/tests/example.tftest.hcl`). You need the Terraform CLI and tflint on your PATH; `make lint` runs `tflint --init`, which may download plugins from [.tflint.hcl](.tflint.hcl).
 
+- **`make verify`** — For each example: `terraform init` + `validate` at **pinned** provider versions (`examples/**/versions.tf`), then at the **AWS floor** (`examples/**/.aws-provider-floor`). See [`developer-docs/providers-and-versions.md`](developer-docs/providers-and-versions.md).
+
+## Provider compatibility
+
+- **Consumer floor (root):** [`versions.tf`](versions.tf) — minimum to use the root module (`aws >= 6.0.0`).
+- **Examples:** exact provider pins in `examples/**/versions.tf` (Renovate-managed for aws/rhcs); AWS floors in `.aws-provider-floor` for CI.
+- **Submodule-only** use may work below the root floor when the cluster submodule is not in the graph (for example `ocm-role` at `4.67.0`).
+- **Lock files:** not committed (gitignored); CI uses ephemeral locks only.
+
+See [`developer-docs/providers-and-versions.md`](developer-docs/providers-and-versions.md) for submodule floors and Renovate policy.
+
 ## Prerequisites
 
 * The [Terraform CLI](https://developer.hashicorp.com/terraform/tutorials/aws-get-started/install-cli) (**>= 1.5.7**) must be installed to run this module. Pin to a [released module version](https://github.com/terraform-redhat/terraform-rhcs-rosa-classic/releases) rather than tracking `main`.
@@ -67,7 +78,7 @@ We recommend you install the following CLI tools:
 | Name | Version |
 | ---- | ------- |
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.7 |
-| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 4.67.0 |
+| <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 6.0.0 |
 | <a name="requirement_null"></a> [null](#requirement\_null) | >= 3.3.0 |
 | <a name="requirement_rhcs"></a> [rhcs](#requirement\_rhcs) | >= 1.7.7 |
 
@@ -75,7 +86,7 @@ We recommend you install the following CLI tools:
 
 | Name | Version |
 | ---- | ------- |
-| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 4.67.0 |
+| <a name="provider_aws"></a> [aws](#provider\_aws) | >= 6.0.0 |
 | <a name="provider_null"></a> [null](#provider\_null) | >= 3.3.0 |
 
 ## Modules
