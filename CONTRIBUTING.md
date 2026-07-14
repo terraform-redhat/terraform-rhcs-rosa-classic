@@ -87,3 +87,11 @@ Manual changelog generation:
 # Generate changelog for a specific release range
 git-cliff v1.7.2..v1.7.3 --prepend CHANGELOG.md
 ```
+
+## Communication
+
+For internal Red Hat contributors: post your PR link and Jira story in `#forum-rosa-service-engineering` and ping `@rosa-cli-tf-devs` on Red Hat Slack.
+
+## Feature process
+
+For all new features and changes, the provider serves as our source of truth, meaning any corresponding module PRs will be placed on hold until the provider change is released. Use the existing `/hold` mechanism on your PR and reference the upstream provider PR or release it depends on.
