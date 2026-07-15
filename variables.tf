@@ -216,6 +216,12 @@ variable "upgrade_acknowledgements_for" {
   description = "Indicates acknowledgment of agreements required to upgrade the cluster version between minor versions (e.g. a value of \"4.12\" indicates acknowledgment of any agreements required to upgrade to OpenShift 4.12.z from 4.11 or before)."
 }
 
+variable "delete_protection" {
+  type        = bool
+  default     = null
+  description = "When true, prevents cluster deletion via OCM. Set to false and apply before running terraform destroy."
+}
+
 
 ##############################################################
 # Default Machine Pool Variables
