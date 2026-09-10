@@ -39,6 +39,7 @@ output "state" {
 output "cluster_admin_username" {
   value       = rhcs_cluster_rosa_classic.rosa_classic_cluster.admin_credentials == null ? null : rhcs_cluster_rosa_classic.rosa_classic_cluster.admin_credentials.username
   description = "The username of the admin user."
+  sensitive   = true
 }
 
 output "cluster_admin_password" {

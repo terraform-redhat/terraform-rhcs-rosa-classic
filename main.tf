@@ -125,6 +125,7 @@ module "rosa_cluster_classic" {
   disable_waiting_in_destroy   = var.disable_waiting_in_destroy
   destroy_timeout              = var.destroy_timeout
   upgrade_acknowledgements_for = var.upgrade_acknowledgements_for
+  delete_protection            = var.delete_protection
   multi_az                     = var.multi_az
 
   #######################

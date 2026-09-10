@@ -109,6 +109,7 @@ resource "rhcs_cluster_rosa_classic" "rosa_classic_cluster" {
   disable_waiting_in_destroy   = var.disable_waiting_in_destroy
   destroy_timeout              = var.destroy_timeout
   upgrade_acknowledgements_for = var.upgrade_acknowledgements_for
+  delete_protection            = var.delete_protection
 
   lifecycle {
     precondition {
