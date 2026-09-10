@@ -21,25 +21,48 @@ resource "aws_iam_openid_connect_provider" "oidc_provider" {
   thumbprint_list = [rhcs_rosa_oidc_config.oidc_config.thumbprint]
 }
 
-module "aws_s3_bucket" {
-  source = "terraform-aws-modules/s3-bucket/aws"
-  # Exact pin: avoid upstream 5.x raising merged AWS provider floors for customers — bump manually when needed.
-  version = "= 4.11.0"
-
+resource "aws_s3_bucket" "oidc" {
   count = var.managed ? 0 : 1
 
   bucket = rhcs_rosa_oidc_config_input.oidc_input[count.index].bucket_name
   tags = merge(var.tags, {
     red-hat-managed = true
   })
+}
+
+resource "aws_s3_bucket_public_access_block" "oidc" {
+  count = var.managed ? 0 : 1
+
+  bucket = aws_s3_bucket.oidc[count.index].id
 
   block_public_acls       = true
   ignore_public_acls      = true
   block_public_policy     = false
   restrict_public_buckets = false
+}
 
-  attach_policy = true
-  policy        = data.aws_iam_policy_document.allow_access_from_another_account[count.index].json
+resource "aws_s3_bucket_policy" "oidc" {
+  count = var.managed ? 0 : 1
+
+  bucket = aws_s3_bucket.oidc[count.index].id
+  policy = data.aws_iam_policy_document.allow_access_from_another_account[count.index].json
+
+  depends_on = [aws_s3_bucket_public_access_block.oidc]
+}
+
+moved {
+  from = module.aws_s3_bucket[0].aws_s3_bucket.this[0]
+  to   = aws_s3_bucket.oidc[0]
+}
+
+moved {
+  from = module.aws_s3_bucket[0].aws_s3_bucket_public_access_block.this[0]
+  to   = aws_s3_bucket_public_access_block.oidc[0]
+}
+
+moved {
+  from = module.aws_s3_bucket[0].aws_s3_bucket_policy.this[0]
+  to   = aws_s3_bucket_policy.oidc[0]
 }
 
 data "aws_iam_policy_document" "allow_access_from_another_account" {
@@ -90,7 +113,7 @@ module "aws_secrets_manager" {
 resource "aws_s3_object" "discrover_doc_object" {
   count = var.managed ? 0 : 1
 
-  bucket       = module.aws_s3_bucket[count.index].s3_bucket_id
+  bucket       = aws_s3_bucket.oidc[count.index].id
   key          = ".well-known/openid-configuration"
   content      = rhcs_rosa_oidc_config_input.oidc_input[count.index].discovery_doc
   content_type = "application/json"
@@ -103,7 +126,7 @@ resource "aws_s3_object" "discrover_doc_object" {
 resource "aws_s3_object" "s3_object" {
   count = var.managed ? 0 : 1
 
-  bucket       = module.aws_s3_bucket[count.index].s3_bucket_id
+  bucket       = aws_s3_bucket.oidc[count.index].id
   key          = "keys.json"
   content      = rhcs_rosa_oidc_config_input.oidc_input[count.index].jwks
   content_type = "application/json"

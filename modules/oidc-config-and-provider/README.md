@@ -40,7 +40,6 @@ module "oidc_config_and_provider" {
 
 | Name | Source | Version |
 | ---- | ------ | ------- |
-| <a name="module_aws_s3_bucket"></a> [aws\_s3\_bucket](#module\_aws\_s3\_bucket) | terraform-aws-modules/s3-bucket/aws | = 4.11.0 |
 | <a name="module_aws_secrets_manager"></a> [aws\_secrets\_manager](#module\_aws\_secrets\_manager) | terraform-aws-modules/secrets-manager/aws | 1.3.1 |
 
 ## Resources
@@ -48,6 +47,9 @@ module "oidc_config_and_provider" {
 | Name | Type |
 | ---- | ---- |
 | [aws_iam_openid_connect_provider.oidc_provider](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_openid_connect_provider) | resource |
+| [aws_s3_bucket.oidc](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket) | resource |
+| [aws_s3_bucket_policy.oidc](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_policy) | resource |
+| [aws_s3_bucket_public_access_block.oidc](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_public_access_block) | resource |
 | [aws_s3_object.discrover_doc_object](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_object) | resource |
 | [aws_s3_object.s3_object](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_object) | resource |
 | [null_resource.unmanaged_vars_validation](https://registry.terraform.io/providers/hashicorp/null/latest/docs/resources/resource) | resource |

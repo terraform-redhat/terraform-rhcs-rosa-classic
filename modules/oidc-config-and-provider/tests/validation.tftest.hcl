@@ -4,7 +4,7 @@
 mock_provider "aws" {
   mock_data "aws_region" {
     defaults = {
-      name = "us-east-1"
+      region = "us-east-1"
     }
   }
 
@@ -44,6 +44,53 @@ mock_provider "null" {
     defaults = {
       id = "mock-null"
     }
+  }
+}
+
+run "managed_true_skips_s3_resources" {
+  command = plan
+
+  variables {
+    managed = true
+  }
+
+  assert {
+    condition     = length(aws_s3_bucket.oidc) == 0
+    error_message = "S3 bucket must not be created when managed is true."
+  }
+
+  assert {
+    condition     = length(aws_s3_bucket_public_access_block.oidc) == 0
+    error_message = "S3 public access block must not be created when managed is true."
+  }
+
+  assert {
+    condition     = length(aws_s3_bucket_policy.oidc) == 0
+    error_message = "S3 bucket policy must not be created when managed is true."
+  }
+}
+
+run "managed_false_creates_s3_resources" {
+  command = plan
+
+  variables {
+    managed            = false
+    installer_role_arn = "arn:aws:iam::123456789012:role/mock-installer"
+  }
+
+  assert {
+    condition     = length(aws_s3_bucket.oidc) == 1
+    error_message = "S3 bucket must be created when managed is false."
+  }
+
+  assert {
+    condition     = length(aws_s3_bucket_public_access_block.oidc) == 1
+    error_message = "S3 public access block must be created when managed is false."
+  }
+
+  assert {
+    condition     = length(aws_s3_bucket_policy.oidc) == 1
+    error_message = "S3 bucket policy must be created when managed is false."
   }
 }
 
