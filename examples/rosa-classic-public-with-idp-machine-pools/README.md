@@ -103,7 +103,7 @@ module "ldap_idp" {
   name              = "ldap-idp"
   idp_type          = "ldap"
   ldap_idp_ca       = ""
-  ldap_idp_url      = "ldap://ldap.forumsys.com/dc=example,dc=com?uid"
+  ldap_idp_url      = "ldap://ldap.forumsys.com/DC=example,DC=com?uid"
   ldap_idp_insecure = true
 }
 
