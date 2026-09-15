@@ -39,7 +39,7 @@ if [ ! -d "${EXAMPLE_PATH}" ]; then
 fi
 
 echo "run-example.sh: Running example \"${example_name}\" - changing directory to \"${EXAMPLE_PATH}\""
-cd ${EXAMPLE_PATH}
+cd "${EXAMPLE_PATH}"
 
 ##############################################################
 # Validate option
@@ -81,12 +81,10 @@ env_arr+=("RHCS_TOKEN" "TF_VAR_cluster_name")
 ## Make sure that all shared VPC examples names include "shared-vpc" substring
 if [[ "${example_name}" == *"shared-vpc"* ]]; then
   echo "run-example.sh: Running example with \"shared-vpc\""
-  env_arr+=("TF_VAR_shared_vpc_aws_access_key_id" "TF_VAR_shared_vpc_aws_secret_access_key")
 fi
 
 ## now loop through the above array
 echo "run-example.sh: Verify that required environment variables are provided"
-NEWLINE=$'\n'
 for env_name in "${env_arr[@]}"
 do
   if [[ -z "${!env_name}" ]]; then
@@ -94,7 +92,13 @@ do
   fi
 done
 
-if [[ ${#undefined_env_arr[@]} > 0 ]]; then
+if [[ "${example_name}" == *"shared-vpc"* ]] &&
+   ! { [[ -n "${TF_VAR_shared_vpc_aws_access_key_id:-}" && -n "${TF_VAR_shared_vpc_aws_secret_access_key:-}" ]] ||
+       [[ -n "${TF_VAR_shared_vpc_aws_profile:-}" ]]; }; then
+	undefined_env_arr+=("TF_VAR_shared_vpc_aws_access_key_id + TF_VAR_shared_vpc_aws_secret_access_key or TF_VAR_shared_vpc_aws_profile")
+fi
+
+if [[ ${#undefined_env_arr[@]} -gt 0 ]]; then
 	echo "run-example.sh: Error:
   The following environment variables are not defined!!!"
     for undefined_env in "${undefined_env_arr[@]}"
