@@ -1,3 +1,21 @@
+## 1.7.4 (16 Sep, 2026)
+
+FEATURES:
+   * Wire delete_protection through ROSA Classic module
+   * Add trust_policy_external_id to account-iam-resources
+
+ENHANCEMENTS:
+ * Bug fixes
+   * Replace non-portable sed -i with redirect-and-move
+ * Documentation
+   * Add communication channels and feature process to CONTRIBUTING
+   * Update terraform-docs after deps bump
+   * Add agent agnostic documentation
+   * Update terraform-docs after deps bump
+   * Update terraform-docs after deps bump
+ * Oidc
+   * Replace upstream s3-bucket module with inline resources
+
 ## 1.7.3 (16 Jun, 2026)
 
 FEATURES:
