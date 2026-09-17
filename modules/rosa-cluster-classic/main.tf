@@ -27,8 +27,9 @@ locals {
         "arn:${data.aws_partition.current[0].partition}:iam::${local.aws_account_id}:role${local.path}${var.account_role_prefix}-Worker-Role"
       ),
     },
-    operator_role_prefix = var.operator_role_prefix,
-    oidc_config_id       = var.oidc_config_id
+    operator_role_prefix     = var.operator_role_prefix,
+    oidc_config_id           = var.oidc_config_id,
+    trust_policy_external_id = var.trust_policy_external_id
   }
   aws_account_arn   = var.aws_account_arn == null ? data.aws_caller_identity.current[0].arn : var.aws_account_arn
   create_admin_user = var.create_admin_user
@@ -45,6 +46,9 @@ resource "rhcs_cluster_rosa_classic" "rosa_classic_cluster" {
   aws_account_id = local.aws_account_id
   replicas       = var.replicas
   version        = var.openshift_version
+  channel_group  = var.version_channel_group
+  channel        = var.channel
+  domain_prefix  = var.domain_prefix
   sts            = local.sts_roles
   aws_subnet_ids = var.aws_subnet_ids
   availability_zones = length(var.aws_availability_zones) > 0 ? (
@@ -144,6 +148,10 @@ resource "rhcs_cluster_rosa_classic" "rosa_classic_cluster" {
       ) == false
       error_message = "Autoscaler parameters cannot be modified while the cluster autoscaler is disabled. Please ensure that cluster_autoscaler_enabled variable is set to true"
     }
+    precondition {
+      condition     = var.channel == null || var.version_channel_group == null
+      error_message = "The 'channel' and 'version_channel_group' parameters cannot be used together. Please specify only one."
+    }
   }
 }
 
@@ -187,6 +195,7 @@ resource "rhcs_default_ingress" "default_ingress" {
   cluster_routes_hostname          = var.default_ingress_cluster_routes_hostname
   load_balancer_type               = var.default_ingress_load_balancer_type
   cluster_routes_tls_secret_ref    = var.default_ingress_cluster_routes_tls_secret_ref
+  component_routes                 = var.default_ingress_component_routes
 }
 
 data "aws_caller_identity" "current" {
