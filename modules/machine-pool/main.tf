@@ -18,6 +18,8 @@ resource "rhcs_machine_pool" "machine_pool" {
   subnet_id                         = var.subnet_id
   disk_size                         = var.disk_size
   aws_additional_security_group_ids = var.aws_additional_security_group_ids
+  aws_tags                          = var.aws_tags
+  ignore_deletion_error             = var.ignore_deletion_error
 
   # During an update, the following attributes should remain unchanged.
   lifecycle {
@@ -31,7 +33,8 @@ resource "rhcs_machine_pool" "machine_pool" {
       availability_zone,
       subnet_id,
       disk_size,
-      aws_additional_security_group_ids
+      aws_additional_security_group_ids,
+      aws_tags
     ]
   }
 }
