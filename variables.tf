@@ -114,6 +114,35 @@ variable "private_hosted_zone_role_arn" {
   description = "AWS IAM role ARN with a policy attached, granting permissions necessary to create and manage Route 53 DNS records in private Route 53 hosted zone associated with intended shared VPC."
 }
 
+variable "version_channel_group" {
+  type        = string
+  default     = null
+  description = "Desired channel group of the version [stable, candidate, fast, nightly]. Cannot be used together with 'channel'. Starting from RHCS Terraform provider version 1.7.7, this attribute no longer has a default value and is computed by the API."
+}
+
+variable "channel" {
+  type        = string
+  default     = null
+  description = "Y-stream specific channel for the cluster version (e.g., 'stable-4.16'). This parameter specifies the upgrade path for the cluster. Cannot be used together with 'version_channel_group'."
+
+  validation {
+    condition     = var.channel == null || can(regex("^(stable|fast|candidate|eus)-\\d+\\.\\d+$", var.channel))
+    error_message = "The 'channel' parameter must follow the format '<channel_group>-<version>' (e.g., 'stable-4.16')."
+  }
+}
+
+variable "domain_prefix" {
+  type        = string
+  default     = null
+  description = "Creates a domain_prefix for your ROSA cluster. Defaults to a random string if not set"
+}
+
+variable "trust_policy_external_id" {
+  type        = string
+  default     = null
+  description = "External ID for trust policy condition in account roles."
+}
+
 variable "base_dns_domain" {
   type        = string
   default     = null
@@ -470,6 +499,16 @@ variable "default_ingress_cluster_routes_tls_secret_ref" {
   default     = null
   description = "Components route TLS secret reference for oauth, console, download."
 }
+
+variable "default_ingress_component_routes" {
+  type = map(object({
+    hostname       = optional(string)
+    tls_secret_ref = optional(string)
+  }))
+  default     = null
+  description = "Component routes for the default ingress. Keys are component names (e.g., 'oauth', 'console', 'downloads')."
+}
+
 ##############################################################
 # General variables
 # Relevant to "account roles", "operator roles" and "OIDC"
@@ -519,6 +558,22 @@ variable "managed_oidc" {
   default     = true
 }
 
+variable "oidc_prefix" {
+  type        = string
+  default     = null
+  description = "Optional prefix for the OIDC resources (if you're using managed policies). Maximum 16 characters, must match pattern: ^[a-z][a-z0-9\\-]+[a-z0-9]$"
+
+  validation {
+    condition     = var.oidc_prefix == null ? true : length(var.oidc_prefix) <= 16
+    error_message = "The oidc_prefix must be maximum 16 characters."
+  }
+
+  validation {
+    condition     = var.oidc_prefix == null ? true : can(regex("^[a-z][a-z0-9\\-]+[a-z0-9]$", var.oidc_prefix))
+    error_message = "The oidc_prefix must start with a lowercase letter, contain only lowercase letters/numbers/hyphens, and end with a lowercase letter or number."
+  }
+}
+
 ##############################################################
 # Operator policies and roles
 ##############################################################
@@ -545,6 +600,12 @@ variable "machine_pools" {
   type        = map(any)
   default     = {}
   description = "Provides a generic approach to add multiple machine pools after the creation of the cluster. This variable allows users to specify configurations for multiple machine pools in a flexible and customizable manner, facilitating the management of resources post-cluster deployment. For additional details regarding the variables used, refer to the [machine-pool sub-module](./modules/machine-pool). For non-primitive variables (such as maps, lists, and objects), supply the JSON-encoded string."
+}
+
+variable "ignore_machine_pools_deletion_error" {
+  type        = bool
+  default     = null
+  description = "Default value for ignore_deletion_error across all machine pools. Can be overridden per pool."
 }
 
 variable "identity_providers" {

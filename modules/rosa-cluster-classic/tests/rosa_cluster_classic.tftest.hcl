@@ -98,3 +98,56 @@ run "delete_protection_disabled" {
     error_message = "delete_protection must be false when explicitly disabled."
   }
 }
+
+run "channel_invalid_format" {
+  command = plan
+
+  providers = {
+    aws  = aws.default
+    rhcs = rhcs.import_sim
+  }
+
+  variables {
+    channel = "invalid-channel"
+  }
+
+  expect_failures = [
+    var.channel
+  ]
+}
+
+run "channel_valid_format" {
+  command = plan
+
+  providers = {
+    aws  = aws.default
+    rhcs = rhcs.import_sim
+  }
+
+  variables {
+    channel = "stable-4.16"
+  }
+
+  assert {
+    condition     = rhcs_cluster_rosa_classic.rosa_classic_cluster.channel == "stable-4.16"
+    error_message = "channel must be passed through to the resource."
+  }
+}
+
+run "channel_and_version_channel_group_mutual_exclusion" {
+  command = plan
+
+  providers = {
+    aws  = aws.default
+    rhcs = rhcs.import_sim
+  }
+
+  variables {
+    channel               = "stable-4.16"
+    version_channel_group = "stable"
+  }
+
+  expect_failures = [
+    rhcs_cluster_rosa_classic.rosa_classic_cluster
+  ]
+}

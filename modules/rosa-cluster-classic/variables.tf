@@ -75,6 +75,35 @@ variable "operator_role_prefix" {
   description = "A designated prefix used for the creation of AWS IAM roles associated with operators within the ROSA environment."
 }
 
+variable "version_channel_group" {
+  type        = string
+  default     = null
+  description = "Desired channel group of the version [stable, candidate, fast, nightly]. Cannot be used together with 'channel'. Starting from RHCS Terraform provider version 1.7.7, this attribute no longer has a default value and is computed by the API."
+}
+
+variable "channel" {
+  type        = string
+  default     = null
+  description = "Y-stream specific channel for the cluster version (e.g., 'stable-4.16'). This parameter specifies the upgrade path for the cluster. Cannot be used together with 'version_channel_group'."
+
+  validation {
+    condition     = var.channel == null || can(regex("^(stable|fast|candidate|eus)-\\d+\\.\\d+$", var.channel))
+    error_message = "The 'channel' parameter must follow the format '<channel_group>-<version>' (e.g., 'stable-4.16')."
+  }
+}
+
+variable "domain_prefix" {
+  type        = string
+  default     = null
+  description = "Creates a domain_prefix for your ROSA cluster. Defaults to a random string if not set"
+}
+
+variable "trust_policy_external_id" {
+  type        = string
+  default     = null
+  description = "External ID for trust policy condition in account roles."
+}
+
 variable "base_dns_domain" {
   type        = string
   default     = null
@@ -527,4 +556,13 @@ variable "default_ingress_cluster_routes_tls_secret_ref" {
   type        = string
   default     = null
   description = "Components route TLS secret reference for oauth, console, download."
+}
+
+variable "default_ingress_component_routes" {
+  type = map(object({
+    hostname       = optional(string)
+    tls_secret_ref = optional(string)
+  }))
+  default     = null
+  description = "Component routes for the default ingress. Keys are component names (e.g., 'oauth', 'console', 'downloads')."
 }

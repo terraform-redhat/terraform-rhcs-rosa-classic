@@ -87,3 +87,8 @@ output "operator_roles_arn" {
   value       = var.create_operator_roles ? module.operator_roles[0].operator_roles_arn : null
   description = "List of Amazon Resource Names (ARNs) for all operator roles created."
 }
+
+output "external_id" {
+  value       = module.rosa_cluster_classic.external_id
+  description = "Unique external identifier of the cluster."
+}

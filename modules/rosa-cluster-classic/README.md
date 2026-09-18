@@ -29,7 +29,7 @@ module "rosa_cluster_classic" {
 
 | Name | Version |
 | ---- | ------- |
-| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0 |
+| <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.3 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 6.0.0 |
 | <a name="requirement_rhcs"></a> [rhcs](#requirement\_rhcs) | >= 1.7.8 |
 
@@ -94,6 +94,7 @@ No modules.
 | <a name="input_aws_region"></a> [aws\_region](#input\_aws\_region) | The full name of the AWS region used for the ROSA cluster installation, for example 'us-east-1'. If no information is provided, the data is retrieved from the currently connected account. | `string` | `null` | no |
 | <a name="input_aws_subnet_ids"></a> [aws\_subnet\_ids](#input\_aws\_subnet\_ids) | The Subnet IDs to use when installing the cluster. Leave blank for installer provisioned subnet IDs. | `list(string)` | `[]` | no |
 | <a name="input_base_dns_domain"></a> [base\_dns\_domain](#input\_base\_dns\_domain) | Base DNS domain name previously reserved and matching the hosted zone name of the private Route 53 hosted zone associated with intended shared VPC, e.g., '1vo8.p1.openshiftapps.com'. | `string` | `null` | no |
+| <a name="input_channel"></a> [channel](#input\_channel) | Y-stream specific channel for the cluster version (e.g., 'stable-4.16'). This parameter specifies the upgrade path for the cluster. Cannot be used together with 'version\_channel\_group'. | `string` | `null` | no |
 | <a name="input_cluster_autoscaler_enabled"></a> [cluster\_autoscaler\_enabled](#input\_cluster\_autoscaler\_enabled) | Enable autoscaler for this cluster. | `bool` | `false` | no |
 | <a name="input_cluster_name"></a> [cluster\_name](#input\_cluster\_name) | Name of the cluster. After resource creation, the attribute value cannot be updated. | `string` | n/a | yes |
 | <a name="input_compute_machine_type"></a> [compute\_machine\_type](#input\_compute\_machine\_type) | Identifies the instance type used by the default worker machine pool e.g. `m5.xlarge`. Use the `rhcs_machine_types` data source to find the possible values. | `string` | `null` | no |
@@ -101,6 +102,7 @@ No modules.
 | <a name="input_create_admin_user"></a> [create\_admin\_user](#input\_create\_admin\_user) | To create cluster admin user with default username `cluster-admin` and generated password. It will be ignored if `admin_credentials_username` or `admin_credentials_password` is set. (default: false) | `bool` | `null` | no |
 | <a name="input_default_ingress_cluster_routes_hostname"></a> [default\_ingress\_cluster\_routes\_hostname](#input\_default\_ingress\_cluster\_routes\_hostname) | Components route hostname for oauth, console, download. | `string` | `null` | no |
 | <a name="input_default_ingress_cluster_routes_tls_secret_ref"></a> [default\_ingress\_cluster\_routes\_tls\_secret\_ref](#input\_default\_ingress\_cluster\_routes\_tls\_secret\_ref) | Components route TLS secret reference for oauth, console, download. | `string` | `null` | no |
+| <a name="input_default_ingress_component_routes"></a> [default\_ingress\_component\_routes](#input\_default\_ingress\_component\_routes) | Component routes for the default ingress. Keys are component names (e.g., 'oauth', 'console', 'downloads'). | <pre>map(object({<br/>    hostname       = optional(string)<br/>    tls_secret_ref = optional(string)<br/>  }))</pre> | `null` | no |
 | <a name="input_default_ingress_excluded_namespaces"></a> [default\_ingress\_excluded\_namespaces](#input\_default\_ingress\_excluded\_namespaces) | Excluded namespaces for ingress. Format should be a comma-separated list 'value1, value2...'. If no values are specified, all namespaces are exposed. | `list(string)` | `null` | no |
 | <a name="input_default_ingress_id"></a> [default\_ingress\_id](#input\_default\_ingress\_id) | Unique identifier of the ingress. | `string` | `null` | no |
 | <a name="input_default_ingress_load_balancer_type"></a> [default\_ingress\_load\_balancer\_type](#input\_default\_ingress\_load\_balancer\_type) | Type of Load Balancer. Options are ["classic", "nlb"]`:with.` | `string` | `null` | no |
@@ -113,6 +115,7 @@ No modules.
 | <a name="input_disable_scp_checks"></a> [disable\_scp\_checks](#input\_disable\_scp\_checks) | Indicates if cloud permission checks are disabled when attempting installation of the cluster. | `bool` | `null` | no |
 | <a name="input_disable_waiting_in_destroy"></a> [disable\_waiting\_in\_destroy](#input\_disable\_waiting\_in\_destroy) | Disable addressing cluster state in the destroy resource. Default value is false, and so a `destroy` waits for the cluster to be deleted. | `bool` | `null` | no |
 | <a name="input_disable_workload_monitoring"></a> [disable\_workload\_monitoring](#input\_disable\_workload\_monitoring) | Enables you to monitor your own projects in isolation from Red Hat Site Reliability Engineer (SRE) platform metrics. | `bool` | `null` | no |
+| <a name="input_domain_prefix"></a> [domain\_prefix](#input\_domain\_prefix) | Creates a domain\_prefix for your ROSA cluster. Defaults to a random string if not set | `string` | `null` | no |
 | <a name="input_ec2_metadata_http_tokens"></a> [ec2\_metadata\_http\_tokens](#input\_ec2\_metadata\_http\_tokens) | Should cluster nodes use both v1 and v2 endpoints or just v2 endpoint of EC2 Instance Metadata Service (IMDS). Available since OpenShift 4.11.0. | `string` | `null` | no |
 | <a name="input_etcd_encryption"></a> [etcd\_encryption](#input\_etcd\_encryption) | Add etcd encryption. By default etcd data is encrypted at rest. This option configures etcd encryption on top of existing storage encryption. | `bool` | `null` | no |
 | <a name="input_fips"></a> [fips](#input\_fips) | Create cluster that uses FIPS Validated / Modules in Process cryptographic libraries. | `bool` | `null` | no |
@@ -139,7 +142,9 @@ No modules.
 | <a name="input_service_cidr"></a> [service\_cidr](#input\_service\_cidr) | Block of IP addresses for services, for example "172.30.0.0/16". | `string` | `null` | no |
 | <a name="input_support_role_arn"></a> [support\_role\_arn](#input\_support\_role\_arn) | The Amazon Resource Name (ARN) associated with the AWS IAM role used by Red Hat SREs to enable access to the cluster account in order to provide support. | `string` | `null` | no |
 | <a name="input_tags"></a> [tags](#input\_tags) | Apply user defined tags to all cluster resources created in AWS. After the creation of the cluster is completed, it is not possible to update this attribute. | `map(string)` | `null` | no |
+| <a name="input_trust_policy_external_id"></a> [trust\_policy\_external\_id](#input\_trust\_policy\_external\_id) | External ID for trust policy condition in account roles. | `string` | `null` | no |
 | <a name="input_upgrade_acknowledgements_for"></a> [upgrade\_acknowledgements\_for](#input\_upgrade\_acknowledgements\_for) | Indicates acknowledgment of agreements required to upgrade the cluster version between minor versions (e.g. a value of "4.12" indicates acknowledgment of any agreements required to upgrade to OpenShift 4.12.z from 4.11 or before). | `string` | `null` | no |
+| <a name="input_version_channel_group"></a> [version\_channel\_group](#input\_version\_channel\_group) | Desired channel group of the version [stable, candidate, fast, nightly]. Cannot be used together with 'channel'. Starting from RHCS Terraform provider version 1.7.7, this attribute no longer has a default value and is computed by the API. | `string` | `null` | no |
 | <a name="input_wait_for_create_complete"></a> [wait\_for\_create\_complete](#input\_wait\_for\_create\_complete) | Wait until the cluster is either in a ready state or in an error state. The waiter has a timeout of 60 minutes. (default: true) | `bool` | `true` | no |
 | <a name="input_worker_disk_size"></a> [worker\_disk\_size](#input\_worker\_disk\_size) | Default worker machine pool root disk size with a **unit suffix** like GiB or TiB, e.g. 200GiB. | `number` | `null` | no |
 | <a name="input_worker_role_arn"></a> [worker\_role\_arn](#input\_worker\_role\_arn) | The Amazon Resource Name (ARN) associated with the AWS IAM role that is used by the cluster's compute instances. | `string` | `null` | no |
@@ -155,6 +160,7 @@ No modules.
 | <a name="output_console_url"></a> [console\_url](#output\_console\_url) | URL of the console. |
 | <a name="output_current_version"></a> [current\_version](#output\_current\_version) | The currently running version of OpenShift on the cluster, for example '4.11.0'. |
 | <a name="output_domain"></a> [domain](#output\_domain) | DNS domain of cluster. |
+| <a name="output_external_id"></a> [external\_id](#output\_external\_id) | Unique external identifier of the cluster. |
 | <a name="output_infra_id"></a> [infra\_id](#output\_infra\_id) | The ROSA cluster infrastructure ID. |
 | <a name="output_private_hosted_zone_id"></a> [private\_hosted\_zone\_id](#output\_private\_hosted\_zone\_id) | ID assigned by AWS to private Route 53 hosted zone associated with intended shared VPC |
 | <a name="output_state"></a> [state](#output\_state) | The state of the cluster. |
