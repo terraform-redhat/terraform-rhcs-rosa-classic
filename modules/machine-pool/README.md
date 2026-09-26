@@ -29,13 +29,13 @@ module "mp" {
 | Name | Version |
 | ---- | ------- |
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.0 |
-| <a name="requirement_rhcs"></a> [rhcs](#requirement\_rhcs) | >= 1.6.2 |
+| <a name="requirement_rhcs"></a> [rhcs](#requirement\_rhcs) | >= 1.7.8 |
 
 ## Providers
 
 | Name | Version |
 | ---- | ------- |
-| <a name="provider_rhcs"></a> [rhcs](#provider\_rhcs) | >= 1.6.2 |
+| <a name="provider_rhcs"></a> [rhcs](#provider\_rhcs) | >= 1.7.8 |
 
 ## Modules
 
@@ -54,8 +54,10 @@ No modules.
 | <a name="input_autoscaling_enabled"></a> [autoscaling\_enabled](#input\_autoscaling\_enabled) | Enables autoscaling. If `true`, this variable requires you to set a maximum and minimum replicas range using the `max_replicas` and `min_replicas` variables. | `bool` | `null` | no |
 | <a name="input_availability_zone"></a> [availability\_zone](#input\_availability\_zone) | Select the availability zone in which to create a single AZ machine pool for a multi-AZ cluster. | `string` | `null` | no |
 | <a name="input_aws_additional_security_group_ids"></a> [aws\_additional\_security\_group\_ids](#input\_aws\_additional\_security\_group\_ids) | AWS additional security group IDs. | `list(string)` | `null` | no |
+| <a name="input_aws_tags"></a> [aws\_tags](#input\_aws\_tags) | AWS tags to apply to the machine pool. After the creation of the machine pool, it is not possible to update this attribute. | `map(string)` | `null` | no |
 | <a name="input_cluster_id"></a> [cluster\_id](#input\_cluster\_id) | Identifier of the cluster. | `string` | n/a | yes |
 | <a name="input_disk_size"></a> [disk\_size](#input\_disk\_size) | Root disk size, in GiB. | `number` | `null` | no |
+| <a name="input_ignore_deletion_error"></a> [ignore\_deletion\_error](#input\_ignore\_deletion\_error) | If true, deletion errors from the provider will be ignored during resource destruction. | `bool` | `null` | no |
 | <a name="input_labels"></a> [labels](#input\_labels) | Labels for the machine pool. Format should be a comma-separated list of 'key = value'. This list overwrites any modifications made to node labels on an ongoing basis. | `map(string)` | `null` | no |
 | <a name="input_machine_type"></a> [machine\_type](#input\_machine\_type) | Identifier of the machine type used by the nodes, for example `m5.xlarge`. Use the `rhcs_machine_types` data source to find the possible values. | `string` | n/a | yes |
 | <a name="input_max_replicas"></a> [max\_replicas](#input\_max\_replicas) | The maximum number of replicas for autoscaling functionality. | `number` | `null` | no |

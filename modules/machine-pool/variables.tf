@@ -100,3 +100,15 @@ variable "aws_additional_security_group_ids" {
   type        = list(string)
   default     = null
 }
+
+variable "aws_tags" {
+  description = "AWS tags to apply to the machine pool. After the creation of the machine pool, it is not possible to update this attribute."
+  type        = map(string)
+  default     = null
+}
+
+variable "ignore_deletion_error" {
+  description = "If true, deletion errors from the provider will be ignored during resource destruction."
+  type        = bool
+  default     = null
+}

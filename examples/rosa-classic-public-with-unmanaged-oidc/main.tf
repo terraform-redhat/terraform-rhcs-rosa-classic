@@ -10,5 +10,6 @@ module "rosa" {
   create_operator_roles = true
   create_oidc           = true
   managed_oidc          = false
+  oidc_prefix           = "myoidc"
   govcloud              = false
 }
