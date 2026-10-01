@@ -133,6 +133,11 @@ lint:
 .PHONY: unit-tests
 unit-tests:
 	@set -e; \
+	if compgen -G 'tests/*.tftest.hcl' > /dev/null; then \
+	  echo '== running root module tests =='; \
+	  rm -rf .terraform .terraform.lock.hcl; \
+	  terraform init -backend=false -input=false && terraform test; \
+	fi; \
 	for submodule in modules/*; do \
 	  echo "== $$submodule =="; \
 	  cd "$$submodule/tests" 2>/dev/null || continue; \

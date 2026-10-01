@@ -21,11 +21,12 @@ module "account_iam_resources" {
   source = "./modules/account-iam-resources"
   count  = var.create_account_roles ? 1 : 0
 
-  account_role_prefix  = local.account_role_prefix
-  openshift_version    = var.openshift_version
-  path                 = local.path
-  permissions_boundary = var.permissions_boundary
-  tags                 = var.tags
+  account_role_prefix      = local.account_role_prefix
+  openshift_version        = var.openshift_version
+  path                     = local.path
+  permissions_boundary     = var.permissions_boundary
+  trust_policy_external_id = var.trust_policy_external_id
+  tags                     = var.tags
 }
 
 ############################
@@ -41,7 +42,8 @@ module "oidc_config_and_provider" {
       local.sts_roles.installer_role_arn
     )
   )
-  tags = var.tags
+  oidc_prefix = var.oidc_prefix
+  tags        = var.tags
 }
 
 ############################
@@ -86,6 +88,10 @@ module "rosa_cluster_classic" {
   cluster_name                 = var.cluster_name
   operator_role_prefix         = var.create_operator_roles ? module.operator_roles[0].operator_role_prefix : local.operator_role_prefix
   openshift_version            = var.openshift_version
+  version_channel_group        = var.version_channel_group
+  channel                      = var.channel
+  domain_prefix                = var.domain_prefix
+  trust_policy_external_id     = var.trust_policy_external_id
   path                         = var.create_account_roles ? module.account_iam_resources[0].path : local.path
   installer_role_arn           = var.create_account_roles ? module.account_iam_resources[0].account_roles_arn["Installer"] : local.sts_roles.installer_role_arn
   support_role_arn             = var.create_account_roles ? module.account_iam_resources[0].account_roles_arn["Support"] : local.sts_roles.support_role_arn
@@ -183,6 +189,7 @@ module "rosa_cluster_classic" {
   default_ingress_cluster_routes_hostname          = var.default_ingress_cluster_routes_hostname
   default_ingress_load_balancer_type               = var.default_ingress_load_balancer_type
   default_ingress_cluster_routes_tls_secret_ref    = var.default_ingress_cluster_routes_tls_secret_ref
+  default_ingress_component_routes                 = var.default_ingress_component_routes
 }
 
 ######################################
@@ -209,6 +216,8 @@ module "rhcs_machine_pool" {
   subnet_id                         = try(each.value.subnet_id, null)
   disk_size                         = try(each.value.disk_size, null)
   aws_additional_security_group_ids = try(each.value.aws_additional_security_group_ids, null)
+  aws_tags                          = try(each.value.aws_tags, null)
+  ignore_deletion_error             = try(each.value.ignore_deletion_error, null)
 }
 
 ###########################################
