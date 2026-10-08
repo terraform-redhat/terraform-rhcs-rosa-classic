@@ -52,3 +52,8 @@ output "private_hosted_zone_id" {
   value       = rhcs_cluster_rosa_classic.rosa_classic_cluster.private_hosted_zone == null ? null : rhcs_cluster_rosa_classic.rosa_classic_cluster.private_hosted_zone.id
   description = "ID assigned by AWS to private Route 53 hosted zone associated with intended shared VPC"
 }
+
+output "external_id" {
+  value       = rhcs_cluster_rosa_classic.rosa_classic_cluster.external_id
+  description = "Unique external identifier of the cluster."
+}

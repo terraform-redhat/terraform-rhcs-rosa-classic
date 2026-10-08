@@ -98,3 +98,144 @@ run "delete_protection_disabled" {
     error_message = "delete_protection must be false when explicitly disabled."
   }
 }
+
+run "channel_invalid_format" {
+  command = plan
+
+  providers = {
+    aws  = aws.default
+    rhcs = rhcs.import_sim
+  }
+
+  variables {
+    channel = "invalid-channel"
+  }
+
+  expect_failures = [
+    var.channel
+  ]
+}
+
+run "channel_valid_format" {
+  command = plan
+
+  providers = {
+    aws  = aws.default
+    rhcs = rhcs.import_sim
+  }
+
+  variables {
+    channel = "stable-4.16"
+  }
+
+  assert {
+    condition     = rhcs_cluster_rosa_classic.rosa_classic_cluster.channel == "stable-4.16"
+    error_message = "channel must be passed through to the resource."
+  }
+}
+
+run "version_channel_group_invalid" {
+  command = plan
+
+  providers = {
+    aws  = aws.default
+    rhcs = rhcs.import_sim
+  }
+
+  variables {
+    version_channel_group = "candidate"
+  }
+
+  expect_failures = [var.version_channel_group]
+}
+
+run "version_channel_group_eus" {
+  command = plan
+
+  providers = {
+    aws  = aws.default
+    rhcs = rhcs.import_sim
+  }
+
+  variables {
+    version_channel_group = "eus"
+  }
+
+  assert {
+    condition     = rhcs_cluster_rosa_classic.rosa_classic_cluster.channel_group == "eus"
+    error_message = "version_channel_group must be passed through to the resource."
+  }
+}
+
+run "trust_policy_external_id_is_passed_to_sts" {
+  command = plan
+
+  providers = {
+    aws  = aws.default
+    rhcs = rhcs.import_sim
+  }
+
+  variables {
+    trust_policy_external_id = "test-external-id-12345"
+  }
+
+  assert {
+    condition     = rhcs_cluster_rosa_classic.rosa_classic_cluster.sts.trust_policy_external_id == "test-external-id-12345"
+    error_message = "trust_policy_external_id must be passed to the cluster STS settings."
+  }
+}
+
+run "default_ingress_component_routes_are_passed_to_resource" {
+  command = plan
+
+  providers = {
+    aws  = aws.default
+    rhcs = rhcs.import_sim
+  }
+
+  variables {
+    default_ingress_component_routes = {
+      oauth = {
+        hostname       = "oauth.apps.example.com"
+        tls_secret_ref = "oauth-tls"
+      }
+      console = {
+        hostname       = "console.apps.example.com"
+        tls_secret_ref = "console-tls"
+      }
+    }
+  }
+
+  assert {
+    condition     = length(rhcs_default_ingress.default_ingress.component_routes) == 2
+    error_message = "The default ingress must contain both configured component routes."
+  }
+
+  assert {
+    condition     = rhcs_default_ingress.default_ingress.component_routes["oauth"].hostname == "oauth.apps.example.com" && rhcs_default_ingress.default_ingress.component_routes["oauth"].tls_secret_ref == "oauth-tls"
+    error_message = "The OAuth component route must reach the RHCS resource."
+  }
+
+  assert {
+    condition     = rhcs_default_ingress.default_ingress.component_routes["console"].hostname == "console.apps.example.com" && rhcs_default_ingress.default_ingress.component_routes["console"].tls_secret_ref == "console-tls"
+    error_message = "The console component route must reach the RHCS resource."
+  }
+}
+
+run "channel_and_version_channel_group_mutual_exclusion" {
+  command = plan
+
+  providers = {
+    aws  = aws.default
+    rhcs = rhcs.import_sim
+  }
+
+  variables {
+    channel               = "stable-4.16"
+    version_channel_group = "stable"
+  }
+
+  expect_failures = [
+    rhcs_cluster_rosa_classic.rosa_classic_cluster
+  ]
+}

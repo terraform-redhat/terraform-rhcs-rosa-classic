@@ -5,7 +5,7 @@
 This is a Terraform manifest example for creating a Red Hat OpenShift Service on AWS (ROSA) cluster. This example provides a structured configuration template that demonstrates how to deploy a ROSA cluster within your AWS environment by using Terraform.
 
 This example includes:
-- A ROSA cluster with public access and unmanaged OIDC.
+- A ROSA cluster with public access and unmanaged OIDC using a custom OIDC prefix.
 - All AWS resources (IAM and networking) that are created as part of the ROSA cluster module execution.
 
 ## Prerequisites
@@ -32,6 +32,7 @@ module "rosa" {
   create_operator_roles = true
   create_oidc           = true
   managed_oidc          = false
+  oidc_prefix           = "myoidc"
 }
 
 ```
