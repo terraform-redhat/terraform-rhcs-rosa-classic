@@ -1,3 +1,15 @@
+## 1.7.6 (13 Oct, 2026)
+
+FEATURES:
+   * Add version channel, ingress, external ID and more
+
+ENHANCEMENTS:
+ * Chores
+   * Add new reviewers to OWNERS file
+ * Documentation
+   * Clarify provider-module release ordering
+   * Explain provider-module release ordering
+
 ## 1.7.4 (16 Sep, 2026)
 
 FEATURES:
