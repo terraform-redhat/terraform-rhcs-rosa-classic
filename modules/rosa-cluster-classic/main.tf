@@ -104,16 +104,17 @@ resource "rhcs_cluster_rosa_classic" "rosa_classic_cluster" {
   aws_additional_infra_security_group_ids         = var.aws_additional_infra_security_group_ids
   aws_additional_control_plane_security_group_ids = var.aws_additional_control_plane_security_group_ids
 
-  kms_key_arn                  = var.kms_key_arn
-  wait_for_create_complete     = var.wait_for_create_complete
-  disable_scp_checks           = var.disable_scp_checks
-  disable_workload_monitoring  = var.disable_workload_monitoring
-  etcd_encryption              = var.etcd_encryption
-  fips                         = var.fips
-  disable_waiting_in_destroy   = var.disable_waiting_in_destroy
-  destroy_timeout              = var.destroy_timeout
-  upgrade_acknowledgements_for = var.upgrade_acknowledgements_for
-  delete_protection            = var.delete_protection
+  kms_key_arn                         = var.kms_key_arn
+  wait_for_create_complete            = var.wait_for_create_complete
+  max_cluster_wait_timeout_in_minutes = var.max_cluster_wait_timeout_in_minutes
+  disable_scp_checks                  = var.disable_scp_checks
+  disable_workload_monitoring         = var.disable_workload_monitoring
+  etcd_encryption                     = var.etcd_encryption
+  fips                                = var.fips
+  disable_waiting_in_destroy          = var.disable_waiting_in_destroy
+  destroy_timeout                     = var.destroy_timeout
+  upgrade_acknowledgements_for        = var.upgrade_acknowledgements_for
+  delete_protection                   = var.delete_protection
 
   lifecycle {
     precondition {

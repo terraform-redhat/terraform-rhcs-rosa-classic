@@ -208,6 +208,13 @@ variable "wait_for_create_complete" {
   description = "Wait until the cluster is either in a ready state or in an error state. The waiter has a timeout of 60 minutes. (default: true)"
 }
 
+variable "max_cluster_wait_timeout_in_minutes" {
+  type        = number
+  nullable    = true
+  default     = null
+  description = "Maximum number of minutes to wait for cluster creation to complete. Only applies when wait_for_create_complete is true; has no effect otherwise. When null, the rhcs provider applies its default of 60 minutes."
+}
+
 variable "disable_workload_monitoring" {
   type        = bool
   default     = null
