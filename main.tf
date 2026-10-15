@@ -123,16 +123,17 @@ module "rosa_cluster_classic" {
   ########
   # Flags
   ########
-  wait_for_create_complete     = var.wait_for_create_complete
-  disable_workload_monitoring  = var.disable_workload_monitoring
-  disable_scp_checks           = var.disable_scp_checks
-  etcd_encryption              = var.etcd_encryption
-  fips                         = var.fips
-  disable_waiting_in_destroy   = var.disable_waiting_in_destroy
-  destroy_timeout              = var.destroy_timeout
-  upgrade_acknowledgements_for = var.upgrade_acknowledgements_for
-  delete_protection            = var.delete_protection
-  multi_az                     = var.multi_az
+  wait_for_create_complete            = var.wait_for_create_complete
+  max_cluster_wait_timeout_in_minutes = var.max_cluster_wait_timeout_in_minutes
+  disable_workload_monitoring         = var.disable_workload_monitoring
+  disable_scp_checks                  = var.disable_scp_checks
+  etcd_encryption                     = var.etcd_encryption
+  fips                                = var.fips
+  disable_waiting_in_destroy          = var.disable_waiting_in_destroy
+  destroy_timeout                     = var.destroy_timeout
+  upgrade_acknowledgements_for        = var.upgrade_acknowledgements_for
+  delete_protection                   = var.delete_protection
+  multi_az                            = var.multi_az
 
   #######################
   # Default Machine Pool

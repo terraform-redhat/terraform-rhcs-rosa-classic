@@ -239,3 +239,60 @@ run "channel_and_version_channel_group_mutual_exclusion" {
     rhcs_cluster_rosa_classic.rosa_classic_cluster
   ]
 }
+
+run "max_cluster_wait_timeout_unset_passthrough" {
+  command = plan
+
+  providers = {
+    aws  = aws.default
+    rhcs = rhcs.import_sim
+  }
+
+  variables {
+    wait_for_create_complete            = true
+    max_cluster_wait_timeout_in_minutes = null
+  }
+
+  assert {
+    condition     = rhcs_cluster_rosa_classic.rosa_classic_cluster.max_cluster_wait_timeout_in_minutes == null
+    error_message = "max_cluster_wait_timeout_in_minutes must pass through as null when unset."
+  }
+}
+
+run "max_cluster_wait_timeout_set_passthrough" {
+  command = plan
+
+  providers = {
+    aws  = aws.default
+    rhcs = rhcs.import_sim
+  }
+
+  variables {
+    wait_for_create_complete            = true
+    max_cluster_wait_timeout_in_minutes = 90
+  }
+
+  assert {
+    condition     = rhcs_cluster_rosa_classic.rosa_classic_cluster.max_cluster_wait_timeout_in_minutes == 90
+    error_message = "max_cluster_wait_timeout_in_minutes must pass through to the resource when set."
+  }
+}
+
+run "max_cluster_wait_timeout_no_effect_branch" {
+  command = plan
+
+  providers = {
+    aws  = aws.default
+    rhcs = rhcs.import_sim
+  }
+
+  variables {
+    wait_for_create_complete            = false
+    max_cluster_wait_timeout_in_minutes = 90
+  }
+
+  assert {
+    condition     = rhcs_cluster_rosa_classic.rosa_classic_cluster.max_cluster_wait_timeout_in_minutes == 90
+    error_message = "max_cluster_wait_timeout_in_minutes must still pass through when wait_for_create_complete is false."
+  }
+}
