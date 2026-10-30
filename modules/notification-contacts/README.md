@@ -33,7 +33,7 @@ No modules.
 | Name | Description | Type | Default | Required |
 | ---- | ----------- | ---- | ------- | :------: |
 | <a name="input_cluster_id"></a> [cluster\_id](#input\_cluster\_id) | Identifier of the cluster. | `string` | n/a | yes |
-| <a name="input_contacts"></a> [contacts](#input\_contacts) | Set of OCM account usernames to receive cluster notification emails. This set is authoritative — the full set of contacts is managed by this resource. | `set(string)` | n/a | yes |
+| <a name="input_contacts"></a> [contacts](#input\_contacts) | Set of OCM account usernames to receive cluster notification emails. Values must be OCM usernames, not email addresses — using email addresses can cause persistent plan diffs and may lead to incorrect contact removal. All contacts must belong to the same Red Hat organization as the cluster. This set is authoritative — the full set of contacts is managed by this resource. | `set(string)` | n/a | yes |
 
 ## Outputs
 

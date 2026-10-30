@@ -623,7 +623,7 @@ variable "identity_providers" {
 variable "notification_contacts" {
   type        = set(string)
   default     = null
-  description = "Set of OCM account usernames to receive cluster notification emails. When non-null, the module creates a `rhcs_cluster_notification_contacts` resource that authoritatively manages the full set of contacts for the cluster's subscription. Requires RHCS provider >= 1.7.10."
+  description = "Set of OCM account usernames to receive cluster notification emails. Values must be OCM usernames, not email addresses — using email addresses can cause persistent plan diffs and may lead to incorrect contact removal. All contacts must belong to the same Red Hat organization as the cluster. When non-null, the module creates a `rhcs_cluster_notification_contacts` resource that authoritatively manages the full set of contacts for the cluster's subscription. WARNING: Setting this to `null` after contacts have been applied destroys the resource, which removes ALL notification contacts from the subscription — including contacts added outside Terraform. To stop managing contacts without removing them, run `terraform state rm 'module.rhcs_notification_contacts[0]'` before setting this to `null`. Requires RHCS provider >= 1.7.10."
 }
 
 variable "govcloud" {
