@@ -28,6 +28,7 @@ Sub-modules included in this module:
 - [idp](./modules/idp): Responsible for configuring Identity Providers (IDPs) within the ROSA Classic cluster, facilitating seamless integration with external authentication systems such as GitHub, GitLab, Google, HTPasswd, LDAP, and OpenID Connect (OIDC).
 - [ocm-role](./modules/ocm-role): Creates and links the AWS IAM OCM role with the required ROSA CLI-parity naming, tagging, trust policy, and permission policies.
 - [machine-pool](./modules/machine-pool): Facilitates the management of machine pools within the ROSA Classic cluster, enabling users to scale resources and adjust specifications based on workload demands.
+- [notification-contacts](./modules/notification-contacts): Manages the set of OCM account usernames that receive cluster notification emails for the associated subscription.
 - [oidc-config-and-provider](./modules/oidc-config-and-provider): Manages the configuration of OIDC (OpenID Connect) providers within the ROSA Classic cluster, enabling secure authentication and access control mechanisms.
 - [operator-policies](./modules/operator-policies): Responsible for managing policies associated with ROSA operators within the cluster, ensuring proper permissions for core cluster functionalities.
 - [operator-roles](./modules/operator-roles): Oversees the management of roles assigned to operators within the ROSA Classic cluster, enabling them to perform required actions with the appropriate permissions.
@@ -80,7 +81,7 @@ We recommend you install the following CLI tools:
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.7 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 6.0.0 |
 | <a name="requirement_null"></a> [null](#requirement\_null) | >= 3.3.0 |
-| <a name="requirement_rhcs"></a> [rhcs](#requirement\_rhcs) | >= 1.7.8 |
+| <a name="requirement_rhcs"></a> [rhcs](#requirement\_rhcs) | >= 1.7.10 |
 
 ## Providers
 
@@ -99,6 +100,7 @@ We recommend you install the following CLI tools:
 | <a name="module_operator_roles"></a> [operator\_roles](#module\_operator\_roles) | ./modules/operator-roles | n/a |
 | <a name="module_rhcs_identity_provider"></a> [rhcs\_identity\_provider](#module\_rhcs\_identity\_provider) | ./modules/idp | n/a |
 | <a name="module_rhcs_machine_pool"></a> [rhcs\_machine\_pool](#module\_rhcs\_machine\_pool) | ./modules/machine-pool | n/a |
+| <a name="module_rhcs_notification_contacts"></a> [rhcs\_notification\_contacts](#module\_rhcs\_notification\_contacts) | ./modules/notification-contacts | n/a |
 | <a name="module_rosa_cluster_classic"></a> [rosa\_cluster\_classic](#module\_rosa\_cluster\_classic) | ./modules/rosa-cluster-classic | n/a |
 
 ## Resources
@@ -184,6 +186,7 @@ We recommend you install the following CLI tools:
 | <a name="input_min_replicas"></a> [min\_replicas](#input\_min\_replicas) | Minimum number of compute nodes. This attribute is applicable solely when autoscaling is enabled. (default: 2) | `number` | `null` | no |
 | <a name="input_multi_az"></a> [multi\_az](#input\_multi\_az) | Specifies whether the deployment of the cluster should extend across multiple availability zones. (default: false) | `bool` | `null` | no |
 | <a name="input_no_proxy"></a> [no\_proxy](#input\_no\_proxy) | A comma-separated list of destination domain names, domains, IP addresses or other network CIDRs to exclude proxying. | `string` | `null` | no |
+| <a name="input_notification_contacts"></a> [notification\_contacts](#input\_notification\_contacts) | Set of OCM account usernames to receive cluster notification emails. When non-null, the module creates a `rhcs_cluster_notification_contacts` resource that authoritatively manages the full set of contacts for the cluster's subscription. Requires RHCS provider >= 1.7.10. | `set(string)` | `null` | no |
 | <a name="input_oidc_config_id"></a> [oidc\_config\_id](#input\_oidc\_config\_id) | The unique identifier associated with users authenticated through OpenID Connect (OIDC) within the ROSA cluster. | `string` | `null` | no |
 | <a name="input_oidc_endpoint_url"></a> [oidc\_endpoint\_url](#input\_oidc\_endpoint\_url) | Registered OIDC configuration issuer URL, added as the trusted relationship to the operator roles. Valid only when create\_oidc is false. | `string` | `null` | no |
 | <a name="input_oidc_prefix"></a> [oidc\_prefix](#input\_oidc\_prefix) | Optional prefix for the OIDC resources (if you're using managed policies). Maximum 16 characters, must match pattern: ^[a-z][a-z0-9\-]+[a-z0-9]$ | `string` | `null` | no |

@@ -268,6 +268,18 @@ module "rhcs_identity_provider" {
   openid_idp_issuer                     = try(each.value.openid_idp_issuer, null)
 }
 
+############################
+# Notification Contacts
+############################
+
+module "rhcs_notification_contacts" {
+  source = "./modules/notification-contacts"
+  count  = var.notification_contacts != null ? 1 : 0
+
+  cluster_id = module.rosa_cluster_classic.cluster_id
+  contacts   = var.notification_contacts
+}
+
 resource "null_resource" "validations" {
   lifecycle {
     precondition {
