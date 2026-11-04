@@ -48,6 +48,7 @@ key constraints (tag contract, naming convention, policy source, required output
 - **modules/shared-vpc-policy-and-hosted-zone:** MUST follow shared VPC docs; narrow IAM bindings over broad IAM.
 - **modules/operator-policies:** MUST align with `operator-roles` and `account-iam-resources`; account-role policy documents for Classic STS.
 - **modules/ocm-role:** MUST match ROSA CLI tag contract (`red-hat-managed`, `rosa_role_type=OCM`, `rosa_role_prefix`, `rosa_admin_role` when admin). Trust and permission policy documents come from `data.rhcs_policies.ocm_role_policies` — do not hard-code ARNs or JSON. Role name follows `{prefix}-OCM-Role-{ocm_org_external_id}` (truncated to 64 chars, sourced from `data.rhcs_info.organization_external_id`). Output `role_arn` is the only input `rhcs_rosa_ocm_role_link` needs.
+- **modules/notification-contacts:** MUST use `rhcs_cluster_notification_contacts`; contacts set is authoritative (full replacement, not additive). Requires rhcs >= 1.7.10.
 
 ## Pull requests
 - MUST: Link official docs on **primarily AWS-only** PRs.
