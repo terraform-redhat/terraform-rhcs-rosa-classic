@@ -1,3 +1,14 @@
+## 1.7.7 (12 Nov, 2026)
+
+FEATURES:
+   * Add notification contacts submodule
+   * Expose Classic cluster wait timeout
+
+ENHANCEMENTS:
+ * Documentation
+   * Improve notification contacts descriptions and add root tests
+   * Add Terraform module agents
+
 ## 1.7.6 (13 Oct, 2026)
 
 FEATURES:
