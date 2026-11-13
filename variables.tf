@@ -117,11 +117,11 @@ variable "private_hosted_zone_role_arn" {
 variable "version_channel_group" {
   type        = string
   default     = null
-  description = "Desired channel group of the version [stable, eus]. Cannot be used together with 'channel'. Starting from RHCS Terraform provider version 1.7.7, this attribute no longer has a default value and is computed by the API."
+  description = "Desired channel group of the version [stable, eus, fast]. Cannot be used together with 'channel'. Starting from RHCS Terraform provider version 1.7.7, this attribute no longer has a default value and is computed by the API."
 
   validation {
-    condition     = var.version_channel_group == null ? true : contains(["stable", "eus"], var.version_channel_group)
-    error_message = "The 'version_channel_group' parameter must be 'stable' or 'eus'."
+    condition     = var.version_channel_group == null ? true : contains(["stable", "eus", "fast"], var.version_channel_group)
+    error_message = "The 'version_channel_group' parameter must be 'stable', 'eus', or 'fast'."
   }
 }
 
@@ -162,12 +162,14 @@ variable "http_proxy" {
   type        = string
   default     = null
   description = "A proxy URL to use for creating HTTP connections outside the cluster. The URL scheme must be http."
+  sensitive   = true
 }
 
 variable "https_proxy" {
   type        = string
   default     = null
   description = "A proxy URL to use for creating HTTPS connections outside the cluster."
+  sensitive   = true
 }
 
 variable "no_proxy" {
@@ -180,6 +182,7 @@ variable "additional_trust_bundle" {
   type        = string
   default     = null
   description = "A string containing a PEM-encoded X.509 certificate bundle that will be added to the nodes' trusted certificate store."
+  sensitive   = true
 }
 
 ##############################################################
