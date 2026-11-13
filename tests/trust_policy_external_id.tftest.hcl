@@ -80,6 +80,74 @@ run "root_passes_external_id_to_account_iam" {
   }
 }
 
+run "root_version_channel_group_fast" {
+  command = plan
+
+  variables {
+    cluster_name           = "test-classic-cluster"
+    openshift_version      = "4.14.24"
+    oidc_config_id         = "00000000000000000000000000000000"
+    aws_subnet_ids         = ["subnet-fake12345"]
+    aws_availability_zones = ["us-east-1a"]
+    version_channel_group  = "fast"
+  }
+
+  // Reaching this assertion is the proof: main.tf passes version_channel_group
+  // straight into module.rosa_cluster_classic, so the run only gets this far when
+  // both the root and the submodule validation accept 'fast'. The submodule exposes
+  // no channel_group output, and cluster_id is unknown during a mocked plan here,
+  // so there is no planned attribute to assert on from the root suite.
+  assert {
+    condition     = var.version_channel_group == "fast"
+    error_message = "The root module must plan successfully with version_channel_group set to 'fast'."
+  }
+}
+
+// The run below uses issensitive(), which requires Terraform >= 1.8. The module itself
+// still supports the lower required_version in versions.tf; only this test suite needs
+// the newer CLI, which the pinned CI Terraform provides.
+//
+// The root module declares its own proxy variables and passes them into
+// module.rosa_cluster_classic, so the submodule suite cannot cover these marks: each
+// level has a separate variable block. Assert on var.* rather than on a planned
+// attribute, because the rhcs provider schema marks the proxy attributes sensitive on
+// its own and such an assertion would pass even without the root sensitive = true.
+run "root_proxy_inputs_are_sensitive" {
+  command = plan
+
+  variables {
+    cluster_name            = "test-classic-cluster"
+    openshift_version       = "4.14.24"
+    oidc_config_id          = "00000000000000000000000000000000"
+    aws_subnet_ids          = ["subnet-fake12345"]
+    aws_availability_zones  = ["us-east-1a"]
+    http_proxy              = "http://proxy.example.com:3128"
+    https_proxy             = "https://proxy.example.com:3129"
+    no_proxy                = ".example.com"
+    additional_trust_bundle = "mock-pem-bundle-not-a-real-certificate"
+  }
+
+  assert {
+    condition     = issensitive(var.http_proxy)
+    error_message = "http_proxy must be declared sensitive in the root module."
+  }
+
+  assert {
+    condition     = issensitive(var.https_proxy)
+    error_message = "https_proxy must be declared sensitive in the root module."
+  }
+
+  assert {
+    condition     = issensitive(var.additional_trust_bundle)
+    error_message = "additional_trust_bundle must be declared sensitive in the root module."
+  }
+
+  assert {
+    condition     = !issensitive(var.no_proxy)
+    error_message = "no_proxy must stay non-sensitive in the root module, matching the rhcs provider schema."
+  }
+}
+
 run "root_version_channel_group_invalid" {
   command = plan
 
