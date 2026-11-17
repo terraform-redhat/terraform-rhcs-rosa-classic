@@ -167,6 +167,173 @@ run "version_channel_group_eus" {
   }
 }
 
+run "version_channel_group_fast" {
+  command = plan
+
+  providers = {
+    aws  = aws.default
+    rhcs = rhcs.import_sim
+  }
+
+  variables {
+    version_channel_group = "fast"
+  }
+
+  assert {
+    condition     = rhcs_cluster_rosa_classic.rosa_classic_cluster.channel_group == "fast"
+    error_message = "version_channel_group must accept 'fast' and pass it through to the resource."
+  }
+}
+
+// The two runs below use issensitive(), which requires Terraform >= 1.8. The module
+// itself still supports the lower required_version in versions.tf; only this test
+// suite needs the newer CLI, which the pinned CI Terraform provides.
+//
+// Do not "simplify" these assertions away: they are the proof that the proxy inputs
+// carry a sensitivity mark. Note that the rhcs provider schema already marks
+// proxy.http_proxy, proxy.https_proxy and proxy.additional_trust_bundle sensitive on
+// its own, so asserting on those attributes would pass even without the module-level
+// sensitive = true. The discriminating checks are issensitive(var.*) and the whole
+// proxy object / proxy.no_proxy being marked, which only happens because the module's
+// sensitive inputs appear in the conditional predicate in main.tf.
+run "proxy_inputs_are_sensitive" {
+  command = plan
+
+  providers = {
+    aws  = aws.default
+    rhcs = rhcs.import_sim
+  }
+
+  variables {
+    http_proxy              = "http://proxy.example.com:3128"
+    https_proxy             = "https://proxy.example.com:3129"
+    no_proxy                = ".example.com"
+    additional_trust_bundle = "mock-pem-bundle-not-a-real-certificate"
+  }
+
+  assert {
+    condition     = issensitive(var.http_proxy)
+    error_message = "http_proxy must be declared sensitive."
+  }
+
+  assert {
+    condition     = issensitive(var.https_proxy)
+    error_message = "https_proxy must be declared sensitive."
+  }
+
+  assert {
+    condition     = issensitive(var.additional_trust_bundle)
+    error_message = "additional_trust_bundle must be declared sensitive."
+  }
+
+  assert {
+    condition     = !issensitive(var.no_proxy)
+    error_message = "no_proxy must stay non-sensitive, matching the rhcs provider schema."
+  }
+
+  assert {
+    condition     = issensitive(rhcs_cluster_rosa_classic.rosa_classic_cluster.proxy)
+    error_message = "The proxy object must be sensitive because sensitive inputs drive the conditional that builds it."
+  }
+
+  assert {
+    condition     = issensitive(rhcs_cluster_rosa_classic.rosa_classic_cluster.proxy.no_proxy)
+    error_message = "no_proxy is redacted inside the proxy object because the enclosing conditional predicate is sensitive."
+  }
+
+  assert {
+    condition     = nonsensitive(rhcs_cluster_rosa_classic.rosa_classic_cluster.proxy.http_proxy) == "http://proxy.example.com:3128"
+    error_message = "http_proxy must still reach the resource unchanged."
+  }
+
+  assert {
+    condition     = nonsensitive(rhcs_cluster_rosa_classic.rosa_classic_cluster.proxy.https_proxy) == "https://proxy.example.com:3129"
+    error_message = "https_proxy must still reach the resource unchanged."
+  }
+
+  assert {
+    condition     = nonsensitive(rhcs_cluster_rosa_classic.rosa_classic_cluster.proxy.no_proxy) == ".example.com"
+    error_message = "no_proxy must still reach the resource unchanged."
+  }
+
+  assert {
+    condition     = nonsensitive(rhcs_cluster_rosa_classic.rosa_classic_cluster.proxy.additional_trust_bundle) == "mock-pem-bundle-not-a-real-certificate"
+    error_message = "additional_trust_bundle must still reach the resource unchanged."
+  }
+}
+
+run "proxy_absent_when_all_proxy_inputs_null" {
+  command = plan
+
+  providers = {
+    aws  = aws.default
+    rhcs = rhcs.import_sim
+  }
+
+  variables {
+    http_proxy              = null
+    https_proxy             = null
+    no_proxy                = null
+    additional_trust_bundle = null
+  }
+
+  assert {
+    condition     = rhcs_cluster_rosa_classic.rosa_classic_cluster.proxy == null
+    error_message = "proxy must be null when every proxy input is unset."
+  }
+}
+
+// Partial branch of the main.tf conditional: only no_proxy is set, the other three
+// inputs are null. The object is still built, and it is still sensitive as a whole --
+// a null value of a sensitive variable keeps its mark, so "var.http_proxy != null"
+// evaluates to a sensitive false and the predicate stays sensitive no matter which of
+// the four inputs are set. The three unset members plan as null.
+run "proxy_partial_only_no_proxy_set" {
+  command = plan
+
+  providers = {
+    aws  = aws.default
+    rhcs = rhcs.import_sim
+  }
+
+  variables {
+    http_proxy              = null
+    https_proxy             = null
+    no_proxy                = ".example.com"
+    additional_trust_bundle = null
+  }
+
+  assert {
+    condition     = rhcs_cluster_rosa_classic.rosa_classic_cluster.proxy != null
+    error_message = "proxy must still be built when only no_proxy is set."
+  }
+
+  assert {
+    condition     = nonsensitive(rhcs_cluster_rosa_classic.rosa_classic_cluster.proxy.no_proxy) == ".example.com"
+    error_message = "no_proxy must reach the resource unchanged when it is the only proxy input set."
+  }
+
+  assert {
+    condition     = nonsensitive(rhcs_cluster_rosa_classic.rosa_classic_cluster.proxy.http_proxy) == null
+    error_message = "http_proxy must plan as null when it is unset."
+  }
+
+  assert {
+    condition     = nonsensitive(rhcs_cluster_rosa_classic.rosa_classic_cluster.proxy.https_proxy) == null
+    error_message = "https_proxy must plan as null when it is unset."
+  }
+
+  assert {
+    condition     = nonsensitive(rhcs_cluster_rosa_classic.rosa_classic_cluster.proxy.additional_trust_bundle) == null
+    error_message = "additional_trust_bundle must plan as null when it is unset."
+  }
+
+  assert {
+    condition     = issensitive(rhcs_cluster_rosa_classic.rosa_classic_cluster.proxy)
+    error_message = "The proxy object stays sensitive even when only no_proxy is set, because the null sensitive inputs keep their mark in the conditional predicate."
+  }
+}
+
 run "trust_policy_external_id_is_passed_to_sts" {
   command = plan
 
