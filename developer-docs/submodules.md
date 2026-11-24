@@ -44,7 +44,7 @@ WHEN adding or changing Variables shared across IAM submodules (`account-iam-res
 WHEN adding a new submodule — MUST add an entry to this section describing its
 key constraints (tag contract, naming convention, policy source, required outputs).
 
-- **modules/rosa-cluster-classic:** MUST match provider for `rhcs_cluster_rosa_classic`; document min OpenShift version when gated.
+- **modules/rosa-cluster-classic:** MUST match provider for `rhcs_cluster_rosa_classic`; document min OpenShift version when gated. `wait_for_urls` requires rhcs >= 1.7.14.
 - **modules/shared-vpc-policy-and-hosted-zone:** MUST follow shared VPC docs; narrow IAM bindings over broad IAM.
 - **modules/operator-policies:** MUST align with `operator-roles` and `account-iam-resources`; account-role policy documents for Classic STS.
 - **modules/ocm-role:** MUST match ROSA CLI tag contract (`red-hat-managed`, `rosa_role_type=OCM`, `rosa_role_prefix`, `rosa_admin_role` when admin). Trust and permission policy documents come from `data.rhcs_policies.ocm_role_policies` — do not hard-code ARNs or JSON. Role name follows `{prefix}-OCM-Role-{ocm_org_external_id}` (truncated to 64 chars, sourced from `data.rhcs_info.organization_external_id`). Output `role_arn` is the only input `rhcs_rosa_ocm_role_link` needs.

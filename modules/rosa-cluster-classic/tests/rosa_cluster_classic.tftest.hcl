@@ -463,3 +463,102 @@ run "max_cluster_wait_timeout_no_effect_branch" {
     error_message = "max_cluster_wait_timeout_in_minutes must still pass through when wait_for_create_complete is false."
   }
 }
+
+run "wait_for_urls_unset_passthrough" {
+  command = plan
+
+  providers = {
+    aws  = aws.default
+    rhcs = rhcs.import_sim
+  }
+
+  variables {
+    wait_for_create_complete = true
+    wait_for_urls            = null
+  }
+
+  assert {
+    condition     = rhcs_cluster_rosa_classic.rosa_classic_cluster.wait_for_urls == null
+    error_message = "wait_for_urls must pass through as null when unset."
+  }
+}
+
+run "wait_for_urls_enabled_passthrough" {
+  command = plan
+
+  providers = {
+    aws  = aws.default
+    rhcs = rhcs.import_sim
+  }
+
+  variables {
+    wait_for_create_complete = true
+    wait_for_urls            = true
+  }
+
+  assert {
+    condition     = rhcs_cluster_rosa_classic.rosa_classic_cluster.wait_for_urls == true
+    error_message = "wait_for_urls must pass through to the resource when enabled."
+  }
+}
+
+run "wait_for_urls_disabled_passthrough" {
+  command = plan
+
+  providers = {
+    aws  = aws.default
+    rhcs = rhcs.import_sim
+  }
+
+  variables {
+    wait_for_create_complete = true
+    wait_for_urls            = false
+  }
+
+  assert {
+    condition     = rhcs_cluster_rosa_classic.rosa_classic_cluster.wait_for_urls == false
+    error_message = "wait_for_urls must pass through to the resource when disabled."
+  }
+}
+
+run "wait_for_urls_false_with_waiter_off" {
+  command = plan
+
+  providers = {
+    aws  = aws.default
+    rhcs = rhcs.import_sim
+  }
+
+  variables {
+    wait_for_create_complete = false
+    wait_for_urls            = false
+  }
+
+  # The precondition must not over-tighten: only wait_for_urls = true requires
+  # wait_for_create_complete = true. false and null stay valid in both branches.
+  assert {
+    condition     = rhcs_cluster_rosa_classic.rosa_classic_cluster.wait_for_urls == false
+    error_message = "wait_for_urls must still pass through when wait_for_create_complete is false."
+  }
+}
+
+run "wait_for_urls_requires_create_waiter" {
+  command = plan
+
+  providers = {
+    aws  = aws.default
+    rhcs = rhcs.import_sim
+  }
+
+  variables {
+    wait_for_create_complete = false
+    wait_for_urls            = true
+  }
+
+  # Expects the "wait_for_urls requires wait_for_create_complete" precondition
+  # on rhcs_cluster_rosa_classic.rosa_classic_cluster to fail. Terraform can
+  # only address the resource, not the individual precondition.
+  expect_failures = [
+    rhcs_cluster_rosa_classic.rosa_classic_cluster
+  ]
+}
