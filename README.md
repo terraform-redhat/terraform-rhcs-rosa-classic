@@ -81,7 +81,7 @@ We recommend you install the following CLI tools:
 | <a name="requirement_terraform"></a> [terraform](#requirement\_terraform) | >= 1.5.7 |
 | <a name="requirement_aws"></a> [aws](#requirement\_aws) | >= 6.0.0 |
 | <a name="requirement_null"></a> [null](#requirement\_null) | >= 3.3.0 |
-| <a name="requirement_rhcs"></a> [rhcs](#requirement\_rhcs) | >= 1.7.10 |
+| <a name="requirement_rhcs"></a> [rhcs](#requirement\_rhcs) | >= 1.7.14 |
 
 ## Providers
 
@@ -206,6 +206,7 @@ We recommend you install the following CLI tools:
 | <a name="input_upgrade_acknowledgements_for"></a> [upgrade\_acknowledgements\_for](#input\_upgrade\_acknowledgements\_for) | Indicates acknowledgment of agreements required to upgrade the cluster version between minor versions (e.g. a value of "4.12" indicates acknowledgment of any agreements required to upgrade to OpenShift 4.12.z from 4.11 or before). | `string` | `null` | no |
 | <a name="input_version_channel_group"></a> [version\_channel\_group](#input\_version\_channel\_group) | Desired channel group of the version [stable, eus, fast]. Cannot be used together with 'channel'. Starting from RHCS Terraform provider version 1.7.7, this attribute no longer has a default value and is computed by the API. | `string` | `null` | no |
 | <a name="input_wait_for_create_complete"></a> [wait\_for\_create\_complete](#input\_wait\_for\_create\_complete) | Wait until the cluster is either in a ready state or in an error state. The waiter has a timeout of 60 minutes. (default: true) | `bool` | `true` | no |
+| <a name="input_wait_for_urls"></a> [wait\_for\_urls](#input\_wait\_for\_urls) | Wait during cluster creation until the cluster also reports both an API URL and a console URL. Requires `wait_for_create_complete` to be true; setting it to true without `wait_for_create_complete = true` is rejected. The URLs are checked by the same creation wait, so this shares the `max_cluster_wait_timeout_in_minutes` timeout, which the rhcs provider defaults to 60 minutes. If the wait times out, or the cluster reaches an error or uninstalling state, creation fails and the created cluster is kept in Terraform state; Terraform marks the resource as tainted, so the next apply plans to replace the cluster unless it is untainted with `terraform untaint`. Only cluster creation waits, so changing this value on an existing cluster does not replace, update, or wait for the cluster. When null, the rhcs provider treats the value as false. Requires RHCS provider >= 1.7.14. | `bool` | `null` | no |
 | <a name="input_worker_disk_size"></a> [worker\_disk\_size](#input\_worker\_disk\_size) | Default worker machine pool root disk size with a **unit suffix** like GiB or TiB, e.g. 200GiB. | `number` | `null` | no |
 
 ## Outputs

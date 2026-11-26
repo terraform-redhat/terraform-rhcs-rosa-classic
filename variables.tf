@@ -218,6 +218,13 @@ variable "max_cluster_wait_timeout_in_minutes" {
   description = "Maximum number of minutes to wait for cluster creation to complete. Only applies when wait_for_create_complete is true; has no effect otherwise. When null, the rhcs provider applies its default of 60 minutes."
 }
 
+variable "wait_for_urls" {
+  type        = bool
+  nullable    = true
+  default     = null
+  description = "Wait during cluster creation until the cluster also reports both an API URL and a console URL. Requires `wait_for_create_complete` to be true; setting it to true without `wait_for_create_complete = true` is rejected. The URLs are checked by the same creation wait, so this shares the `max_cluster_wait_timeout_in_minutes` timeout, which the rhcs provider defaults to 60 minutes. If the wait times out, or the cluster reaches an error or uninstalling state, creation fails and the created cluster is kept in Terraform state; Terraform marks the resource as tainted, so the next apply plans to replace the cluster unless it is untainted with `terraform untaint`. Only cluster creation waits, so changing this value on an existing cluster does not replace, update, or wait for the cluster. When null, the rhcs provider treats the value as false. Requires RHCS provider >= 1.7.14."
+}
+
 variable "disable_workload_monitoring" {
   type        = bool
   default     = null

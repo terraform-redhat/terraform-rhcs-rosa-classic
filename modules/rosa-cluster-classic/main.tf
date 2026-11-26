@@ -107,6 +107,7 @@ resource "rhcs_cluster_rosa_classic" "rosa_classic_cluster" {
   kms_key_arn                         = var.kms_key_arn
   wait_for_create_complete            = var.wait_for_create_complete
   max_cluster_wait_timeout_in_minutes = var.max_cluster_wait_timeout_in_minutes
+  wait_for_urls                       = var.wait_for_urls
   disable_scp_checks                  = var.disable_scp_checks
   disable_workload_monitoring         = var.disable_workload_monitoring
   etcd_encryption                     = var.etcd_encryption
@@ -152,6 +153,10 @@ resource "rhcs_cluster_rosa_classic" "rosa_classic_cluster" {
     precondition {
       condition     = var.channel == null || var.version_channel_group == null
       error_message = "The 'channel' and 'version_channel_group' parameters cannot be used together. Please specify only one."
+    }
+    precondition {
+      condition     = var.wait_for_urls != true || var.wait_for_create_complete == true
+      error_message = "The 'wait_for_urls' parameter requires 'wait_for_create_complete' to be true."
     }
   }
 }

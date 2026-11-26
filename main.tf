@@ -125,6 +125,7 @@ module "rosa_cluster_classic" {
   ########
   wait_for_create_complete            = var.wait_for_create_complete
   max_cluster_wait_timeout_in_minutes = var.max_cluster_wait_timeout_in_minutes
+  wait_for_urls                       = var.wait_for_urls
   disable_workload_monitoring         = var.disable_workload_monitoring
   disable_scp_checks                  = var.disable_scp_checks
   etcd_encryption                     = var.etcd_encryption

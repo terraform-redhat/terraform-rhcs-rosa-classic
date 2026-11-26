@@ -132,3 +132,69 @@ run "root_max_cluster_wait_timeout_no_effect_branch" {
     error_message = "Root must plan the un-indexed rosa_cluster_classic module when wait_for_create_complete is false."
   }
 }
+
+run "root_wait_for_urls_enabled_passthrough" {
+  command = apply
+
+  variables {
+    cluster_name             = "test-classic-cluster"
+    openshift_version        = "4.14.24"
+    oidc_config_id           = "00000000000000000000000000000000"
+    aws_subnet_ids           = ["subnet-fake12345"]
+    aws_availability_zones   = ["us-east-1a"]
+    wait_for_create_complete = true
+    wait_for_urls            = true
+  }
+
+  # See the comment in the unset timeout run: child-module internal resources
+  # are not addressable from a root test; the attribute passthrough (== true)
+  # is asserted in the submodule suite. Here we confirm the un-indexed module
+  # plans with wait_for_urls enabled.
+  assert {
+    condition     = module.rosa_cluster_classic.cluster_id == "mock-classic-cluster"
+    error_message = "Root must plan the un-indexed rosa_cluster_classic module when wait_for_urls is true."
+  }
+}
+
+run "root_wait_for_urls_disabled_passthrough" {
+  command = apply
+
+  variables {
+    cluster_name             = "test-classic-cluster"
+    openshift_version        = "4.14.24"
+    oidc_config_id           = "00000000000000000000000000000000"
+    aws_subnet_ids           = ["subnet-fake12345"]
+    aws_availability_zones   = ["us-east-1a"]
+    wait_for_create_complete = true
+    wait_for_urls            = false
+  }
+
+  # See the comment in the unset timeout run: the attribute passthrough
+  # (== false) is asserted in the submodule suite.
+  assert {
+    condition     = module.rosa_cluster_classic.cluster_id == "mock-classic-cluster"
+    error_message = "Root must plan the un-indexed rosa_cluster_classic module when wait_for_urls is false."
+  }
+}
+
+run "root_wait_for_urls_unset_passthrough" {
+  command = apply
+
+  variables {
+    cluster_name             = "test-classic-cluster"
+    openshift_version        = "4.14.24"
+    oidc_config_id           = "00000000000000000000000000000000"
+    aws_subnet_ids           = ["subnet-fake12345"]
+    aws_availability_zones   = ["us-east-1a"]
+    wait_for_create_complete = true
+    wait_for_urls            = null
+  }
+
+  # See the comment in the unset timeout run: the null passthrough is asserted
+  # in the submodule suite. The root default is null, which the rhcs provider
+  # treats as false, so this run also proves the default wiring is unchanged.
+  assert {
+    condition     = module.rosa_cluster_classic.cluster_id == "mock-classic-cluster"
+    error_message = "Root must plan the un-indexed rosa_cluster_classic module when wait_for_urls is unset."
+  }
+}
